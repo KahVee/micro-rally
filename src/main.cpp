@@ -4,6 +4,7 @@
 
 #include "SceneManager.hpp"
 #include "MainMenuScene.hpp"
+#include "SettingsScene.hpp"
 
 int main()
 {
@@ -19,7 +20,10 @@ int main()
     // This object provides delta time
     sf::Clock clock;
     // The object that manages scenes of the program
-    SceneManager sceneManager("Main Menu", new MainMenuScene(font));
+    SceneManager sceneManager;
+    sceneManager.AddScene("mainmenu", new MainMenuScene(font, sceneManager));
+    sceneManager.AddScene("settings", new SettingsScene(font, sceneManager));
+    sceneManager.ChangeScene("mainmenu");
     // Limit framerate to 60
     window.setFramerateLimit(60);
     // Main loop

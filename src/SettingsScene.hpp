@@ -6,15 +6,14 @@
 #include "Scene.hpp"
 #include "Button.hpp"
 
-class MainMenuScene : public Scene
+class SettingsScene : public Scene
 {
 public:
-    MainMenuScene(const sf::Font& font, SceneManager& sceneManager);
-    ~MainMenuScene() = default;
+    SettingsScene(const sf::Font& font, SceneManager& sceneManager);
+    ~SettingsScene() = default;
     void HandleEvents(sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
 private:
-    Button quit_;
-    Button settings_;
+    Button back_;
 };
