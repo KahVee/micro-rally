@@ -3,13 +3,15 @@
 #include <SFML/Graphics.hpp>
 
 #include "SceneManager.hpp"
-#include "MainMenuScene.hpp"
-#include "SettingsScene.hpp"
+//#include "MainMenuScene.hpp"
+//#include "SettingsScene.hpp"
+#include "MenuScene.hpp"
+#include "Button.hpp"
 
 int main()
 {
     // The window of the program
-    sf::RenderWindow window(sf::VideoMode(800, 600), "testsfml");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "testsfml", sf::Style::Titlebar | sf::Style::Close);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("FreeMono.ttf"))
@@ -21,8 +23,16 @@ int main()
     sf::Clock clock;
     // The object that manages scenes of the program
     SceneManager sceneManager;
-    sceneManager.AddScene("mainmenu", new MainMenuScene(font, sceneManager));
-    sceneManager.AddScene("settings", new SettingsScene(font, sceneManager));
+    // Create main menu scene
+    MenuScene* mainMenu = new MenuScene(); // const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, std::function<void()> onClick
+    mainMenu->AddSceneComponent(new Button({0.4f, 0.2f}, {0.2f, 0.2f}, window,"QUIT", sf::Color::Blue, font, sf::Color::Green, sf::Color::White, [&window](){window.close();}));
+    mainMenu->AddSceneComponent(new Button({0.4f, 0.5f}, {0.2f, 0.2f}, window,"SETTINGS", sf::Color::Blue, font, sf::Color::Green, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("settings");}));
+    sceneManager.AddScene("mainmenu", mainMenu);
+    // Create settings scene
+    MenuScene* settings = new MenuScene();
+    settings->AddSceneComponent(new Button({0.4f, 0.2f}, {0.2f, 0.2f}, window,"BACK", sf::Color::Blue, font, sf::Color::Green, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainmenu");}));
+    sceneManager.AddScene("settings", settings);
+    // Set initial scene
     sceneManager.ChangeScene("mainmenu");
     // Limit framerate to 60
     window.setFramerateLimit(60);

@@ -9,10 +9,8 @@ class SceneManager;
 class Scene
 {
 public:
-    Scene(SceneManager& sceneManager) : sceneManager_(sceneManager){}
+    virtual ~Scene() = default;
     virtual void HandleEvents(sf::RenderWindow& window) = 0;
     virtual void Update(const sf::Time& deltaTime) = 0;
     virtual void Draw(sf::RenderWindow& window) = 0;
-protected:
-    SceneManager& sceneManager_;
 };

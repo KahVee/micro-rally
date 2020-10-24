@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <SFML/Graphics.hpp>
+
 #include "Scene.hpp"
 
 // This needs to be here because of cyclic dependencies
