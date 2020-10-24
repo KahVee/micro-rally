@@ -7,7 +7,6 @@ TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, con
     text_.setString(text);
     text_.setFillColor(textColor);
     text_.setFont(font);
-    //text_.setCharacterSize(30);
     SetCharacterSize(characterSize);
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
 }
@@ -29,7 +28,7 @@ void TextSceneComponent::SetPosition(const sf::Vector2f& position, const sf::Vec
 {
     sf::Vector2f textPosition(
         (position.x + size.x / 2) - (text_.getGlobalBounds().width / 2),
-        (position.y + size.y / 2) - (text_.getGlobalBounds().height / 2)
+        (position.y + size.y / 2) - (text_.getCharacterSize() / 1.5f)
     );
     text_.setPosition(textPosition);
 }

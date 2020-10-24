@@ -51,7 +51,7 @@ void ButtonSceneComponent::SetPosition(const sf::Vector2f& position)
     rectangleShape_.setPosition(position);
     sf::Vector2f textPosition(
         (position.x + rectangleShape_.getGlobalBounds().width / 2) - (text_.getGlobalBounds().width / 2),
-        (position.y + rectangleShape_.getGlobalBounds().height / 2) - (text_.getGlobalBounds().height)
+        (position.y + rectangleShape_.getGlobalBounds().height / 2) - (text_.getCharacterSize() / 1.5f)
     );
     text_.setPosition(textPosition);
 }

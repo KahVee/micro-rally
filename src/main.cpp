@@ -7,6 +7,7 @@
 #include "ButtonSceneComponent.hpp"
 #include "TextSceneComponent.hpp"
 #include "PictureSceneComponent.hpp"
+#include "TextInputSceneComponent.hpp"
 
 int main()
 {
@@ -33,15 +34,18 @@ int main()
     // Gray color
     sf::Color Gray(100,100,100);
     // Create main menu scene
-    MenuScene* mainMenu = new MenuScene(); // (const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Texture& texture)
+    MenuScene* mainMenu = new MenuScene();
     mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
-    mainMenu->AddSceneComponent(new TextSceneComponent({0.4f, 0.0f}, {0.2f, 0.1f}, window,"2D CAR GAME", sf::Color::Red, font, 50u));
+    mainMenu->AddSceneComponent(new TextSceneComponent({0.4f, 0.1f}, {0.2f, 0.1f}, window,"2D CAR GAME", sf::Color::Red, font, 50u));
     mainMenu->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.1f}, window,"QUIT", sf::Color::Black, font, 30u, Gray, sf::Color::White, [&window](){window.close();}));
     mainMenu->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.4f}, {0.2f, 0.1f}, window,"SETTINGS", sf::Color::Black, font, 30u, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("settings");}));
     sceneManager.AddScene("mainmenu", mainMenu);
     // Create settings scene
     MenuScene* settings = new MenuScene();
+    settings->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
+    settings->AddSceneComponent(new TextSceneComponent({0.4f, 0.1f}, {0.2f, 0.1f}, window,"SETTINGS", sf::Color::Red, font, 50u));
     settings->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.1f}, window,"BACK", sf::Color::Black, font, 30u, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainmenu");}));
+    settings->AddSceneComponent(new TextInputSceneComponent({0.3f, 0.4f}, {0.4f, 0.1f}, window,"inputtextbox", sf::Color::Black, font, 30u, Gray, sf::Color::White, 10, [](const std::string& text){std::cout << text << std::endl;}));
     sceneManager.AddScene("settings", settings);
     // Set initial scene
     sceneManager.ChangeScene("mainmenu");
