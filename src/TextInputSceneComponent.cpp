@@ -1,6 +1,6 @@
 #include "TextInputSceneComponent.hpp"
 
-TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize, const sf::Color& backgroundColor, const sf::Color& highlightColor, const int& characterLimit, std::function<void(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
+TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize, const sf::Color& backgroundColor, const sf::Color& highlightColor, const int& characterLimit, std::function<std::string(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
 {
     if(text.length() > characterLimit)
     {
@@ -99,10 +99,12 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
                     // When input is submitted
                     selected_ = false;
                     rectangleShape_.setFillColor(backgroundColor_);
+                    unsubmittedTextString_ = onSubmit_(unsubmittedTextString_);
                     textString_ = unsubmittedTextString_;
+                    text_.setString(textString_);
                     cursorPosition_ = textString_.length();
+                    SetPosition({relativePosition_.x * window.getSize().x, relativePosition_.y * window.getSize().y});
                     cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
-                    onSubmit_(textString_);
                 }
             }
             break;

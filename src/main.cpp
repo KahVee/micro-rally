@@ -45,7 +45,7 @@ int main()
     settings->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
     settings->AddSceneComponent(new TextSceneComponent({0.4f, 0.1f}, {0.2f, 0.1f}, window,"SETTINGS", sf::Color::Red, font, 50u));
     settings->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.1f}, window,"BACK", sf::Color::Black, font, 30u, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainmenu");}));
-    settings->AddSceneComponent(new TextInputSceneComponent({0.3f, 0.4f}, {0.4f, 0.1f}, window,"inputtextbox", sf::Color::Black, font, 30u, Gray, sf::Color::White, 10, [](const std::string& text){std::cout << text << std::endl;}));
+    settings->AddSceneComponent(new TextInputSceneComponent({0.3f, 0.4f}, {0.4f, 0.1f}, window,"inputtextbox", sf::Color::Black, font, 30u, Gray, sf::Color::White, 10, [](const std::string& text){std::cout << text << std::endl; return "";}));
     sceneManager.AddScene("settings", settings);
     // Set initial scene
     sceneManager.ChangeScene("mainmenu");

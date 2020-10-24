@@ -10,7 +10,7 @@
 class TextInputSceneComponent : public SceneComponent
 {
 public:
-    TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize, const sf::Color& backgroundColor, const sf::Color& highlightColor, const int& characterLimit, std::function<void(std::string)> onSubmit);
+    TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize, const sf::Color& backgroundColor, const sf::Color& highlightColor, const int& characterLimit, std::function<std::string(std::string)> onSubmit);
     ~TextInputSceneComponent() = default;
     void HandleEvent(sf::Event& event, sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
@@ -31,5 +31,5 @@ private:
     int characterLimit_;
     int cursorPosition_;
     sf::Text cursor_;
-    std::function<void(std::string)> onSubmit_;
+    std::function<std::string(std::string)> onSubmit_;
 };
