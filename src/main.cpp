@@ -6,6 +6,7 @@
 #include "MenuScene.hpp"
 #include "ButtonSceneComponent.hpp"
 #include "TextSceneComponent.hpp"
+#include "PictureSceneComponent.hpp"
 
 int main()
 {
@@ -18,19 +19,29 @@ int main()
         std::cout << "font load error" << std::endl;
         window.close();
     }
+    // Load texture for menu background
+    sf::Texture texture;
+    if (!texture.loadFromFile("Lemon.jpg"))
+    {
+        std::cout << "texture load error" << std::endl;
+        window.close();
+    }
     // This object provides delta time
     sf::Clock clock;
     // The object that manages scenes of the program
     SceneManager sceneManager;
+    // Gray color
+    sf::Color Gray(100,100,100);
     // Create main menu scene
-    MenuScene* mainMenu = new MenuScene(); // (const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize)
-    mainMenu->AddSceneComponent(new TextSceneComponent({0.4f, 0.0f}, {0.2f, 0.2f}, window,"2D CAR GAME", sf::Color::Red, font, 40u));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.2f}, window,"QUIT", sf::Color::Blue, font, sf::Color::Green, sf::Color::White, [&window](){window.close();}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.4f}, {0.2f, 0.2f}, window,"SETTINGS", sf::Color::Blue, font, sf::Color::Green, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("settings");}));
+    MenuScene* mainMenu = new MenuScene(); // (const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Texture& texture)
+    mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
+    mainMenu->AddSceneComponent(new TextSceneComponent({0.4f, 0.0f}, {0.2f, 0.1f}, window,"2D CAR GAME", sf::Color::Red, font, 50u));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.1f}, window,"QUIT", sf::Color::Black, font, 30u, Gray, sf::Color::White, [&window](){window.close();}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.4f}, {0.2f, 0.1f}, window,"SETTINGS", sf::Color::Black, font, 30u, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("settings");}));
     sceneManager.AddScene("mainmenu", mainMenu);
     // Create settings scene
     MenuScene* settings = new MenuScene();
-    settings->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.2f}, window,"BACK", sf::Color::Blue, font, sf::Color::Green, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainmenu");}));
+    settings->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.1f}, window,"BACK", sf::Color::Black, font, 30u, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainmenu");}));
     sceneManager.AddScene("settings", settings);
     // Set initial scene
     sceneManager.ChangeScene("mainmenu");

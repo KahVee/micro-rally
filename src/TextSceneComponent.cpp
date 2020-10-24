@@ -27,10 +27,10 @@ void TextSceneComponent::Draw(sf::RenderWindow& window)
 
 void TextSceneComponent::SetPosition(const sf::Vector2f& position, const sf::Vector2f& size)
 {
-    sf::Vector2f textPosition = {
+    sf::Vector2f textPosition(
         (position.x + size.x / 2) - (text_.getGlobalBounds().width / 2),
         (position.y + size.y / 2) - (text_.getGlobalBounds().height / 2)
-    };
+    );
     text_.setPosition(textPosition);
 }
 
