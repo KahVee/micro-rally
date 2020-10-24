@@ -3,9 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "SceneManager.hpp"
 
-// This needs to be here because of cyclic dependencies
-class SceneManager;
-
 class Scene
 {
 public:
