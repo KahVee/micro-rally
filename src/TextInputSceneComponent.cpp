@@ -1,6 +1,6 @@
 #include "TextInputSceneComponent.hpp"
 
-TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize, const sf::Color& backgroundColor, const sf::Color& highlightColor, const int& characterLimit, std::function<std::string(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
+TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, const int& characterLimit, std::function<std::string(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
 {
     if(text.length() > characterLimit)
     {
@@ -15,13 +15,14 @@ TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePos
     text_.setString(textString_);
     text_.setFillColor(textColor);
     text_.setFont(font);
-    text_.setCharacterSize(characterSize);
+    text_.setCharacterSize(100);
     // Cursor settings
     cursor_.setString("_");
     cursor_.setFillColor(textColor);
     cursor_.setFont(font);
-    cursor_.setCharacterSize(characterSize);
+    cursor_.setCharacterSize(100);
     cursorPosition_ = textString_.length();
+
     rectangleShape_.setFillColor(backgroundColor);
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
@@ -130,9 +131,9 @@ void TextInputSceneComponent::Draw(sf::RenderWindow& window)
 void TextInputSceneComponent::SetPosition(const sf::Vector2f& position)
 {
     rectangleShape_.setPosition(position);
-    sf::Vector2f textPosition(
-        (position.x + rectangleShape_.getGlobalBounds().width / 2) - (text_.getGlobalBounds().width / 2),
-        (position.y + rectangleShape_.getGlobalBounds().height / 2) - (text_.getCharacterSize() / 1.5f)
+    sf::Vector2f textPosition(                                                                           // For some reason getGlobalBounds doesn't work here
+        position.x + rectangleShape_.getGlobalBounds().width / 2.0f - text_.getGlobalBounds().width / 2.0f - text_.getLocalBounds().left * text_.getScale().x,
+        position.y + rectangleShape_.getGlobalBounds().height / 2.0f - text_.getGlobalBounds().height / 2.0f - text_.getLocalBounds().top * text_.getScale().y
     );
     text_.setPosition(textPosition);
 }
@@ -140,6 +141,15 @@ void TextInputSceneComponent::SetPosition(const sf::Vector2f& position)
 void TextInputSceneComponent::SetSize(const sf::Vector2f& size)
 {
     rectangleShape_.setSize(size);
+    float desiredScale = 0.75 / ((cursor_.getLocalBounds().height + cursor_.getLocalBounds().top)/ size.y);
+    text_.setScale(desiredScale, desiredScale);
+    cursor_.setScale(desiredScale, desiredScale);
+    if(characterLimit_ * cursor_.getGlobalBounds().width > size.x * 0.9)
+    {
+        desiredScale = 0.9 / (characterLimit_ * cursor_.getLocalBounds().width / size.x);
+        text_.setScale(desiredScale, desiredScale);
+        cursor_.setScale(desiredScale, desiredScale);
+    }
 }
 
 void TextInputSceneComponent::SetTextColor(const sf::Color& color)

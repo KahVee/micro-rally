@@ -1,11 +1,11 @@
 #include "ButtonSceneComponent.hpp"
 
-ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize, const sf::Color& backgroundColor, const sf::Color& highlightColor, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor)
+ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor)
 {
     text_.setString(text);
     text_.setFillColor(textColor);
     text_.setFont(font);
-    text_.setCharacterSize(characterSize);
+    text_.setCharacterSize(100);
     rectangleShape_.setFillColor(backgroundColor);
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
@@ -50,8 +50,8 @@ void ButtonSceneComponent::SetPosition(const sf::Vector2f& position)
 {
     rectangleShape_.setPosition(position);
     sf::Vector2f textPosition(
-        (position.x + rectangleShape_.getGlobalBounds().width / 2) - (text_.getGlobalBounds().width / 2),
-        (position.y + rectangleShape_.getGlobalBounds().height / 2) - (text_.getCharacterSize() / 1.5f)
+        position.x + rectangleShape_.getGlobalBounds().width / 2.0f - text_.getGlobalBounds().width / 2.0f - text_.getGlobalBounds().left,
+        position.y + rectangleShape_.getGlobalBounds().height / 2.0f - text_.getGlobalBounds().height / 2.0f - text_.getGlobalBounds().top
     );
     text_.setPosition(textPosition);
 }
@@ -59,6 +59,13 @@ void ButtonSceneComponent::SetPosition(const sf::Vector2f& position)
 void ButtonSceneComponent::SetSize(const sf::Vector2f& size)
 {
     rectangleShape_.setSize(size);
+    float desiredScale = 0.75 / (text_.getLocalBounds().height / size.y);
+    text_.setScale(desiredScale, desiredScale);
+    if(text_.getGlobalBounds().width > size.x * 0.9)
+    {
+        desiredScale = 0.9 / (text_.getLocalBounds().width / size.x);
+        text_.setScale(desiredScale, desiredScale);
+    }
 }
 
 void ButtonSceneComponent::SetTextColor(const sf::Color& color)

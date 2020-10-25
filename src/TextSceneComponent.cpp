@@ -2,12 +2,13 @@
 
 #include <iostream>
 
-TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const unsigned int& characterSize) : SceneComponent(relativePosition, relativeSize)
+TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font) : SceneComponent(relativePosition, relativeSize)
 {
     text_.setString(text);
     text_.setFillColor(textColor);
     text_.setFont(font);
-    SetCharacterSize(characterSize);
+    text_.setCharacterSize(100);
+    SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
 }
 
@@ -27,15 +28,27 @@ void TextSceneComponent::Draw(sf::RenderWindow& window)
 void TextSceneComponent::SetPosition(const sf::Vector2f& position, const sf::Vector2f& size)
 {
     sf::Vector2f textPosition(
-        (position.x + size.x / 2) - (text_.getGlobalBounds().width / 2),
-        (position.y + size.y / 2) - (text_.getCharacterSize() / 1.5f)
+        (position.x + size.x / 2.0f) - text_.getGlobalBounds().width / 2.0f - text_.getGlobalBounds().left,
+        (position.y + size.y / 2.0f) - text_.getGlobalBounds().height / 2.0f - text_.getGlobalBounds().top
     );
+    // text_.setPosition(textPosition);
+    // rectangleShape_.setPosition(position);
+    // sf::Vector2f textPosition(
+    //     position.x + rectangleShape_.getLocalBounds().width / 2.0f - text_.getLocalBounds().width / 2.0f - text_.getLocalBounds().left,
+    //     position.y + rectangleShape_.getLocalBounds().height / 2.0f - text_.getLocalBounds().height / 2.0f - text_.getLocalBounds().top
+    // );
     text_.setPosition(textPosition);
 }
 
-void TextSceneComponent::SetCharacterSize(const unsigned int& size)
+void TextSceneComponent::SetSize(const sf::Vector2f& size)
 {
-    text_.setCharacterSize(size);
+    float desiredScale = 0.75 / (text_.getLocalBounds().height / size.y);
+    text_.setScale(desiredScale, desiredScale);
+    if(text_.getGlobalBounds().width > size.x * 0.9)
+    {
+        desiredScale = 0.9 / (text_.getLocalBounds().width / size.x);
+        text_.setScale(desiredScale, desiredScale);
+    }
 }
 
 void TextSceneComponent::SetTextColor(const sf::Color& color)
