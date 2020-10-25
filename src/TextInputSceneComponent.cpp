@@ -45,7 +45,6 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
                 rectangleShape_.setFillColor(backgroundColor_);
                 unsubmittedTextString_ = textString_;
                 text_.setString(textString_);
-                SetPosition({relativePosition_.x * window.getSize().x, relativePosition_.y * window.getSize().y});
                 cursorPosition_ = textString_.length();
                 cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
             }
@@ -61,7 +60,6 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
                     unsubmittedTextString_.erase(unsubmittedTextString_.begin() + cursorPosition_ - 1);
                     text_.setString(unsubmittedTextString_);
                     cursorPosition_--;
-                    SetPosition({relativePosition_.x * window.getSize().x, relativePosition_.y * window.getSize().y});
                     cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
                 }
                 else if(std::isprint(c) && unsubmittedTextString_.length() < characterLimit_)
@@ -69,7 +67,6 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
                     unsubmittedTextString_.insert(unsubmittedTextString_.begin() + cursorPosition_, c);
                     text_.setString(unsubmittedTextString_);
                     cursorPosition_++;
-                    SetPosition({relativePosition_.x * window.getSize().x, relativePosition_.y * window.getSize().y});
                     cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
                 }
             }
@@ -104,7 +101,6 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
                     textString_ = unsubmittedTextString_;
                     text_.setString(textString_);
                     cursorPosition_ = textString_.length();
-                    SetPosition({relativePosition_.x * window.getSize().x, relativePosition_.y * window.getSize().y});
                     cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
                 }
             }
@@ -131,9 +127,9 @@ void TextInputSceneComponent::Draw(sf::RenderWindow& window)
 void TextInputSceneComponent::SetPosition(const sf::Vector2f& position)
 {
     rectangleShape_.setPosition(position);
-    sf::Vector2f textPosition(                                                                           // For some reason getGlobalBounds doesn't work here
-        position.x + rectangleShape_.getGlobalBounds().width / 2.0f - text_.getGlobalBounds().width / 2.0f - text_.getLocalBounds().left * text_.getScale().x,
-        position.y + rectangleShape_.getGlobalBounds().height / 2.0f - text_.getGlobalBounds().height / 2.0f - text_.getLocalBounds().top * text_.getScale().y
+    sf::Vector2f textPosition(
+        position.x + rectangleShape_.getGlobalBounds().width / 2.0f - characterLimit_ * cursor_.getGlobalBounds().width / 2.0f,
+        position.y + rectangleShape_.getGlobalBounds().height / 2.0f - (cursor_.getGlobalBounds().height + cursor_.getGlobalBounds().top) / 2.0f 
     );
     text_.setPosition(textPosition);
 }

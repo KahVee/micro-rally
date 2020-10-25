@@ -15,14 +15,14 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 450), "testsfml", sf::Style::Titlebar | sf::Style::Close);
     // The font of the program
     sf::Font font;
-    if(!font.loadFromFile("FreeMono.ttf"))
+    if(!font.loadFromFile("../res/FreeMono.ttf"))
     {
         std::cout << "font load error" << std::endl;
         window.close();
     }
     // Load texture for menu background
     sf::Texture texture;
-    if (!texture.loadFromFile("Lemon.jpg"))
+    if (!texture.loadFromFile("../res/Lemon.jpg"))
     {
         std::cout << "texture load error" << std::endl;
         window.close();
@@ -43,7 +43,7 @@ int main()
     // Create settings scene
     MenuScene* settings = new MenuScene();
     settings->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
-    settings->AddSceneComponent(new TextSceneComponent({0.4f, 0.1f}, {0.2f, 0.1f}, window,"SETTINGS", sf::Color::Red, font));
+    settings->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"SETTINGS", sf::Color::Red, font));
     settings->AddSceneComponent(new ButtonSceneComponent({0.4f, 0.2f}, {0.2f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainmenu");}));
     settings->AddSceneComponent(new TextInputSceneComponent({0.3f, 0.4f}, {0.4f, 0.1f}, window,"inputtextbox", sf::Color::Black, font, Gray, sf::Color::White, 5, [](const std::string& text){std::cout << text << std::endl; return "";}));
     sceneManager.AddScene("settings", settings);
