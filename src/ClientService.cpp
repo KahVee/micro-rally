@@ -1,5 +1,11 @@
 #include "ClientService.hpp"
 
+ClientService::ClientService()
+{
+    running_ = false;
+}
+
+
 ClientService::~ClientService()
 {
     for(auto packet : packetQueue_)
@@ -35,13 +41,16 @@ void ClientService::Start()
             }
             // Nothing implemented for failure to read            
         }
-        // Send packets in queue
-        for(auto packet : packetQueue_)
         {
-            socket_.send(*packet);
-            delete packet;
+            // Send packets in queue
+            const std::lock_guard<std::mutex> lock(packetQueueMutex_);
+            for(auto packet : packetQueue_)
+            {
+                socket_.send(*packet);
+                delete packet;
+            }
+            packetQueue_.clear();
         }
-        packetQueue_.clear();
     }
 }
 
@@ -57,6 +66,7 @@ bool ClientService::IsRunning()
 
 void ClientService::Send(sf::Packet* packet)
 {
+    const std::lock_guard<std::mutex> lock(packetQueueMutex_);
     packetQueue_.push_back(packet);
 }
 

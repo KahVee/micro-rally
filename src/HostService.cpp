@@ -1,5 +1,10 @@
 #include "HostService.hpp"
 
+HostService::HostService()
+{
+    running_ = false;
+}
+
 HostService::~HostService()
 {
     for(auto client : clients_)

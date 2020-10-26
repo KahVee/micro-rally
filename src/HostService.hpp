@@ -8,7 +8,7 @@
 class HostService
 {
 public:
-    HostService() = default;
+    HostService();
     ~HostService();
     HostService(const HostService& hostService) = delete;
     HostService& operator=(const HostService& hostService) = delete;
@@ -20,5 +20,5 @@ private:
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
     std::vector<sf::TcpSocket*> clients_;
-    bool running_ = false;//std::atomic<bool> running_;
+    std::atomic<bool> running_;
 };
