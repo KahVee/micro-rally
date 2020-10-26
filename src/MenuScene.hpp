@@ -6,6 +6,7 @@
 #include "SceneManager.hpp"
 #include "SceneComponent.hpp"
 
+/*A Scene that contains SceneComponents.*/
 class MenuScene : public Scene
 {
 public:

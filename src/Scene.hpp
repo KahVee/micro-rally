@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "SceneManager.hpp"
 
+/*A virtual class that represents a view on screen with it's own event-handling, updating and drawing.*/
 class Scene
 {
 public:

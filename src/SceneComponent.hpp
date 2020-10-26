@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
+/*A virtual class that represents a part of a Scene.*/
 class SceneComponent
 {
 public:

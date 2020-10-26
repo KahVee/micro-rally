@@ -4,10 +4,12 @@
 
 TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font) : SceneComponent(relativePosition, relativeSize)
 {
+    // Set text
     text_.setString(text);
     text_.setFillColor(textColor);
     text_.setFont(font);
     text_.setCharacterSize(100);
+    // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
 }
@@ -49,9 +51,4 @@ void TextSceneComponent::SetSize(const sf::Vector2f& size)
         desiredScale = 0.9 / (text_.getLocalBounds().width / size.x);
         text_.setScale(desiredScale, desiredScale);
     }
-}
-
-void TextSceneComponent::SetTextColor(const sf::Color& color)
-{
-    text_.setFillColor(color);
 }

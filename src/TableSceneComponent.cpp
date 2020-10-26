@@ -1,21 +1,23 @@
 #include "TableSceneComponent.hpp"
 
-TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const int& rowLimit, const std::vector<int>& columnCharacterLimits) : SceneComponent(relativePosition, relativeSize), rowLimit_(rowLimit), columnCharacterLimits_(columnCharacterLimits)
+TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, int rowLimit, const std::vector<int>& columnCharacterLimits) : SceneComponent(relativePosition, relativeSize), rowLimit_(rowLimit), columnCharacterLimits_(columnCharacterLimits)
 {
+    // Set text
     text_.setFillColor(textColor);
     text_.setFont(font);
     text_.setCharacterSize(100);
     rectangleShape_.setFillColor(backgroundColor);
-
+    // Characters per row
     rowCharacterLimit_ = 0;
     for(auto characterLimit : columnCharacterLimits_)
     {
         rowCharacterLimit_ += characterLimit;
     }
+    // Character needed for sizing
     character_.setString(" ");
     character_.setFont(font);
     character_.setCharacterSize(text_.getCharacterSize());
-
+    // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
 }
@@ -47,33 +49,35 @@ void TableSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window
 
 void TableSceneComponent::Update(const sf::Time& deltaTime)
 {
-    std::stringstream ss;
-    for(auto row : table_)
-    {
-        for(int i = 0; i < row.size(); i++)
-        {
-            if(row[i].size() == columnCharacterLimits_[i])
-            {
-                ss << row[i];
-            }
-            else if (row[i].size() > columnCharacterLimits_[i])
-            {
-                ss << row[i].substr(0,columnCharacterLimits_[i]);
-            }
-            else
-            {
-                ss << row[i].append(columnCharacterLimits_[i] - row[i].size(), ' ');
-            }
-        }
-        ss << std::endl;
-    }
-    text_.setString(ss.str());
 }
 
 void TableSceneComponent::Draw(sf::RenderWindow& window)
 {
     window.draw(rectangleShape_);
     window.draw(text_);
+}
+
+int TableSceneComponent::AddRow(const std::vector<std::string>& row)
+{
+    if(table_.size() == rowLimit_)
+    {
+        table_.pop_front();
+    }
+    table_.push_back(row);
+    UpdateText();
+    return table_.size() - 1;
+}
+
+void TableSceneComponent::RemoveIndex(const int& i)
+{
+    table_.erase(table_.begin() + i);
+    UpdateText();
+}
+
+void TableSceneComponent::ReplaceIndex(const int& i, const std::vector<std::string>& row)
+{
+    table_[i] = row;
+    UpdateText();
 }
 
 void TableSceneComponent::SetPosition(const sf::Vector2f& position)
@@ -101,16 +105,6 @@ void TableSceneComponent::SetSize(const sf::Vector2f& size)
     }
 }
 
-void TableSceneComponent::SetTextColor(const sf::Color& color)
-{
-    text_.setFillColor(color);
-}
-
-void TableSceneComponent::SetBackgroundColor(const sf::Color& color)
-{
-    rectangleShape_.setFillColor(color);
-}
-
 bool TableSceneComponent::IsMouseHovering(sf::RenderWindow &window)
 {
     // float mouseX = sf::Mouse::getPosition(window).x;
@@ -130,22 +124,27 @@ bool TableSceneComponent::IsMouseHovering(sf::RenderWindow &window)
     return false;
 }
 
-int TableSceneComponent::AddRow(const std::vector<std::string>& row)
+void TableSceneComponent::UpdateText()
 {
-    if(table_.size() == rowLimit_)
+    std::stringstream ss;
+    for(auto row : table_)
     {
-        table_.pop_front();
+        for(int i = 0; i < row.size(); i++)
+        {
+            if(row[i].size() == columnCharacterLimits_[i])
+            {
+                ss << row[i];
+            }
+            else if (row[i].size() > columnCharacterLimits_[i])
+            {
+                ss << row[i].substr(0,columnCharacterLimits_[i]);
+            }
+            else
+            {
+                ss << row[i].append(columnCharacterLimits_[i] - row[i].size(), ' ');
+            }
+        }
+        ss << std::endl;
     }
-    table_.push_back(row);
-    return table_.size() - 1;
-}
-
-void TableSceneComponent::RemoveIndex(const int& i)
-{
-    table_.erase(table_.begin() + i);
-}
-
-void TableSceneComponent::ReplaceIndex(const int& i, const std::vector<std::string>& row)
-{
-    table_[i] = row;
+    text_.setString(ss.str());
 }

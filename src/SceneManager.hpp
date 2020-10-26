@@ -6,9 +6,7 @@
 
 #include "Scene.hpp"
 
-// This needs to be here because of cyclic dependencies
-class Scene;
-
+/*A SceneManager contains Scene objects and methods related to them.*/
 class SceneManager
 {
 public:

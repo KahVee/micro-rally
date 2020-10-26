@@ -2,11 +2,14 @@
 
 ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor)
 {
+    // Set text
     text_.setString(text);
     text_.setFillColor(textColor);
     text_.setFont(font);
     text_.setCharacterSize(100);
+    // Set RectangleShape
     rectangleShape_.setFillColor(backgroundColor);
+    // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
 }
@@ -18,11 +21,11 @@ void ButtonSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& windo
         case sf::Event::MouseMoved:
             if(IsMouseHovering(window))
             {
-                SetBackgroundColor(highlightColor_);
+                rectangleShape_.setFillColor(highlightColor_);
             }
             else
             {
-                SetBackgroundColor(backgroundColor_);
+                rectangleShape_.setFillColor(backgroundColor_);
             }
             break;
         case sf::Event::MouseButtonPressed:
@@ -66,16 +69,6 @@ void ButtonSceneComponent::SetSize(const sf::Vector2f& size)
         desiredScale = 0.9 / (text_.getLocalBounds().width / size.x);
         text_.setScale(desiredScale, desiredScale);
     }
-}
-
-void ButtonSceneComponent::SetTextColor(const sf::Color& color)
-{
-    text_.setFillColor(color);
-}
-
-void ButtonSceneComponent::SetBackgroundColor(const sf::Color& color)
-{
-    rectangleShape_.setFillColor(color);
 }
 
 bool ButtonSceneComponent::IsMouseHovering(sf::RenderWindow &window)

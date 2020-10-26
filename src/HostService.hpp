@@ -4,6 +4,7 @@
 #include <string>
 #include <atomic>
 
+/*A class that represents the host-side of network communication.*/
 class HostService
 {
 public:

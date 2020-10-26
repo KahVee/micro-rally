@@ -5,6 +5,7 @@
 
 #include "SceneComponent.hpp"
 
+/*A SceneComponent that displays text.*/
 class TextSceneComponent : public SceneComponent
 {
 public:
@@ -13,9 +14,9 @@ public:
     void HandleEvent(sf::Event& event, sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
+private:
     void SetPosition(const sf::Vector2f& position, const sf::Vector2f& size);
     void SetSize(const sf::Vector2f& size);
-    void SetTextColor(const sf::Color& color);
-private:
+    
     sf::Text text_;
 };

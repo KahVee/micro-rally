@@ -7,6 +7,7 @@
 #include <atomic>
 #include <string>
 
+/*A class that represents the client-side of network communication.*/
 class ClientService
 {
 public:

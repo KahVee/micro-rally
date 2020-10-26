@@ -1,7 +1,8 @@
 #include "TextInputSceneComponent.hpp"
 
-TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, const int& characterLimit, std::function<std::string(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
+TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, int characterLimit, std::function<std::string(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
 {
+    // Set text
     if(text.length() > characterLimit)
     {
         textString_ = text.substr(0, characterLimit);
@@ -20,10 +21,11 @@ TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePos
     cursor_.setString("_");
     cursor_.setFillColor(textColor);
     cursor_.setFont(font);
-    cursor_.setCharacterSize(100);
+    cursor_.setCharacterSize(text_.getCharacterSize());
     cursorPosition_ = textString_.length();
-
+    // RectangleShape settings
     rectangleShape_.setFillColor(backgroundColor);
+    // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
     cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
@@ -146,16 +148,6 @@ void TextInputSceneComponent::SetSize(const sf::Vector2f& size)
         text_.setScale(desiredScale, desiredScale);
         cursor_.setScale(desiredScale, desiredScale);
     }
-}
-
-void TextInputSceneComponent::SetTextColor(const sf::Color& color)
-{
-    text_.setFillColor(color);
-}
-
-void TextInputSceneComponent::SetBackgroundColor(const sf::Color& color)
-{
-    rectangleShape_.setFillColor(color);
 }
 
 bool TextInputSceneComponent::IsMouseHovering(sf::RenderWindow &window)

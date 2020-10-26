@@ -6,6 +6,7 @@
 
 #include "SceneComponent.hpp"
 
+/*A SceneComponent that represents a clickable button on screen.*/
 class ButtonSceneComponent : public SceneComponent
 {
 public:
@@ -14,12 +15,11 @@ public:
     void HandleEvent(sf::Event& event, sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
+private:
     void SetPosition(const sf::Vector2f& position);
     void SetSize(const sf::Vector2f& size);
-    void SetTextColor(const sf::Color& color);
-    void SetBackgroundColor(const sf::Color& color);
     bool IsMouseHovering(sf::RenderWindow &window);
-private:
+
     sf::Color backgroundColor_;
     sf::Color highlightColor_;
     sf::RectangleShape rectangleShape_;
