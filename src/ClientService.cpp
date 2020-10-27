@@ -14,9 +14,9 @@ ClientService::~ClientService()
     }
 }
 
-sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port)
+sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout)
 {
-    sf::Socket::Status status = socket_.connect(address, port);
+    sf::Socket::Status status = socket_.connect(address, port, timeout);
     if(status == sf::Socket::Done)
     {
         selector_.add(socket_);
@@ -26,6 +26,15 @@ sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned
 
 void ClientService::Start()
 {
+    {
+        // Delete old packets
+        const std::lock_guard<std::mutex> lock(packetQueueMutex_);
+        for(auto packet : packetQueue_)
+        {
+            delete packet;
+        }
+        packetQueue_.clear();
+    }
     running_ = true;
     while(running_)
     {
@@ -52,6 +61,9 @@ void ClientService::Start()
             packetQueue_.clear();
         }
     }
+    // Reset clientservice
+    selector_.clear();
+    socket_.disconnect();
 }
 
 void ClientService::Stop()

@@ -61,32 +61,49 @@ void HostService::Start()
                             {
                                 if(messageType == "CHAT_MESSAGE")
                                 {
-                                    // Do something
+                                    // Handle chat message
+                                    std::string playerName;
                                     std::string chatMessage;
-                                    packet >> chatMessage;
+                                    packet >> playerName >> chatMessage;
                                     sf::Packet sendPacket;
-                                    sendPacket << "CHAT_MESSAGE" << chatMessage;
+                                    sendPacket << "CHAT_MESSAGE" << playerName << chatMessage;
                                     // Send to all chatters
-                                    for(auto sendClient : clients_)
-                                    {
-                                        sendClient->send(sendPacket);
-                                    }
+                                    SendToAll(sendPacket);
                                 }
                                 else if (messageType == "PING")
                                 {
                                     // Handle ping
                                     sf::Packet sendPacket;
                                     sendPacket << "PING";
-                                    client->send(sendPacket);
+                                    SendToOne(client, sendPacket);
                                 }
                             }
                             // Nothing implemented for failure to read    
                         }
                     }
                 }
+                // Delete null pointers in case disconnected clients were deleted
+                clients_.erase(std::remove(clients_.begin(), clients_.end(), nullptr), clients_.end());
             }
         }
     }
+    // Send end message to all clients
+    sf::Packet packet;
+    packet << "HOST_QUIT";
+    SendToAll(packet);
+    // Reset hostservice
+    for(auto client : clients_)
+    {
+        client->disconnect();
+    }
+    clients_.erase(std::remove(clients_.begin(), clients_.end(), nullptr), clients_.end());
+    for(auto client : clients_)
+    {
+        delete client;
+    }
+    clients_.clear();
+    selector_.clear();
+    listener_.close();
 }
 
 void HostService::Stop()
@@ -97,4 +114,27 @@ void HostService::Stop()
 bool HostService::IsRunning()
 {
     return running_;
+}
+
+void HostService::SendToAll(sf::Packet& packet)
+{
+    for(auto client : clients_)
+    {
+        SendToOne(client, packet);
+    }
+}
+
+void HostService::SendToOne(sf::TcpSocket* client, sf::Packet& packet)
+{
+    // Check if client connected
+    if(client->getLocalPort())
+    {
+        client->send(packet);
+    }
+    else
+    {
+        // If not connected remove from connections
+        selector_.remove(*client);
+        delete client;
+    }
 }

@@ -2,7 +2,9 @@
 
 #include <SFML/Network.hpp>
 #include <string>
+#include <algorithm>
 #include <atomic>
+#include <list>
 
 /*A class that represents the host-side of network communication.*/
 class HostService
@@ -17,8 +19,10 @@ public:
     void Stop();
     bool IsRunning();
 private:
+    void SendToAll(sf::Packet& packet);
+    void SendToOne(sf::TcpSocket* client, sf::Packet& packet);
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
-    std::vector<sf::TcpSocket*> clients_;
+    std::list<sf::TcpSocket*> clients_;
     std::atomic<bool> running_;
 };

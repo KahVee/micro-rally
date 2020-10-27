@@ -14,7 +14,7 @@ class ClientService
 public:
     ClientService();
     ~ClientService();
-    sf::Socket::Status Connect(const sf::IpAddress &address, unsigned short port);
+    sf::Socket::Status Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout);
     void Start();
     void Stop();
     bool IsRunning();
