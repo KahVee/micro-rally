@@ -14,7 +14,7 @@ ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition,
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
     // Set button sound options
     buttonSound_.setBuffer(buttonSoundBuff_);
-    buttonSound_.setVolume(50.f);
+    buttonSound_.setVolume(30.f);
     
 }
 

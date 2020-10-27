@@ -2,7 +2,6 @@
 
 #include <string>
 #include <functional>
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 

@@ -172,8 +172,9 @@ int main()
         packet >> playerName >> message;
         table->AddRow({playerName, message});
     });
-    clientService.AddMessageFunction("HOST_QUIT", [&clientService, &sceneManager](sf::Packet& packet){
+    clientService.AddMessageFunction("HOST_QUIT", [&clientService, &sceneManager, &theme1](sf::Packet& packet){
         clientService.Stop();
+        theme1.stop();
         sceneManager.ChangeScene("mainMenu");
     });
     // Limit framerate to 60
