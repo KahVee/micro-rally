@@ -5,6 +5,8 @@
 #include <SFML/Network.hpp>
 #include <vector>
 #include <thread>
+#include <iomanip>
+#include <sstream>
 
 #include "SceneManager.hpp"
 #include "MenuScene.hpp"
@@ -90,16 +92,23 @@ int main()
     TableSceneComponent* table = new TableSceneComponent({0.05f, 0.2f}, {0.5f, 0.6f}, window, sf::Color::Black, font, Gray, 12, {10, 20});
     lobby->AddSceneComponent(table);
     lobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.5f, 0.1f}, window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
-        [table, &clientService, &playerName](const std::string& text){
+        [&clientService, &playerName, &pingClock](const std::string& text){
             if(clientService.IsRunning())
             {
                 if(text == "/ping")
                 {
-
+                    // /ping command for debugging
+                    pingClock.restart();
+                    sf::Packet* packet = new sf::Packet;
+                    *packet << "PING";
+                    clientService.Send(packet);
                 }
-                sf::Packet* packet = new sf::Packet;
-                *packet << "CHAT_MESSAGE" << playerName << text;
-                clientService.Send(packet);
+                else
+                {
+                    sf::Packet* packet = new sf::Packet;
+                    *packet << "CHAT_MESSAGE" << playerName << text;
+                    clientService.Send(packet);
+                }
             }
             return "";
         }));
@@ -131,6 +140,13 @@ int main()
     // Set initial scene
     sceneManager.ChangeScene("mainMenu");
     // Client message functions
+    clientService.AddMessageFunction("PING", [table, &pingClock](sf::Packet& packet){
+        sf::Time ping = pingClock.restart();
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(4) << ping.asSeconds();
+        ss << " seconds";
+        table->AddRow({"PING", ss.str()});
+    });
     clientService.AddMessageFunction("CHAT_MESSAGE", [table](sf::Packet& packet){
         std::string playerName;
         std::string message;
