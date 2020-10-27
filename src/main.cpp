@@ -36,6 +36,22 @@ int main()
         std::cout << "texture load error" << std::endl;
         window.close();
     }
+    // Load ButtonSound
+    sf::SoundBuffer buttonSoundBuff;
+    if (!buttonSoundBuff.loadFromFile("../res/ButtonSound.wav"))
+    {
+        std::cout << "audio load error" << std::endl;
+        window.close();
+    }
+    // Load Theme1
+    sf::Music theme1;
+    if(!theme1.openFromFile("../res/Theme1.wav"))
+    {
+        std::cout << "audio load error" << std::endl;
+        window.close();
+    }
+    theme1.setVolume(15.f);
+    theme1.setLoop(true);
     // This object provides delta time
     sf::Clock clock;
     // Ping clock
@@ -55,8 +71,8 @@ int main()
     MenuScene* mainMenu = new MenuScene();
     mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
     mainMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"2D CAR GAME", sf::Color::Red, font));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, window,"HOST", sf::Color::Black, font, Gray, sf::Color::White,
-        [&hostService, &hostThread, &clientService, &clientThread, &sceneManager](){
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, window,"HOST", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
+        [&hostService, &hostThread, &clientService, &clientThread, &sceneManager, &theme1](){
             if(!hostService.IsRunning())
             {
                 if(hostService.Listen(25000) == sf::Socket::Done)
@@ -65,14 +81,15 @@ int main()
                     {
                         hostThread = std::thread(&HostService::Start, std::ref(hostService));
                         clientThread = std::thread(&ClientService::Start, std::ref(clientService));
+                        theme1.play();
                         sceneManager.ChangeScene("lobby");
                     }
                 }
             }
         }));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window,"JOIN", sf::Color::Black, font, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("join");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, window,"SETTINGS", sf::Color::Black, font, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("settings");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"QUIT", sf::Color::Black, font, Gray, sf::Color::White, [&window](){window.close();}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window,"JOIN", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("join");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, window,"SETTINGS", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("settings");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"QUIT", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&window](){window.close();}));
     sceneManager.AddScene("mainMenu", mainMenu);
     // Create settings scene ------------------------------------------------------------------------------------------
     MenuScene* settings = new MenuScene();
@@ -83,7 +100,7 @@ int main()
             playerName = text;
             return text;
         }));
-    settings->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
+    settings->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("settings", settings);
     // Create lobby scene ------------------------------------------------------------------------------------------
     MenuScene* lobby = new MenuScene();
@@ -112,30 +129,32 @@ int main()
             }
             return "";
         }));
-    lobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White,
-        [&hostService, &clientService, &sceneManager](){
+    lobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
+        [&hostService, &clientService, &sceneManager, &theme1](){
             hostService.Stop();
             clientService.Stop();
+            theme1.stop();
             sceneManager.ChangeScene("mainMenu");
         }));
     sceneManager.AddScene("lobby", lobby);
-    // Create client lobby scene ------------------------------------------------------------------------------------------
+    // Create join scene ------------------------------------------------------------------------------------------
     MenuScene* join = new MenuScene();
     join->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
     join->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"JOIN", sf::Color::Red, font));
     join->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
-        [&clientService, &clientThread, &sceneManager](const std::string& text){
+        [&clientService, &clientThread, &sceneManager, &theme1](const std::string& text){
             if(!clientService.IsRunning())
             {
                 if(clientService.Connect(text, 25000, sf::seconds(5.0f)) == sf::Socket::Done)
                 {
                     clientThread = std::thread(&ClientService::Start, std::ref(clientService));
+                    theme1.play();
                     sceneManager.ChangeScene("lobby");
                 }
             }
             return text;
         }));
-    join->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
+    join->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("join", join);
     // Set initial scene
     sceneManager.ChangeScene("mainMenu");

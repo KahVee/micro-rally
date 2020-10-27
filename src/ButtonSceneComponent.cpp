@@ -1,6 +1,6 @@
 #include "ButtonSceneComponent.hpp"
 
-ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor)
+ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff)
 {
     // Set text
     text_.setString(text);
@@ -12,6 +12,10 @@ ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition,
     // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
+    // Set button sound options
+    buttonSound_.setBuffer(buttonSoundBuff_);
+    buttonSound_.setVolume(50.f);
+    
 }
 
 void ButtonSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
@@ -32,6 +36,8 @@ void ButtonSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& windo
             if(IsMouseHovering(window))
             {
                 onClick_();
+                // Sound on click
+                buttonSound_.play();
             }
             break;
         default:
