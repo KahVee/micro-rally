@@ -3,14 +3,13 @@
 #include <SFML/Network.hpp>
 #include <string>
 #include <algorithm>
-#include <atomic>
 #include <list>
 
 /*A class that represents the host-side of network communication.*/
 class HostService
 {
 public:
-    HostService();
+    HostService() = default;
     ~HostService();
     HostService(const HostService& hostService) = delete;
     HostService& operator=(const HostService& hostService) = delete;
@@ -24,5 +23,5 @@ private:
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
     std::list<sf::TcpSocket*> clients_;
-    std::atomic<bool> running_;
+    bool running_ = false;
 };

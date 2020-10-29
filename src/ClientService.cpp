@@ -1,19 +1,5 @@
 #include "ClientService.hpp"
 
-ClientService::ClientService()
-{
-    running_ = false;
-}
-
-
-ClientService::~ClientService()
-{
-    for(auto packet : packetQueue_)
-    {
-        delete packet;
-    }
-}
-
 sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout)
 {
     sf::Socket::Status status = socket_.connect(address, port, timeout);
@@ -26,49 +12,17 @@ sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned
 
 void ClientService::Start()
 {
-    {
-        // Delete old packets
-        const std::lock_guard<std::mutex> lock(packetQueueMutex_);
-        for(auto packet : packetQueue_)
-        {
-            delete packet;
-        }
-        packetQueue_.clear();
-    }
     running_ = true;
-    while(running_)
-    {
-        // Wait for data on socket
-        sf::Packet packet;
-        if(ReceiveWithTimeout(packet, sf::seconds(0.05f)) == sf::Socket::Done)
-        {
-            // Received data in packet
-            std::string messageType;
-            if(packet >> messageType)
-            {
-                messageFunctions_[messageType](packet);
-            }
-            // Nothing implemented for failure to read            
-        }
-        {
-            // Send packets in queue
-            const std::lock_guard<std::mutex> lock(packetQueueMutex_);
-            for(auto packet : packetQueue_)
-            {
-                socket_.send(*packet);
-                delete packet;
-            }
-            packetQueue_.clear();
-        }
-    }
-    // Reset clientservice
-    selector_.clear();
-    socket_.disconnect();
 }
 
 void ClientService::Stop()
 {
+    // Reset clientservice
+    selector_.clear();
+    socket_.disconnect();
     running_ = false;
+    sf::Packet packet;
+    messageFunctions_["DISCONNECT"](packet);
 }
 
 bool ClientService::IsRunning()
@@ -76,10 +30,41 @@ bool ClientService::IsRunning()
     return running_;
 }
 
-void ClientService::Send(sf::Packet* packet)
+void ClientService::Send(sf::Packet& packet)
 {
-    const std::lock_guard<std::mutex> lock(packetQueueMutex_);
-    packetQueue_.push_back(packet);
+    // Check if client connected
+    if(socket_.getLocalPort())
+    {
+        socket_.send(packet);
+    }
+    else
+    {
+        // If not connected reset and set running_ = false
+        Stop();
+    }
+}
+
+void ClientService::Receive()
+{
+    if(running_)
+    {
+        // Wait for data on socket
+        sf::Packet packet;
+        sf::Socket::Status status = ReceiveWithTimeout(packet, sf::microseconds(1));
+        if(status == sf::Socket::Done)
+        {
+            // Received data in packet
+            std::string messageType;
+            if(packet >> messageType)
+            {
+                messageFunctions_[messageType](packet);
+            }        
+        }
+        else if(status == sf::Socket::Disconnected)
+        {
+            Stop();
+        }
+    }
 }
 
 void ClientService::AddMessageFunction(const std::string& messageType, std::function<void(sf::Packet& packet)> function)

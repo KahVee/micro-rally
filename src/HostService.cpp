@@ -1,10 +1,5 @@
 #include "HostService.hpp"
 
-HostService::HostService()
-{
-    running_ = false;
-}
-
 HostService::~HostService()
 {
     for(auto client : clients_)
@@ -87,10 +82,6 @@ void HostService::Start()
             }
         }
     }
-    // Send end message to all clients
-    sf::Packet packet;
-    packet << "HOST_QUIT";
-    SendToAll(packet);
     // Reset hostservice
     for(auto client : clients_)
     {
