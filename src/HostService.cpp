@@ -2,7 +2,7 @@
 
 HostService::~HostService()
 {
-    for(auto client : clients_)
+    for(auto& client : clients_)
     {
         delete client;
     }
@@ -43,12 +43,13 @@ void HostService::Start()
             else
             {
                 // Test other sockets
-                for(auto client : clients_)
+                for(auto& client : clients_)
                 {
                     if(selector_.isReady(*client))
                     {
                         sf::Packet packet;
-                        if(client->receive(packet) == sf::Socket::Done)
+                        sf::Socket::Status status = client->receive(packet);
+                        if(status == sf::Socket::Done)
                         {
                             // Received data in packet
                             std::string messageType;
@@ -73,23 +74,23 @@ void HostService::Start()
                                     SendToOne(client, sendPacket);
                                 }
                             }
-                            // Nothing implemented for failure to read    
+                        }
+                        else if (status == sf::Socket::Disconnected)
+                        {
+                            // If not connected remove from connections
+                            RemoveClient(client);
                         }
                     }
                 }
                 // Delete null pointers in case disconnected clients were deleted
-                clients_.erase(std::remove(clients_.begin(), clients_.end(), nullptr), clients_.end());
+                clients_.remove(nullptr);
             }
         }
     }
     // Reset hostservice
-    for(auto client : clients_)
+    for(auto& client : clients_)
     {
         client->disconnect();
-    }
-    clients_.erase(std::remove(clients_.begin(), clients_.end(), nullptr), clients_.end());
-    for(auto client : clients_)
-    {
         delete client;
     }
     clients_.clear();
@@ -109,13 +110,13 @@ bool HostService::IsRunning()
 
 void HostService::SendToAll(sf::Packet& packet)
 {
-    for(auto client : clients_)
+    for(auto& client : clients_)
     {
         SendToOne(client, packet);
     }
 }
 
-void HostService::SendToOne(sf::TcpSocket* client, sf::Packet& packet)
+void HostService::SendToOne(sf::TcpSocket*& client, sf::Packet& packet)
 {
     // Check if client connected
     if(client->getLocalPort())
@@ -125,7 +126,14 @@ void HostService::SendToOne(sf::TcpSocket* client, sf::Packet& packet)
     else
     {
         // If not connected remove from connections
-        selector_.remove(*client);
-        delete client;
+        RemoveClient(client);
     }
+}
+
+void HostService::RemoveClient(sf::TcpSocket*& client)
+{
+    selector_.remove(*client);
+    client->disconnect();
+    delete client;
+    client = nullptr;
 }

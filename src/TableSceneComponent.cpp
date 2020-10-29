@@ -68,13 +68,13 @@ int TableSceneComponent::AddRow(const std::vector<std::string>& row)
     return table_.size() - 1;
 }
 
-void TableSceneComponent::RemoveIndex(const int& i)
+void TableSceneComponent::RemoveIndex(int i)
 {
     table_.erase(table_.begin() + i);
     UpdateText();
 }
 
-void TableSceneComponent::ReplaceIndex(const int& i, const std::vector<std::string>& row)
+void TableSceneComponent::ReplaceIndex(int i, const std::vector<std::string>& row)
 {
     table_[i] = row;
     UpdateText();

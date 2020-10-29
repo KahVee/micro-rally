@@ -2,7 +2,6 @@
 
 #include <SFML/Network.hpp>
 #include <string>
-#include <algorithm>
 #include <list>
 
 /*A class that represents the host-side of network communication.*/
@@ -19,7 +18,8 @@ public:
     bool IsRunning();
 private:
     void SendToAll(sf::Packet& packet);
-    void SendToOne(sf::TcpSocket* client, sf::Packet& packet);
+    void SendToOne(sf::TcpSocket*& client, sf::Packet& packet);
+    void RemoveClient(sf::TcpSocket*& client);
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
     std::list<sf::TcpSocket*> clients_;

@@ -17,8 +17,8 @@ public:
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
     int AddRow(const std::vector<std::string>& row);
-    void RemoveIndex(const int& i);
-    void ReplaceIndex(const int& i, const std::vector<std::string>& row);
+    void RemoveIndex(int i);
+    void ReplaceIndex(int i, const std::vector<std::string>& row);
 private:
     void SetPosition(const sf::Vector2f& position);
     void SetSize(const sf::Vector2f& size);
