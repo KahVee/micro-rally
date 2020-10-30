@@ -9,20 +9,20 @@
 #include <iomanip>
 #include <sstream>
 
-#include "SceneManager.hpp"
-#include "MenuScene.hpp"
-#include "ButtonSceneComponent.hpp"
-#include "TextSceneComponent.hpp"
-#include "PictureSceneComponent.hpp"
-#include "TextInputSceneComponent.hpp"
-#include "TableSceneComponent.hpp"
-#include "HostService.hpp"
-#include "ClientService.hpp"
+#include "scene/SceneManager.hpp"
+#include "scene/MenuScene.hpp"
+#include "scene/ButtonSceneComponent.hpp"
+#include "scene/TextSceneComponent.hpp"
+#include "scene/PictureSceneComponent.hpp"
+#include "scene/TextInputSceneComponent.hpp"
+#include "scene/TableSceneComponent.hpp"
+#include "network/HostService.hpp"
+#include "network/ClientService.hpp"
 
 int main()
 {
     // The window of the program
-    sf::RenderWindow window(sf::VideoMode(800, 450), "testsfml", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1600, 900), "testsfml", sf::Style::Titlebar | sf::Style::Close);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))
