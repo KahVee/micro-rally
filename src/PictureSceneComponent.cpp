@@ -13,18 +13,18 @@ PictureSceneComponent::PictureSceneComponent(const sf::Vector2f& relativePositio
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
 }
 
-void PictureSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
-{
-}
+void PictureSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window){}
 
-void PictureSceneComponent::Update(const sf::Time& deltaTime)
-{
-}
+void PictureSceneComponent::Update(const sf::Time& deltaTime){}
 
 void PictureSceneComponent::Draw(sf::RenderWindow& window)
 {
     window.draw(sprite_);
 }
+
+void PictureSceneComponent::Init(){}
+
+void PictureSceneComponent::Reset(){}
 
 void PictureSceneComponent::SetPosition(const sf::Vector2f& position)
 {

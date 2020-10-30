@@ -17,6 +17,8 @@ public:
     void HandleEvents(sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
+    void Init();
+    void Reset();
     void AddSceneComponent(SceneComponent* sceneComponent);
 private:
     std::vector<SceneComponent*> sceneComponents_;

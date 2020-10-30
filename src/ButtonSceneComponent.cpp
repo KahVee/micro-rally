@@ -45,15 +45,20 @@ void ButtonSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& windo
     }
 }
 
-void ButtonSceneComponent::Update(const sf::Time& deltaTime)
-{
-}
+void ButtonSceneComponent::Update(const sf::Time& deltaTime){}
 
 void ButtonSceneComponent::Draw(sf::RenderWindow& window)
 {
     window.draw(rectangleShape_);
     window.draw(text_);
 }
+
+void ButtonSceneComponent::Init()
+{
+    rectangleShape_.setFillColor(backgroundColor_);
+}
+
+void ButtonSceneComponent::Reset(){}
 
 void ButtonSceneComponent::SetPosition(const sf::Vector2f& position)
 {

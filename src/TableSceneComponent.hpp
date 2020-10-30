@@ -16,6 +16,8 @@ public:
     void HandleEvent(sf::Event& event, sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
+    void Init();
+    void Reset();
     int AddRow(const std::vector<std::string>& row);
     void RemoveIndex(int i);
     void ReplaceIndex(int i, const std::vector<std::string>& row);

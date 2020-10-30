@@ -42,6 +42,22 @@ void MenuScene::Draw(sf::RenderWindow& window)
     }
 }
 
+void MenuScene::Init()
+{
+    for(auto sceneComponent : sceneComponents_)
+    {
+        sceneComponent->Init();
+    }
+}
+
+void MenuScene::Reset()
+{
+    for(auto sceneComponent : sceneComponents_)
+    {
+        sceneComponent->Reset();
+    }
+}
+
 void MenuScene::AddSceneComponent(SceneComponent* sceneComponent)
 {
     sceneComponents_.push_back(sceneComponent);

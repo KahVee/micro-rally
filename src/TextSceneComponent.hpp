@@ -14,6 +14,8 @@ public:
     void HandleEvent(sf::Event& event, sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
+    void Init();
+    void Reset();
 private:
     void SetPosition(const sf::Vector2f& position, const sf::Vector2f& size);
     void SetSize(const sf::Vector2f& size);

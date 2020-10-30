@@ -112,9 +112,7 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
     }
 }
 
-void TextInputSceneComponent::Update(const sf::Time& deltaTime)
-{
-}
+void TextInputSceneComponent::Update(const sf::Time& deltaTime){}
 
 void TextInputSceneComponent::Draw(sf::RenderWindow& window)
 {
@@ -125,6 +123,10 @@ void TextInputSceneComponent::Draw(sf::RenderWindow& window)
         window.draw(cursor_);
     }
 }
+
+void TextInputSceneComponent::Init(){}
+
+void TextInputSceneComponent::Reset(){}
 
 void TextInputSceneComponent::SetPosition(const sf::Vector2f& position)
 {

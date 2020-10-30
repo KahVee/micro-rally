@@ -163,7 +163,7 @@ int main()
     join->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("join", join);
     // Set initial scene
-    sceneManager.ChangeScene("mainMenu");
+    sceneManager.SetInitialScene("mainMenu");
     // Client message functions
     clientService.AddMessageFunction("PING", [table, &pingClock](sf::Packet& packet){
         sf::Time ping = pingClock.restart();

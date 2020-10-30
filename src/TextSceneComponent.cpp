@@ -14,18 +14,18 @@ TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, con
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
 }
 
-void TextSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
-{
-}
+void TextSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window){}
 
-void TextSceneComponent::Update(const sf::Time& deltaTime)
-{
-}
+void TextSceneComponent::Update(const sf::Time& deltaTime){}
 
 void TextSceneComponent::Draw(sf::RenderWindow& window)
 {
     window.draw(text_);
 }
+
+void TextSceneComponent::Init(){}
+
+void TextSceneComponent::Reset(){}
 
 void TextSceneComponent::SetPosition(const sf::Vector2f& position, const sf::Vector2f& size)
 {

@@ -57,6 +57,14 @@ void TableSceneComponent::Draw(sf::RenderWindow& window)
     window.draw(text_);
 }
 
+void TableSceneComponent::Init(){}
+
+void TableSceneComponent::Reset()
+{
+    table_.clear();
+    text_.setString("");
+}
+
 int TableSceneComponent::AddRow(const std::vector<std::string>& row)
 {
     if(table_.size() == rowLimit_)

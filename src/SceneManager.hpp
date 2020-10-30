@@ -15,6 +15,7 @@ public:
     SceneManager& operator=(const SceneManager& sceneManager) = delete;
     ~SceneManager();
     void AddScene(const std::string& sceneName, Scene* scenePointer);
+    void SetInitialScene(const std::string& sceneName);
     void ChangeScene(const std::string& sceneName);
     Scene* GetCurrentScene() const;
     void HandleEvents(sf::RenderWindow& window);
