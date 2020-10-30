@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 #include "Scene.hpp"
-#include "SceneManager.hpp"
 #include "SceneComponent.hpp"
 
 /*A Scene that contains SceneComponents.*/
