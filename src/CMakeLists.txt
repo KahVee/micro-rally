@@ -36,6 +36,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "scene/TextInputSceneComponent.cpp"
     "scene/TableSceneComponent.hpp"
     "scene/TableSceneComponent.cpp"
+    "scene/SliderSceneComponent.hpp"
+    "scene/SliderSceneComponent.cpp"
     "network/HostService.hpp"
     "network/HostService.cpp"
     "network/ClientService.hpp"

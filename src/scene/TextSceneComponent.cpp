@@ -33,12 +33,6 @@ void TextSceneComponent::SetPosition(const sf::Vector2f& position, const sf::Vec
         (position.x + size.x / 2.0f) - text_.getGlobalBounds().width / 2.0f - text_.getGlobalBounds().left,
         (position.y + size.y / 2.0f) - text_.getGlobalBounds().height / 2.0f - text_.getGlobalBounds().top
     );
-    // text_.setPosition(textPosition);
-    // rectangleShape_.setPosition(position);
-    // sf::Vector2f textPosition(
-    //     position.x + rectangleShape_.getLocalBounds().width / 2.0f - text_.getLocalBounds().width / 2.0f - text_.getLocalBounds().left,
-    //     position.y + rectangleShape_.getLocalBounds().height / 2.0f - text_.getLocalBounds().height / 2.0f - text_.getLocalBounds().top
-    // );
     text_.setPosition(textPosition);
 }
 

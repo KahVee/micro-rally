@@ -16,13 +16,16 @@
 #include "scene/PictureSceneComponent.hpp"
 #include "scene/TextInputSceneComponent.hpp"
 #include "scene/TableSceneComponent.hpp"
+#include "scene/SliderSceneComponent.hpp"
 #include "network/HostService.hpp"
 #include "network/ClientService.hpp"
 
 int main()
 {
+    //sf::ContextSettings contextSettings;
+    //contextSettings.antialiasingLevel = 8; TO ENABLE ANTI-ALIASING UNCOMMENT THE LINES WITH CONTEXTSETTINGS
     // The window of the program
-    sf::RenderWindow window(sf::VideoMode(1600, 900), "testsfml", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1600, 900), "testsfml", sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))
@@ -93,13 +96,21 @@ int main()
     mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"QUIT", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&window](){window.close();}));
     sceneManager.AddScene("mainMenu", mainMenu);
     // Create settings scene ------------------------------------------------------------------------------------------
-    MenuScene* settings = new MenuScene();
+    MenuScene* settings = new MenuScene();//const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, const sf::Color& lineColor, float relativeButtonPosition, std::function<void()> onSlide
     settings->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
     settings->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"SETTINGS", sf::Color::Red, font));
     settings->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window, playerName, sf::Color::Black, font, Gray, sf::Color::White, 10,
         [&playerName](const std::string& text){
             playerName = text;
             return text;
+        }));
+    settings->AddSceneComponent(new SliderSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, window,"Volume: ", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, sf::Color::Black, 0.5f,
+        [](float relativeButtonPosition){
+            float volume = relativeButtonPosition * 100.0f;
+            sf::Listener::setGlobalVolume(volume);
+            std::stringstream ss;
+            ss << std::setw(3) << std::setfill(' ') << static_cast<int>(volume);
+            return ss.str();
         }));
     settings->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("settings", settings);
