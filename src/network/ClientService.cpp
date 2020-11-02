@@ -10,24 +10,18 @@ sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned
     return status;
 }
 
-void ClientService::Start()
-{
-    running_ = true;
-}
-
-void ClientService::Stop()
+void ClientService::Disconnect()
 {
     // Reset clientservice
     selector_.clear();
     socket_.disconnect();
-    running_ = false;
     sf::Packet packet;
     messageFunctions_["DISCONNECT"](packet);
 }
 
-bool ClientService::IsRunning()
+bool ClientService::IsConnected()
 {
-    return running_;
+    return socket_.getLocalPort();
 }
 
 void ClientService::Send(sf::Packet& packet)
@@ -40,30 +34,27 @@ void ClientService::Send(sf::Packet& packet)
     else
     {
         // If not connected reset and set running_ = false
-        Stop();
+        Disconnect();
     }
 }
 
 void ClientService::Receive()
 {
-    if(running_)
+    // Wait for data on socket
+    sf::Packet packet;
+    sf::Socket::Status status = ReceiveWithTimeout(packet, sf::microseconds(1));
+    if(status == sf::Socket::Done)
     {
-        // Wait for data on socket
-        sf::Packet packet;
-        sf::Socket::Status status = ReceiveWithTimeout(packet, sf::microseconds(1));
-        if(status == sf::Socket::Done)
+        // Received data in packet
+        std::string messageType;
+        if(packet >> messageType)
         {
-            // Received data in packet
-            std::string messageType;
-            if(packet >> messageType)
-            {
-                messageFunctions_[messageType](packet);
-            }        
-        }
-        else if(status == sf::Socket::Disconnected)
-        {
-            Stop();
-        }
+            messageFunctions_[messageType](packet);
+        }        
+    }
+    else if(status == sf::Socket::Disconnected)
+    {
+        Disconnect();
     }
 }
 

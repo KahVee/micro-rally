@@ -83,7 +83,6 @@ int main()
                     if(clientService.Connect("localhost", 25000, sf::seconds(5.0f)) == sf::Socket::Done)
                     {
                         hostThread = std::thread(&HostService::Start, std::ref(hostService));
-                        clientService.Start();
                         theme1.play();
                         sceneManager.ChangeScene("lobby");
                     }
@@ -122,7 +121,7 @@ int main()
     lobby->AddSceneComponent(table);
     lobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.5f, 0.1f}, window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &playerName, &pingClock](const std::string& text){
-            if(clientService.IsRunning())
+            if(clientService.IsConnected())
             {
                 if(text == "/ping")
                 {
@@ -149,7 +148,7 @@ int main()
             {
                 hostThread.join();
             }
-            clientService.Stop();
+            clientService.Disconnect();
             theme1.stop();
             sceneManager.ChangeScene("mainMenu");
         }));
@@ -160,11 +159,10 @@ int main()
     join->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"JOIN", sf::Color::Red, font));
     join->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &sceneManager, &theme1](const std::string& text){
-            if(!clientService.IsRunning())
+            if(!clientService.IsConnected())
             {
                 if(clientService.Connect(text, 25000, sf::seconds(5.0f)) == sf::Socket::Done)
                 {
-                    clientService.Start();
                     theme1.play();
                     sceneManager.ChangeScene("lobby");
                 }
