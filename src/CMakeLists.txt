@@ -55,17 +55,9 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
 ## If you want to link SFML statically
 # set(SFML_STATIC_LIBRARIES TRUE)
 
-<<<<<<< HEAD
 ## In most cases better set in the CMake cache
 # set(SFML_DIR "<sfml root prefix>/lib/cmake/SFML")
 
-# Find SFML library
-find_package(SFML 2.5 COMPONENTS system window graphics audio network REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/SFML-2.5.1/lib/cmake/SFML)
-=======
-# Find SFML library
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/SFML/cmake/Modules")
-find_package(SFML 2.5 COMPONENTS system window graphics audio network)
->>>>>>> master
 target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio sfml-network)
 
 # Find Box2D library
