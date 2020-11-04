@@ -2,17 +2,30 @@
 
 #include <box2d/b2_body.h>
 #include <box2d/b2_world.h>
+#include <box2d/b2_polygon_shape.h>
+#include <box2d/b2_fixture.h>
 
 #include "DynamicObject.hpp"
+class Car;
+#include "Car.hpp"
 
 class Tire : public DynamicObject {
     public:
-        Tire(sf::Sprite sprite, b2World *world);
+        Tire(std::string spritePath, b2World *world, Car *car);
         virtual ~Tire();
 
         void UpdateFriction();
-        void DebugApplyForce();
+        void UpdateDrive(bool isAccelerating, bool isBraking);
+        void UpdateTurningTorque(bool isTurningLeft, bool isTurningRight);
 
     private:
-        const float AngularVelocityMultiplier = 0.1f;
+        Car *car_;
+        b2PolygonShape shape_;
+        b2FixtureDef fDef_;
+        const float angularVelocityDampeningMultiplier = 10;
+        const float dragForceMultiplier = 2;
+        void PrivateUpdate(float dt);
+
+        b2Vec2 ForwardVelocity();
+        b2Vec2 LateralVelocity();
 };

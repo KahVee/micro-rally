@@ -3,15 +3,16 @@
 #include <SFML/Graphics.hpp>
 
 #include "Scene.hpp"
+#include "../GameObject/Game.hpp"
 
 /*A Scene that contains SceneComponents.*/
 class GameScene : public Scene
 {
 public:
     GameScene() = default;
-    GameScene(const GameScene& menuScene) = delete;
-    GameScene& operator=(const GameScene& menuScene) = delete;
-    ~GameScene() = default;
+    GameScene(const GameScene& gameScene) = delete;
+    GameScene& operator=(const GameScene& gameScene) = delete;
+    ~GameScene();
     void HandleEvents(sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
@@ -19,5 +20,5 @@ public:
     void Reset();
     // Public members
 private:
-    // Private members
+    Game *game_;
 };
