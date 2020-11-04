@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <box2d/b2_body.h>
 
 /* 
@@ -18,6 +19,8 @@ class GameObject {
     virtual void SetTransform(b2Vec2, float) = 0;
 
     protected:
+    void LoadSprite(std::string file);
+    sf::Texture texture_;
     sf::Sprite sprite_;
     b2Transform transform_;
 };

@@ -11,13 +11,24 @@
  */
 class DynamicObject : public GameObject {
     public:
-    DynamicObject(sf::Sprite sprite, b2World *world);
+    DynamicObject(std::string spritePath, b2World *world);
     virtual ~DynamicObject() = 0;
 
-    virtual b2Transform GetTransform() const;
-    virtual void SetTransform(b2Vec2, float);
+    //Common update for all DynamicObjects
+    void Update(float dt);
 
-    protected:
-    b2World *world_;
+    b2Transform GetTransform() const;
+    void SetTransform(b2Vec2, float);
+
+    b2Vec2 GetVelocity();
+    float GetAngularVelocity();
+
+    void SetVelocity(b2Vec2);
+    void SetAngularVelocity(float);
+
     b2Body *body_;
+
+    protected:    
+    b2World *world_;
+    virtual void PrivateUpdate(float dt);
 };

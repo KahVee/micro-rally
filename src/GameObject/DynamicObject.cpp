@@ -1,14 +1,29 @@
-#include "DynamicObject.hpp"
+#include <iostream>
 
-DynamicObject::DynamicObject(sf::Sprite sprite, b2World *world): world_(world) {
+#include "DynamicObject.hpp"
+#include "../constants.hpp"
+
+DynamicObject::DynamicObject(std::string spritePath, b2World *world): world_(world) {
     b2BodyDef bDef;
     bDef.type = b2_dynamicBody;
     body_ = world->CreateBody(&bDef);
-    sprite_ = sprite;
+    LoadSprite(spritePath);
 }
 
 DynamicObject::~DynamicObject() {
     
+}
+
+void DynamicObject::Update(float dt) {
+    b2Vec2 worldPos = body_->GetTransform().p;
+    float worldRot = body_->GetTransform().q.GetAngle();
+    sprite_.setPosition(sf::Vector2f(PIXELS_PER_METER*worldPos.x, WINDOW_HEIGHT-(PIXELS_PER_METER*worldPos.y)));
+    sprite_.setRotation(-worldRot*RAD_TO_DEG);
+    PrivateUpdate(dt);
+}
+
+void DynamicObject::PrivateUpdate(float dt) {
+
 }
 
 //TODO: fix usage of transform_, maybe make it a reference?
