@@ -37,7 +37,6 @@ int main()
         std::cout << "font load error" << std::endl;
         window.close();
     }
-
     // Load texture for menu background
     sf::Texture texture;
     if (!texture.loadFromFile("../res/Lemon.jpg"))
@@ -45,7 +44,6 @@ int main()
         std::cout << "texture load error" << std::endl;
         window.close();
     }
-
     // Load ButtonSound
     sf::SoundBuffer buttonSoundBuff;
     if (!buttonSoundBuff.loadFromFile("../res/ButtonSound.wav"))
@@ -53,7 +51,6 @@ int main()
         std::cout << "audio load error" << std::endl;
         window.close();
     }
-
     // Load Theme1
     sf::Music theme1;
     if(!theme1.openFromFile("../res/Theme1.wav"))
@@ -63,7 +60,6 @@ int main()
     }
     theme1.setVolume(15.f);
     theme1.setLoop(true);
-
     // This object provides delta time
     sf::Clock clock;
     // Ping clock
@@ -78,7 +74,6 @@ int main()
     SceneManager sceneManager;
     // Gray color
     sf::Color Gray(100,100,100,100);
-
     // Create main menu scene ------------------------------------------------------------------------------------------
     MenuScene* mainMenu = new MenuScene();
     mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
@@ -124,7 +119,6 @@ int main()
         }));
     settings->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("settings", settings);
-
     // Create lobby scene ------------------------------------------------------------------------------------------
     MenuScene* lobby = new MenuScene();
     lobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
@@ -165,7 +159,6 @@ int main()
             sceneManager.ChangeScene("mainMenu");
         }));
     sceneManager.AddScene("lobby", lobby);
-
     // Create join scene ------------------------------------------------------------------------------------------
     MenuScene* join = new MenuScene();
     join->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
