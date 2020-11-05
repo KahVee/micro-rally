@@ -222,4 +222,12 @@ int main()
         window.display();
     }
     return 0;
+    // Terminate all threads
+    hostService.Stop();
+    if(hostThread.joinable())
+    {
+        hostThread.join();
+    }
+    return 0;
+
 }
