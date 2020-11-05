@@ -1,5 +1,11 @@
 #include "GameScene.hpp"
 
+#include <vector>
+
+GameScene::~GameScene() {
+    delete game_;
+}
+
 void GameScene::HandleEvents(sf::RenderWindow& window)
 {
     sf::Event event;
@@ -10,24 +16,66 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
             window.close();
         }
         // Handle events
+        if(event.type == sf::Event::KeyPressed) {
+            switch(event.key.code) {
+                case sf::Keyboard::W:
+                    game_->GetPlayerCar()->Accelerate(true);
+                    break;
+                case sf::Keyboard::S:
+                    game_->GetPlayerCar()->Brake(true);
+                    break;
+                case sf::Keyboard::A:
+                    game_->GetPlayerCar()->TurnLeft(true);
+                    break;
+                case sf::Keyboard::D:
+                    game_->GetPlayerCar()->TurnRight(true);
+                    break;
+            }
+        }
+
+        if(event.type == sf::Event::KeyReleased) {
+            switch(event.key.code) {
+                case sf::Keyboard::W:
+                    game_->GetPlayerCar()->Accelerate(false);
+                    break;
+                case sf::Keyboard::S:
+                    game_->GetPlayerCar()->Brake(false);
+                    break;
+                case sf::Keyboard::A:
+                    game_->GetPlayerCar()->TurnLeft(false);
+                    break;
+                case sf::Keyboard::D:
+                    game_->GetPlayerCar()->TurnRight(false);
+                    break;
+            }
+        }
     }
 }
 
 void GameScene::Update(const sf::Time& deltaTime)
 {
-    // Update things
+    game_->Update(deltaTime.asSeconds());
 }
 void GameScene::Draw(sf::RenderWindow& window)
 {
-    // Draw things
+    std::vector<DynamicObject*> objects = game_->GetObjects();
+    for(auto o: objects) {
+        window.draw(o->GetSprite());
+    }
 }
 
+// This is called when the current scene is changed to this one
 void GameScene::Init()
 {
-    // This is called when the current scene is changed to this one
+    game_ = new Game();
+    game_->GetPlayerCar()->Accelerate(false);
+    game_->GetPlayerCar()->Brake(false);
+    game_->GetPlayerCar()->TurnLeft(false);
+    game_->GetPlayerCar()->TurnRight(false);
 }
 
+// This is called when the current scene is changed to another one from this
 void GameScene::Reset()
 {
-    // This is called when the current scene is changed to another one from this
+    delete game_;
 }

@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "scene/SceneManager.hpp"
+#include "scene/GameScene.hpp"
 #include "scene/MenuScene.hpp"
 #include "scene/ButtonSceneComponent.hpp"
 #include "scene/TextSceneComponent.hpp"
@@ -20,12 +21,15 @@
 #include "network/HostService.hpp"
 #include "network/ClientService.hpp"
 
+#include "constants.hpp"
+
 int main()
 {
     //sf::ContextSettings contextSettings;
     //contextSettings.antialiasingLevel = 8; TO ENABLE ANTI-ALIASING UNCOMMENT THE LINES WITH CONTEXTSETTINGS
     // The window of the program
-    sf::RenderWindow window(sf::VideoMode(1600, 900), "testsfml", sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "PhysicsTest", sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
+
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))
@@ -74,7 +78,8 @@ int main()
     MenuScene* mainMenu = new MenuScene();
     mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
     mainMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"2D CAR GAME", sf::Color::Red, font));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, window,"HOST", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.32f}, {0.3f, 0.1f}, window,"PLAY NOW", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("game");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.44f}, {0.3f, 0.1f}, window,"HOST", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
         [&hostService, &hostThread, &clientService, &sceneManager, &theme1](){
             if(!hostService.IsRunning())
             {
@@ -90,10 +95,11 @@ int main()
                 }
             }
         }));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window,"JOIN", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("join");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, window,"SETTINGS", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("settings");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.56f}, {0.3f, 0.1f}, window,"JOIN", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("join");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.68f}, {0.3f, 0.1f}, window,"SETTINGS", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("settings");}));
     mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"QUIT", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&window](){window.close();}));
     sceneManager.AddScene("mainMenu", mainMenu);
+
     // Create settings scene ------------------------------------------------------------------------------------------
     MenuScene* settings = new MenuScene();
     settings->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
@@ -171,8 +177,10 @@ int main()
         }));
     join->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("join", join);
-    // Set initial scene
-    sceneManager.SetInitialScene("mainMenu");
+
+    GameScene* game = new GameScene();
+    sceneManager.AddScene("game", game);
+
     // Client message functions
     clientService.AddMessageFunction("PING", [table, &pingClock](sf::Packet& packet){
         sf::Time ping = pingClock.restart();
@@ -191,9 +199,13 @@ int main()
         theme1.stop();
         sceneManager.ChangeScene("mainMenu");
     });
+
+    // Set initial scene
+    sceneManager.SetInitialScene("mainMenu");
     // Limit framerate to 60
     window.setFramerateLimit(60);
     // Main loop
+
     while (window.isOpen())
     {
         // Delta time
@@ -203,19 +215,11 @@ int main()
         // Update scene
         sceneManager.Update(deltaTime);
         // Clear the window
-        window.clear();
+        window.clear(sf::Color(sf::Color(200, 200, 200, 255)));
         // Draw current scene
         sceneManager.Draw(window);
         // Display everything in the window
         window.display();
-        // Handle received client messages
-        clientService.Receive();
-    }
-    // Terminate all threads
-    hostService.Stop();
-    if(hostThread.joinable())
-    {
-        hostThread.join();
     }
     return 0;
 }

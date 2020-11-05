@@ -16,6 +16,7 @@ void SceneManager::AddScene(const std::string& sceneName, Scene* scenePointer)
 void SceneManager::SetInitialScene(const std::string& sceneName)
 {
     currentScene_ = scenes_[sceneName];
+    currentScene_->Init();
 }
 
 void SceneManager::ChangeScene(const std::string& sceneName)
