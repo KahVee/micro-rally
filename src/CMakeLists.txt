@@ -20,16 +20,17 @@ project (EXECUTABLE_NAME)
 add_executable(${EXECUTABLE_NAME} "")
 target_sources(${EXECUTABLE_NAME} PRIVATE
     "main.cpp"
+    "constants.hpp"
     "GameObject/Game.hpp"
     "GameObject/Game.cpp"
     "GameObject/GameObject.cpp"
     "GameObject/GameObject.hpp"
     "GameObject/DynamicObject.hpp"
-	"GameObject/DynamicObject.cpp"
-	"GameObject/Tire.cpp"
+    "GameObject/DynamicObject.cpp"
+    "GameObject/Tire.cpp"
     "GameObject/Tire.hpp"
-	"GameObject/Car.hpp"
-	"GameObject/Car.cpp"
+    "GameObject/Car.hpp"
+    "GameObject/Car.cpp"
     "scene/SceneManager.hpp"
     "scene/SceneManager.cpp"
     "scene/Scene.hpp"
@@ -37,31 +38,31 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "scene/MenuScene.cpp"
     "scene/GameScene.hpp"
     "scene/GameScene.cpp"
-    # "scene/SceneComponent.hpp"
-    # "scene/ButtonSceneComponent.hpp"
-    # "scene/ButtonSceneComponent.cpp"
-    # "scene/TextSceneComponent.hpp"
-    # "scene/TextSceneComponent.cpp"
-    # "scene/PictureSceneComponent.hpp"
-    # "scene/PictureSceneComponent.cpp"
-    # "scene/TextInputSceneComponent.hpp"
-    # "scene/TextInputSceneComponent.cpp"
-    # "scene/TableSceneComponent.hpp"
-    # "scene/TableSceneComponent.cpp"
-    # "scene/SliderSceneComponent.hpp"
-    # "scene/SliderSceneComponent.cpp"
-    # "network/HostService.hpp"
-    # "network/HostService.cpp"
-    # "network/ClientService.hpp"
-    # "network/ClientService.cpp"
+    "scene/SceneComponent.hpp"
+    "scene/ButtonSceneComponent.hpp"
+    "scene/ButtonSceneComponent.cpp"
+    "scene/TextSceneComponent.hpp"
+    "scene/TextSceneComponent.cpp"
+    "scene/PictureSceneComponent.hpp"
+    "scene/PictureSceneComponent.cpp"
+    "scene/TextInputSceneComponent.hpp"
+    "scene/TextInputSceneComponent.cpp"
+    "scene/TableSceneComponent.hpp"
+    "scene/TableSceneComponent.cpp"
+    "scene/SliderSceneComponent.hpp"
+    "scene/SliderSceneComponent.cpp"
+    "network/HostService.hpp"
+    "network/HostService.cpp"
+    "network/ClientService.hpp"
+    "network/ClientService.cpp"
 )
 
 ## If you want to link SFML statically
 # set(SFML_STATIC_LIBRARIES TRUE)
 
-## In most cases better set in the CMake cache
-# set(SFML_DIR "<sfml root prefix>/lib/cmake/SFML")
-
+# Find SFML library
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/SFML/cmake/Modules")
+find_package(SFML 2.5 COMPONENTS system window graphics audio network)
 target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio sfml-network)
 
 # Find Box2D library
