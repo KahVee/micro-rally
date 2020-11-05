@@ -1,6 +1,7 @@
 #include "GameScene.hpp"
 
 #include <vector>
+#include <iostream>
 
 GameScene::~GameScene() {
     delete game_;
@@ -55,6 +56,9 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
 void GameScene::Update(const sf::Time& deltaTime)
 {
     game_->Update(deltaTime.asSeconds());
+
+    // This line prints the friction under the car
+    // std::cout << game_->GetMap()->GetFriction(game_->GetPlayerCar()->GetTransform().p) << std::endl;
 }
 void GameScene::Draw(sf::RenderWindow& window)
 {

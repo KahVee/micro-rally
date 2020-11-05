@@ -17,9 +17,13 @@ GameMap::~GameMap() {
     }
 }
 
+/* 
+ * Gets the friction value of a tile in the map.
+ * The reference frame is always in the same orientation as the map.
+ */
 const float GameMap::GetFriction(b2Vec2 v) const {
-    int x = static_cast<int>(v.x);
-    int y = static_cast<int>(v.y);
+    int x = static_cast<int>(v.x/tileSize_);
+    int y = static_cast<int>(v.y/tileSize_);
     if (x >= 0 && x < width_ && y >= 0 && y< height_) {
         int row = height_ - y - 1;
         int column = x;
@@ -32,6 +36,9 @@ const float GameMap::GetFriction(b2Vec2 v) const {
 
 }
 
+/* 
+ * Loads the config file for tiles and loads a saved map file.
+ */
 void GameMap::LoadMapFile(const std::string& filepath) {
     // Read json file (tile types)
     std::ifstream tilesFile("../config/map_tile_config.json");
@@ -73,6 +80,15 @@ void GameMap::LoadMapFile(const std::string& filepath) {
     mapDrawable.load("/home/markus/School/cpp_proj/micro-machines-2020-1/res/mc_texture.png",
         PIXELS_PER_METER*tileSize_, map_, width_, height_);
     std::cout << "Map loaded!" << std::endl;
+}
+
+// TODO: when cameras are properly implemented, make sure this moves as well
+void GameMap::Update() {
+    b2Vec2 worldPos = transform_.p;
+    float worldRot = transform_.q.GetAngle();
+    mapDrawable.setPosition(sf::Vector2f(PIXELS_PER_METER*worldPos.x, 
+        WINDOW_HEIGHT- PIXELS_PER_METER*(worldPos.y + tileSize_*height_)));
+    mapDrawable.setRotation(-worldRot*RAD_TO_DEG);
 }
 
 b2Transform GameMap::GetTransform() const {
