@@ -58,6 +58,9 @@ void GameScene::Update(const sf::Time& deltaTime)
 }
 void GameScene::Draw(sf::RenderWindow& window)
 {
+    // Draw map
+    window.draw(game_->GetMap()->mapDrawable);
+    // Draw dynamic objects
     std::vector<DynamicObject*> objects = game_->GetObjects();
     for(auto o: objects) {
         window.draw(o->GetSprite());

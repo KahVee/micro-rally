@@ -11,6 +11,7 @@ Game::Game() {
     objects_ = std::vector<DynamicObject*>();
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
+    map_ = new GameMap(1.0);
 
     playerCar_ = new Car("../res/f1.png", world_, 2, 4);
 
@@ -34,6 +35,11 @@ std::vector<DynamicObject*> Game::GetObjects(){
 Car *Game::GetPlayerCar() {
     return playerCar_;
 }
+
+GameMap *Game::GetMap() {
+    return map_;
+}
+
 
 void Game::Init() {
 
