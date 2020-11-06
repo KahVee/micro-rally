@@ -177,7 +177,7 @@ int main()
         }));
     join->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("join", join);
-
+    // Create game scene ------------------------------------------------------------------------------------------
     GameScene* game = new GameScene();
     sceneManager.AddScene("game", game);
 
@@ -215,13 +215,14 @@ int main()
         // Update scene
         sceneManager.Update(deltaTime);
         // Clear the window
-        window.clear(sf::Color(sf::Color(200, 200, 200, 255)));
+        window.clear(sf::Color(200, 200, 200, 255));
         // Draw current scene
         sceneManager.Draw(window);
         // Display everything in the window
         window.display();
+        // Handle received client messages
+        clientService.Receive();
     }
-    return 0;
     // Terminate all threads
     hostService.Stop();
     if(hostThread.joinable())
