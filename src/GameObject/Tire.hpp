@@ -26,6 +26,6 @@ class Tire : public DynamicObject {
         const float dragForceMultiplier = 2;
         void PrivateUpdate(float dt);
 
-        b2Vec2 ForwardVelocity();
-        b2Vec2 LateralVelocity();
+        float ForwardVelocity();
+        float LateralVelocity();
 };
