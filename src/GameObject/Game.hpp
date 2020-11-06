@@ -6,6 +6,7 @@
 #include "GameObject.hpp"
 #include "DynamicObject.hpp"
 #include "Car.hpp"
+#include "GameMap.hpp"
 
 class Game {
     public:
@@ -14,15 +15,15 @@ class Game {
 
         std::vector<DynamicObject*> GetObjects();
         Car *GetPlayerCar();
+        GameMap *GetMap();
 
         void Init();
         void Update(float dt);
-        sf::Sprite GetMapSprite();
 
     private:
         Car *playerCar_;
         b2World *world_;
-        //Map map_;
+        GameMap *map_;
         std::vector<DynamicObject*> objects_;
         sf::Texture mapTexture_;
         sf::Sprite mapSprite_;

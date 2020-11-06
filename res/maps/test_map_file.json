@@ -1,0 +1,22 @@
+{
+    "width": 30,
+    "height": 15,
+    "tileLayout": [
+        "..............................",
+        "..............................",
+        "....AAAAAAAAAAAAAAAAAAAAA.....",
+        "....AAAAAAAAAAAAAAAAAAAAA.....",
+        "....AAAA..............AAAA....",
+        "....AAAA..............AAAA....",
+        "....AAAA..............AAAA....",
+        "....AAAA..............AAAA....",
+        "....AAAAAAAAAAAA......AAAA....",
+        "....AAAA,,,AAAAA......AAAA....",
+        "....AAAA,,,AAAAAAAAAAAAAAA....",
+        "....AAAAAAAAAAAAAAAAAAAAAA....",
+        "................AAAAAAAAAA....",
+        "..............................",
+        ".............................."
+    ]
+    
+}

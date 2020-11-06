@@ -11,6 +11,7 @@ Game::Game() {
     objects_ = std::vector<DynamicObject*>();
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
+    map_ = new GameMap(5.0);
 
     playerCar_ = new Car("../res/f1.png", world_, 2, 4);
 
@@ -32,6 +33,7 @@ Game::~Game() {
         delete o;
     }
     delete world_;
+    delete map_;
 }
 
 std::vector<DynamicObject*> Game::GetObjects(){
@@ -42,6 +44,11 @@ Car *Game::GetPlayerCar() {
     return playerCar_;
 }
 
+GameMap *Game::GetMap() {
+    return map_;
+}
+
+
 void Game::Init() {
 
 }
@@ -50,10 +57,6 @@ void Game::Update(float dt) {
     for(auto object: objects_) {
         object->Update(dt);
     }
+    map_->Update();
     world_->Step(dt, 16, 16);
-}
-
-sf::Sprite Game::GetMapSprite()
-{
-    return mapSprite_;
 }

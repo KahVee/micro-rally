@@ -1,6 +1,7 @@
 #include "GameScene.hpp"
 
 #include <vector>
+#include <iostream>
 
 GameScene::~GameScene() {
     delete game_;
@@ -55,6 +56,9 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
 void GameScene::Update(const sf::Time& deltaTime)
 {
     game_->Update(deltaTime.asSeconds());
+
+    // This line prints the friction under the car
+    // std::cout << game_->GetMap()->GetFriction(game_->GetPlayerCar()->GetTransform().p) << std::endl;
 }
 void GameScene::Draw(sf::RenderWindow& window)
 {
@@ -63,7 +67,9 @@ void GameScene::Draw(sf::RenderWindow& window)
     view.setCenter(game_->GetPlayerCar()->GetSprite().getPosition());
     //view.setRotation(game_->GetPlayerCar()->GetTransform().q.GetAngle() * -RAD_TO_DEG);
     window.setView(view);
-    window.draw(game_->GetMapSprite());
+    // Draw map
+    window.draw(game_->GetMap()->GetMapDrawable());
+    // Draw dynamic objects
     std::vector<DynamicObject*> objects = game_->GetObjects();
     for(auto o: objects) {
         window.draw(o->GetSprite());
@@ -73,14 +79,14 @@ void GameScene::Draw(sf::RenderWindow& window)
     sf::RectangleShape rectangle({window.getSize().x * 0.25f, window.getSize().y * 0.25f});
     rectangle.setPosition({window.getSize().x * 0.75f, 0.0f});
     rectangle.setOutlineThickness(5.0f);
-    rectangle.setFillColor(sf::Color::Blue);
     rectangle.setOutlineColor(sf::Color::Black);
     window.draw(rectangle);
     // Draw minimap
-    sf::View minimapView(sf::FloatRect(0.f, 0.f, game_->GetMapSprite().getGlobalBounds().width, game_->GetMapSprite().getGlobalBounds().height ));
+    sf::View minimapView(sf::FloatRect(0.f, 0.f, game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER, game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER));
     minimapView.setViewport(sf::FloatRect(0.75f, 0.f, 0.25f, 0.25f)); // TODO Stop using magic numbers
     window.setView(minimapView);
-    window.draw(game_->GetMapSprite());
+    // Draw map
+    window.draw(game_->GetMap()->GetMapDrawable());
     for(auto o: objects) {
         window.draw(o->GetSprite());
     }
