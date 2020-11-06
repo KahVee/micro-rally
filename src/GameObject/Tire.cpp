@@ -24,9 +24,9 @@ Tire::~Tire() {
 void Tire::UpdateFriction() {
     //TODO: Test ApplyForce() too
     //Stops tire from sliding sideways, TODO: add a variable multiplier
-    body_->ApplyLinearImpulse(body_->GetMass() * -LateralVelocity(), body_->GetWorldCenter(), true);
+    body_->ApplyLinearImpulse(body_->GetMass() * -LateralVelocity() * body_->GetWorldVector(b2Vec2(1,0)), body_->GetWorldCenter(), true);
     //"Rolling resistance", TODO: add surface traction to this
-    body_->ApplyForce(-dragForceMultiplier*ForwardVelocity(), body_->GetWorldCenter(), true);
+    body_->ApplyForce(-dragForceMultiplier * ForwardVelocity() * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
 }
 
 void Tire::UpdateDrive(bool isAccelerating, bool isBraking) {
@@ -34,13 +34,13 @@ void Tire::UpdateDrive(bool isAccelerating, bool isBraking) {
     float force = 0;
     if(isAccelerating) {
         targetSpeed = car_->GetMaxSpeed();
-        if(targetSpeed > ForwardVelocity().Length()) {
+        if(targetSpeed > ForwardVelocity()) {
             force = car_->GetEnginePower();
         } 
     }
     if(isBraking) {
-        targetSpeed = car_->GetReverseSpeed();
-        if(targetSpeed < ForwardVelocity().Length()) {
+        targetSpeed = -car_->GetReverseSpeed();
+        if(targetSpeed < ForwardVelocity()) {
             force = -car_->GetBrakingPower();
         }
     }
@@ -70,12 +70,10 @@ void Tire::PrivateUpdate(float dt) {
     //UpdateFriction();
 }
 
-b2Vec2 Tire::ForwardVelocity() {
-    b2Vec2 forwardDirection = body_->GetWorldVector(b2Vec2(0,1));
-    return b2Dot(forwardDirection, body_->GetLinearVelocity()) * forwardDirection;
+float Tire::ForwardVelocity() {
+    return b2Dot(body_->GetWorldVector(b2Vec2(0,1)), body_->GetLinearVelocity());
 }
 
-b2Vec2 Tire::LateralVelocity() {
-    b2Vec2 lateralDirection = body_->GetWorldVector(b2Vec2(1,0));
-    return b2Dot(lateralDirection, body_->GetLinearVelocity()) * lateralDirection;
+float Tire::LateralVelocity() {
+    return b2Dot(body_->GetWorldVector(b2Vec2(1,0)), body_->GetLinearVelocity());
 }

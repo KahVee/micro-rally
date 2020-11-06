@@ -12,6 +12,7 @@
 Car::Car(std::string spritePath, b2World *world, int width, int height): DynamicObject(spritePath, world) {
     enginePower_ = 100;
     maxSpeed_ = 40;
+    reverseSpeed_ = 20;
     brakingPower_ = 50;
     tireLockAngle_ = 35 * DEG_TO_RAD;
     tireTurnSpeed_ = 160;
