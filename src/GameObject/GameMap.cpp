@@ -78,7 +78,7 @@ void GameMap::LoadMapFile(const std::string& filepath) {
         map_.push_back(tileTypes_[tileChar]);
     }
 
-    mapDrawable.load("/home/markus/School/cpp_proj/micro-machines-2020-1/res/mc_texture.png",
+    mapDrawable.load("../res/mc_texture.png",
         PIXELS_PER_METER*tileSize_, map_, width_, height_);
     std::cout << "Map loaded!" << std::endl;
 }
