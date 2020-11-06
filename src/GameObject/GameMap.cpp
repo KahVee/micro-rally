@@ -46,6 +46,7 @@ void GameMap::LoadMapFile(const std::string& filepath) {
     tilesFile >> tileTypeJson;
     tilesFile.close();
 
+    // TODO: Add exception handling
     // Parse tiletypes and add them to tileTypes_
     for (int i = 0; i < tileTypeJson["tileTypes"].size(); i++) {
         auto tile_stats = tileTypeJson["tileTypes"][i];
