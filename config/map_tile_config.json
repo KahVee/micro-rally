@@ -1,0 +1,22 @@
+{
+    "tileTypes": [
+        {
+            "name": "asphalt",
+            "fileChar": "A",
+            "friction": 1.0,
+            "texture": 1
+        },
+        {
+            "name": "dirt",
+            "fileChar": ".",
+            "friction": 1.6,
+            "texture": 2
+        },
+        {
+            "name": "sand",
+            "fileChar": ",",
+            "friction": 2.1,
+            "texture": 18
+        }
+    ]
+}
