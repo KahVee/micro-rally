@@ -11,7 +11,7 @@ public:
         PlayerName = name;
         std::string turha;
         std::ofstream file;
-        file.open("settings.txt");
+        file.open("settings.json");
         file << "PlayerName:" << name << std::endl;
         file.close();
         return 0;
@@ -22,7 +22,7 @@ public:
         std::string name;
         std::string turha = "a";
         std::ifstream file;
-        file.open("settings.txt");
+        file.open("settings.json");
         while (!file.eof() && turha != "PlayerName")
         {
             std::getline(file, turha, ':');
