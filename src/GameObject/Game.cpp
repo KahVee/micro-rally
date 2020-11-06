@@ -18,6 +18,13 @@ Game::Game() {
         objects_.push_back((DynamicObject*)tire);
     }
     objects_.push_back((DynamicObject*)playerCar_);
+    // Load texture for menu background
+    if (!mapTexture_.loadFromFile("../res/Lemon.jpg"))
+    {
+        std::cout << "texture load error" << std::endl;
+    }
+    // Set sprite
+    mapSprite_.setTexture(mapTexture_);
 }
 
 Game::~Game() {
@@ -44,4 +51,9 @@ void Game::Update(float dt) {
         object->Update(dt);
     }
     world_->Step(dt, 16, 16);
+}
+
+sf::Sprite Game::GetMapSprite()
+{
+    return mapSprite_;
 }

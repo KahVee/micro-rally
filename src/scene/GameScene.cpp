@@ -58,10 +58,34 @@ void GameScene::Update(const sf::Time& deltaTime)
 }
 void GameScene::Draw(sf::RenderWindow& window)
 {
+    // Draw map and objects
+    sf::View view(sf::FloatRect(0.f, 0.f, 640.f, 360.f));
+    view.setCenter(game_->GetPlayerCar()->GetSprite().getPosition());
+    //view.setRotation(game_->GetPlayerCar()->GetTransform().q.GetAngle() * -RAD_TO_DEG);
+    window.setView(view);
+    window.draw(game_->GetMapSprite());
     std::vector<DynamicObject*> objects = game_->GetObjects();
     for(auto o: objects) {
         window.draw(o->GetSprite());
     }
+    // Draw minimap border
+    window.setView(window.getDefaultView());
+    sf::RectangleShape rectangle({window.getSize().x * 0.25f, window.getSize().y * 0.25f});
+    rectangle.setPosition({window.getSize().x * 0.75f, 0.0f});
+    rectangle.setOutlineThickness(5.0f);
+    rectangle.setFillColor(sf::Color::Blue);
+    rectangle.setOutlineColor(sf::Color::Black);
+    window.draw(rectangle);
+    // Draw minimap
+    sf::View minimapView(sf::FloatRect(0.f, 0.f, game_->GetMapSprite().getGlobalBounds().width, game_->GetMapSprite().getGlobalBounds().height ));
+    minimapView.setViewport(sf::FloatRect(0.75f, 0.f, 0.25f, 0.25f)); // TODO Stop using magic numbers
+    window.setView(minimapView);
+    window.draw(game_->GetMapSprite());
+    for(auto o: objects) {
+        window.draw(o->GetSprite());
+    }
+    // Set default view back
+    window.setView(window.getDefaultView());
 }
 
 // This is called when the current scene is changed to this one

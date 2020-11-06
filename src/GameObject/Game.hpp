@@ -17,10 +17,13 @@ class Game {
 
         void Init();
         void Update(float dt);
+        sf::Sprite GetMapSprite();
 
     private:
         Car *playerCar_;
         b2World *world_;
         //Map map_;
         std::vector<DynamicObject*> objects_;
+        sf::Texture mapTexture_;
+        sf::Sprite mapSprite_;
 };

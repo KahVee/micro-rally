@@ -4,6 +4,7 @@
 
 #include "Scene.hpp"
 #include "../GameObject/Game.hpp"
+#include "../constants.hpp"
 
 /*A Scene that contains SceneComponents.*/
 class GameScene : public Scene
