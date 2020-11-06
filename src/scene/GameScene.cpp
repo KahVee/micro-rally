@@ -3,6 +3,17 @@
 #include <vector>
 #include <iostream>
 
+GameScene::GameScene()
+{
+    // Load Theme2
+    if(!theme2_.openFromFile("../res/boogiewoogiestomp.wav"))
+    {
+        std::cout << "audio load error" << std::endl;
+    }
+    theme2_.setVolume(15.f);
+    theme2_.setLoop(true);
+}
+
 GameScene::~GameScene() {
     delete game_;
 }
@@ -102,10 +113,12 @@ void GameScene::Init()
     game_->GetPlayerCar()->Brake(false);
     game_->GetPlayerCar()->TurnLeft(false);
     game_->GetPlayerCar()->TurnRight(false);
+    theme2_.play();
 }
 
 // This is called when the current scene is changed to another one from this
 void GameScene::Reset()
 {
+    theme2_.stop();
     delete game_;
 }

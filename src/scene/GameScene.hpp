@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Scene.hpp"
 #include "../GameObject/Game.hpp"
@@ -10,7 +11,7 @@
 class GameScene : public Scene
 {
 public:
-    GameScene() = default;
+    GameScene();
     GameScene(const GameScene& gameScene) = delete;
     GameScene& operator=(const GameScene& gameScene) = delete;
     ~GameScene();
@@ -22,4 +23,5 @@ public:
     // Public members
 private:
     Game *game_;
+    sf::Music theme2_;
 };

@@ -25,6 +25,4 @@ class Game {
         b2World *world_;
         GameMap *map_;
         std::vector<DynamicObject*> objects_;
-        sf::Texture mapTexture_;
-        sf::Sprite mapSprite_;
 };
