@@ -26,6 +26,7 @@ Game::~Game() {
         delete o;
     }
     delete world_;
+    delete map_;
 }
 
 std::vector<DynamicObject*> Game::GetObjects(){

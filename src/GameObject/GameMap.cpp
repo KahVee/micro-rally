@@ -78,18 +78,18 @@ void GameMap::LoadMapFile(const std::string& filepath) {
         map_.push_back(tileTypes_[tileChar]);
     }
 
-    mapDrawable.load("../res/mc_texture.png",
+    mapDrawable_.load("../res/mc_texture.png",
         PIXELS_PER_METER*tileSize_, map_, width_, height_);
     std::cout << "Map loaded!" << std::endl;
 }
 
-// TODO: when cameras are properly implemented, make sure this moves as well
 void GameMap::Update() {
-    b2Vec2 worldPos = transform_.p;
-    float worldRot = transform_.q.GetAngle();
-    mapDrawable.setPosition(sf::Vector2f(PIXELS_PER_METER*worldPos.x, 
-        WINDOW_HEIGHT- PIXELS_PER_METER*(worldPos.y + tileSize_*height_)));
-    mapDrawable.setRotation(-worldRot*RAD_TO_DEG);
+    // This currently works without these lines. Only left here just in case
+    // b2Vec2 worldPos = transform_.p;
+    // float worldRot = transform_.q.GetAngle();
+    // mapDrawable_.setPosition(sf::Vector2f(PIXELS_PER_METER*worldPos.x, 
+    //    WINDOW_HEIGHT- PIXELS_PER_METER*(worldPos.y + tileSize_*height_)));
+    // mapDrawable_.setRotation(-worldRot*RAD_TO_DEG);
 }
 
 b2Transform GameMap::GetTransform() const {
@@ -98,4 +98,24 @@ b2Transform GameMap::GetTransform() const {
 
 void GameMap::SetTransform(b2Vec2 t, float a) {
     transform_.Set(t, a);
+}
+
+GameMapDrawable GameMap::GetMapDrawable() const
+{
+    return mapDrawable_;
+}
+
+int GameMap::GetWidth() const
+{
+    return width_;
+}
+
+int GameMap::GetHeight() const
+{
+    return height_;
+}
+
+float GameMap::GetTileSize() const
+{
+    return tileSize_;
 }

@@ -21,7 +21,8 @@
 #include "network/HostService.hpp"
 #include "network/ClientService.hpp"
 
-#include "constants.hpp"
+// INCLUDED IN GameScene already (circular dependency if uncommented)
+//#include "constants.hpp"
 
 int main()
 {

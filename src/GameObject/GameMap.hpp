@@ -20,8 +20,12 @@ public:
 
     const float GetFriction(b2Vec2) const;
     void LoadMapFile(const std::string&);
-    GameMapDrawable mapDrawable;
+    GameMapDrawable GetMapDrawable() const;
+    int GetWidth() const;
+    int GetHeight() const;
+    float GetTileSize() const;
 private:
+    GameMapDrawable mapDrawable_;
     int width_;
     int height_;
     float tileSize_ = 1.0; // In respect to simluation coordinates
