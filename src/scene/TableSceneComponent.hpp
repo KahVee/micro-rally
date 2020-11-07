@@ -11,7 +11,7 @@
 class TableSceneComponent : public SceneComponent
 {
 public:
-    TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, int rowLimit, const std::vector<int>& columnCharacterLimits);
+    TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, int rowLimit, const std::vector<int>& columnCharacterLimits);
     ~TableSceneComponent() = default;
     void HandlePacket(sf::Packet& packet);
     void HandleEvent(sf::Event& event, sf::RenderWindow& window);

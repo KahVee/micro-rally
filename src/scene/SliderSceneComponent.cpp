@@ -1,6 +1,6 @@
 #include "SliderSceneComponent.hpp"
 
-SliderSceneComponent::SliderSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, const sf::Color& lineColor, float relativeButtonPosition, std::function<std::string(float)>  onSlide) : SceneComponent(relativePosition, relativeSize), onSlide_(onSlide), backgroundColor_(buttonColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff), relativeButtonPosition_(relativeButtonPosition), textString_(text)
+SliderSceneComponent::SliderSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, const sf::Color& lineColor, float relativeButtonPosition, std::function<std::string(float)>  onSlide) : SceneComponent(relativePosition, relativeSize, componentClass), onSlide_(onSlide), backgroundColor_(buttonColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff), relativeButtonPosition_(relativeButtonPosition), textString_(text)
 {
     // Set text
     text_.setString(textString_ + onSlide_(relativeButtonPosition_));

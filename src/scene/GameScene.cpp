@@ -20,7 +20,7 @@ GameScene::~GameScene() {
 
 void GameScene::HandlePacket(sf::Packet& packet)
 {
-
+    // TODO HANDLE CHAT, PING
 }
 
 void GameScene::HandleEvents(sf::RenderWindow& window)

@@ -1,6 +1,6 @@
 #include "TextInputSceneComponent.hpp"
 
-TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, int characterLimit, std::function<std::string(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
+TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, int characterLimit, std::function<std::string(std::string)> onSubmit) : SceneComponent(relativePosition, relativeSize, componentClass), backgroundColor_(backgroundColor), highlightColor_(highlightColor), characterLimit_(characterLimit), onSubmit_(onSubmit)
 {
     // Set text
     if(text.length() > characterLimit)

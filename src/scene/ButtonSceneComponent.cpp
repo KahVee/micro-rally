@@ -1,6 +1,6 @@
 #include "ButtonSceneComponent.hpp"
 
-ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff)
+ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize, componentClass), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff)
 {
     // Set text
     text_.setString(text);

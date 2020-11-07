@@ -1,6 +1,6 @@
 #include "TableSceneComponent.hpp"
 
-TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, int rowLimit, const std::vector<int>& columnCharacterLimits) : SceneComponent(relativePosition, relativeSize), rowLimit_(rowLimit), columnCharacterLimits_(columnCharacterLimits)
+TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, int rowLimit, const std::vector<int>& columnCharacterLimits) : SceneComponent(relativePosition, relativeSize, componentClass), rowLimit_(rowLimit), columnCharacterLimits_(columnCharacterLimits)
 {
     // Set text
     text_.setFillColor(textColor);

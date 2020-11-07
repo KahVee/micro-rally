@@ -1,6 +1,6 @@
 #include "PictureSceneComponent.hpp"
 
-PictureSceneComponent::PictureSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Texture& texture) : SceneComponent(relativePosition, relativeSize), texture_(texture)
+PictureSceneComponent::PictureSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Texture& texture) : SceneComponent(relativePosition, relativeSize, componentClass), texture_(texture)
 {
     // Set sprite
     sprite_.setTexture(texture_);

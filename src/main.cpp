@@ -77,10 +77,10 @@ int main()
     sf::Color Gray(100,100,100,100);
     // Create main menu scene ------------------------------------------------------------------------------------------
     MenuScene* mainMenu = new MenuScene();
-    mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
-    mainMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"2D CAR GAME", sf::Color::Red, font));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.32f}, {0.3f, 0.1f}, window,"PLAY NOW", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("game");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.44f}, {0.3f, 0.1f}, window,"HOST", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
+    mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, texture));
+    mainMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"2D CAR GAME", sf::Color::Red, font));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.32f}, {0.3f, 0.1f}, "", window,"PLAY NOW", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("game");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.44f}, {0.3f, 0.1f}, "", window,"HOST", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
         [&hostService, &hostThread, &clientService, &sceneManager, &theme1](){
             if(!hostService.IsRunning())
             {
@@ -96,21 +96,21 @@ int main()
                 }
             }
         }));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.56f}, {0.3f, 0.1f}, window,"JOIN", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("join");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.68f}, {0.3f, 0.1f}, window,"SETTINGS", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("settings");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"QUIT", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&window](){window.close();}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.56f}, {0.3f, 0.1f}, "", window,"JOIN", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("join");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.68f}, {0.3f, 0.1f}, "", window,"SETTINGS", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("settings");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window,"QUIT", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&window](){window.close();}));
     sceneManager.AddScene("mainMenu", mainMenu);
 
     // Create settings scene ------------------------------------------------------------------------------------------
     MenuScene* settings = new MenuScene();
-    settings->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
-    settings->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"SETTINGS", sf::Color::Red, font));
-    settings->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window, playerName, sf::Color::Black, font, Gray, sf::Color::White, 10,
+    settings->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, texture));
+    settings->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"SETTINGS", sf::Color::Red, font));
+    settings->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "", window, playerName, sf::Color::Black, font, Gray, sf::Color::White, 10,
         [&playerName](const std::string& text){
             playerName = text;
             return text;
         }));
-    settings->AddSceneComponent(new SliderSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, window,"Volume: ", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, sf::Color::Black, 0.5f,
+    settings->AddSceneComponent(new SliderSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, "", window,"Volume: ", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, sf::Color::Black, 0.5f,
         [](float relativeButtonPosition){
             float volume = relativeButtonPosition * 100.0f;
             sf::Listener::setGlobalVolume(volume);
@@ -118,15 +118,15 @@ int main()
             ss << std::setw(3) << std::setfill(' ') << static_cast<int>(volume);
             return ss.str();
         }));
-    settings->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
+    settings->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("settings", settings);
     // Create lobby scene ------------------------------------------------------------------------------------------
     MenuScene* lobby = new MenuScene();
-    lobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
-    lobby->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"LOBBY", sf::Color::Red, font));
-    TableSceneComponent* table = new TableSceneComponent({0.05f, 0.2f}, {0.5f, 0.6f}, window, sf::Color::Black, font, Gray, 12, {10, 20});
+    lobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, texture));
+    lobby->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"LOBBY", sf::Color::Red, font));
+    TableSceneComponent* table = new TableSceneComponent({0.05f, 0.2f}, {0.5f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 12, {10, 20});
     lobby->AddSceneComponent(table);
-    lobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.5f, 0.1f}, window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
+    lobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.5f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &playerName, &pingClock](const std::string& text){
             if(clientService.IsConnected())
             {
@@ -147,7 +147,7 @@ int main()
             }
             return "";
         }));
-    lobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
+    lobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
         [&hostService, &hostThread, &clientService, &sceneManager, &theme1](){
             hostService.Stop();
             // Terminate thread if needed
@@ -162,9 +162,9 @@ int main()
     sceneManager.AddScene("lobby", lobby);
     // Create join scene ------------------------------------------------------------------------------------------
     MenuScene* join = new MenuScene();
-    join->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, window, texture));
-    join->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, window,"JOIN", sf::Color::Red, font));
-    join->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
+    join->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, texture));
+    join->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"JOIN", sf::Color::Red, font));
+    join->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &sceneManager, &theme1](const std::string& text){
             if(!clientService.IsConnected())
             {
@@ -176,7 +176,7 @@ int main()
             }
             return text;
         }));
-    join->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
+    join->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("mainMenu");}));
     sceneManager.AddScene("join", join);
     // Create game scene ------------------------------------------------------------------------------------------
     GameScene* game = new GameScene();
