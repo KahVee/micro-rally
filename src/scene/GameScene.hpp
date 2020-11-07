@@ -15,6 +15,7 @@ public:
     GameScene(const GameScene& gameScene) = delete;
     GameScene& operator=(const GameScene& gameScene) = delete;
     ~GameScene();
+    void HandlePacket(sf::Packet& packet);
     void HandleEvents(sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);

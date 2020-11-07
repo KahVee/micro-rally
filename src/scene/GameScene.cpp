@@ -18,6 +18,11 @@ GameScene::~GameScene() {
     delete game_;
 }
 
+void GameScene::HandlePacket(sf::Packet& packet)
+{
+
+}
+
 void GameScene::HandleEvents(sf::RenderWindow& window)
 {
     sf::Event event;

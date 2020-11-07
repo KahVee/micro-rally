@@ -22,6 +22,8 @@ TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, c
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
 }
 
+void TableSceneComponent::HandlePacket(sf::Packet& packet){}
+
 void TableSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
 {
     // switch(event.type)

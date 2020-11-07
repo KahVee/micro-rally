@@ -19,6 +19,8 @@ SliderSceneComponent::SliderSceneComponent(const sf::Vector2f& relativePosition,
     
 }
 
+void SliderSceneComponent::HandlePacket(sf::Packet& packet){}
+
 void SliderSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
 {
     switch(event.type)

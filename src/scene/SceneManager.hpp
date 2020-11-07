@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 
 #include "Scene.hpp"
 
@@ -18,6 +19,7 @@ public:
     void SetInitialScene(const std::string& sceneName);
     void ChangeScene(const std::string& sceneName);
     Scene* GetCurrentScene() const;
+    void HandlePacket(sf::Packet& packet);
     void HandleEvents(sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);

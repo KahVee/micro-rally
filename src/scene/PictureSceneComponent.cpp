@@ -13,6 +13,8 @@ PictureSceneComponent::PictureSceneComponent(const sf::Vector2f& relativePositio
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
 }
 
+void PictureSceneComponent::HandlePacket(sf::Packet& packet){}
+
 void PictureSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window){}
 
 void PictureSceneComponent::Update(const sf::Time& deltaTime){}

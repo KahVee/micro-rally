@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 
 /*A virtual class that represents a part of a Scene.*/
 class SceneComponent
@@ -8,6 +9,7 @@ class SceneComponent
 public:
     SceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize) : relativePosition_(relativePosition), relativeSize_(relativeSize) {}
     virtual ~SceneComponent() = default;
+    virtual void HandlePacket(sf::Packet& packet) = 0;
     virtual void HandleEvent(sf::Event& event, sf::RenderWindow& window) = 0;
     virtual void Update(const sf::Time& deltaTime) = 0;
     virtual void Draw(sf::RenderWindow& window) = 0;

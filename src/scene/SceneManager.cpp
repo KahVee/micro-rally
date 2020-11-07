@@ -31,6 +31,11 @@ Scene* SceneManager::GetCurrentScene() const
     return currentScene_;
 }
 
+void SceneManager::HandlePacket(sf::Packet& packet)
+{
+    currentScene_->HandlePacket(packet);
+}
+
 void SceneManager::HandleEvents(sf::RenderWindow& window)
 {
     currentScene_->HandleEvents(window);
