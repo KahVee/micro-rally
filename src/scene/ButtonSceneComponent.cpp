@@ -18,7 +18,7 @@ ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition,
     
 }
 
-void ButtonSceneComponent::HandlePacket(sf::Packet& packet){}
+void ButtonSceneComponent::HandlePacket(sf::Packet packet){}
 
 void ButtonSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
 {

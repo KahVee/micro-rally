@@ -20,9 +20,11 @@ TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, c
     // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
+    // Set size of deque
+    table_.resize(rowLimit_);
 }
 
-void TableSceneComponent::HandlePacket(sf::Packet& packet)
+void TableSceneComponent::HandlePacket(sf::Packet packet)
 {
     std::string messageType;
     packet >> messageType;
@@ -41,7 +43,25 @@ void TableSceneComponent::HandlePacket(sf::Packet& packet)
             packet >> ping;
             AddRow({"PING", ping});
         }
-    }    
+    }
+    else if (componentClass_ == "playerlist")
+    {
+        if(messageType == "CLIENT_CONNECT")
+        {
+            std::string clientName;
+            sf::Int32 id;
+            packet >> clientName >> id;
+            ReplaceIndex(id, {std::to_string(id), clientName});
+        }
+        else if(messageType == "CLIENT_DISCONNECT")
+        {
+            std::string clientName;
+            sf::Int32 id;
+            packet >> clientName >> id;
+            ReplaceIndex(id, {"",""});
+        }
+    }
+    
 }
 
 void TableSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
@@ -84,6 +104,7 @@ void TableSceneComponent::Init(){}
 void TableSceneComponent::Reset()
 {
     table_.clear();
+    table_.resize(rowLimit_);
     text_.setString("");
 }
 

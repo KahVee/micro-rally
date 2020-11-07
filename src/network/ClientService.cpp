@@ -5,12 +5,16 @@ void ClientService::Init(SceneManager* sceneManager)
     sceneManager_ = sceneManager;
 }
 
-sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout)
+sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout, const std::string& playerName)
 {
     sf::Socket::Status status = socket_.connect(address, port, timeout);
     if(status == sf::Socket::Done)
     {
         selector_.add(socket_);
+        // Send client info to host
+        sf::Packet connectPacket;
+        connectPacket << "CLIENT_CONNECT" << playerName;
+        socket_.send(connectPacket);
     }
     return status;
 }
@@ -20,7 +24,6 @@ void ClientService::Disconnect()
     // Reset clientservice
     selector_.clear();
     socket_.disconnect();
-    sf::Packet packet;
     sceneManager_->ChangeScene("mainMenu");
 }
 
@@ -77,18 +80,42 @@ void ClientService::Receive()
                 std::stringstream ss;
                 ss << std::fixed << std::setprecision(4) << ping.asSeconds();
                 ss << " seconds";
-                sf::Packet pingPacket;
-                pingPacket << "PING" << ss.str();
-                sceneManager_->HandlePacket(pingPacket);
+                sf::Packet sendPacket;
+                sendPacket << "PING" << ss.str();
+                sceneManager_->HandlePacket(sendPacket);
             }
             else if (messageType == "CHAT_MESSAGE")
             {
                 std::string playerName;
                 std::string message;
                 packet >> playerName >> message;
-                sf::Packet messagePacket;
-                messagePacket << "CHAT_MESSAGE" << playerName << message;
-                sceneManager_->HandlePacket(messagePacket);
+                sf::Packet sendPacket;
+                sendPacket << "CHAT_MESSAGE" << playerName << message;
+                sceneManager_->HandlePacket(sendPacket);
+            }
+            else if (messageType == "CLIENT_CONNECT")
+            {
+                sf::Int32 numberOfClients;
+                packet >> numberOfClients;
+                for(int i = 0; i < numberOfClients; i++)
+                {
+                    std::string clientName;
+                    sf::Int32 id;
+                    packet >> clientName >> id;
+                    sf::Packet sendPacket;
+                    sendPacket << "CLIENT_CONNECT" << clientName << id;
+                    sceneManager_->HandlePacket(sendPacket);      
+                }
+            }
+            
+            else if (messageType == "CLIENT_DISCONNECT")
+            {
+                std::string clientName;
+                sf::Int32 id;
+                packet >> clientName >> id;
+                sf::Packet sendPacket;
+                sendPacket << "CLIENT_DISCONNECT" << clientName << id;
+                sceneManager_->HandlePacket(sendPacket);
             }
         }        
     }

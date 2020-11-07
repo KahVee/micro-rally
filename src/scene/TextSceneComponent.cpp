@@ -14,7 +14,7 @@ TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, con
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
 }
 
-void TextSceneComponent::HandlePacket(sf::Packet& packet){}
+void TextSceneComponent::HandlePacket(sf::Packet packet){}
 
 void TextSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window){}
 

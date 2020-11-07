@@ -14,7 +14,7 @@ public:
     ClientService() = default;
     ~ClientService() = default;
     void Init(SceneManager* sceneManager);
-    sf::Socket::Status Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout);
+    sf::Socket::Status Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout, const std::string& playerName);
     void Disconnect();
     bool IsConnected();
     void Send(sf::Packet& packet);

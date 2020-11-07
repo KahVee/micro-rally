@@ -23,6 +23,6 @@ public:
     void Reset();
     // Public members
 private:
-    Game *game_;
+    Game *game_ = nullptr;
     sf::Music theme2_;
 };

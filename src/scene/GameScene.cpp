@@ -15,7 +15,10 @@ GameScene::GameScene()
 }
 
 GameScene::~GameScene() {
-    delete game_;
+    if(game_ != nullptr)
+    {
+        delete game_;
+    }
 }
 
 void GameScene::HandlePacket(sf::Packet& packet)
@@ -125,5 +128,9 @@ void GameScene::Init()
 void GameScene::Reset()
 {
     theme2_.stop();
-    delete game_;
+    if(game_ != nullptr)
+    {
+        delete game_;
+        game_ = nullptr;
+    }
 }

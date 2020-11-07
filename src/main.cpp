@@ -77,12 +77,12 @@ int main()
     mainMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"2D CAR GAME", sf::Color::Red, font));
     mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.32f}, {0.3f, 0.1f}, "", window,"PLAY NOW", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff, [&sceneManager](){sceneManager.ChangeScene("game");}));
     mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.44f}, {0.3f, 0.1f}, "", window,"HOST", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuff,
-        [&hostService, &hostThread, &clientService, &sceneManager](){
+        [&hostService, &hostThread, &clientService, &sceneManager, &playerName](){
             if(!hostService.IsRunning())
             {
                 if(hostService.Listen(25000) == sf::Socket::Done)
                 {
-                    if(clientService.Connect("localhost", 25000, sf::seconds(5.0f)) == sf::Socket::Done)
+                    if(clientService.Connect("localhost", 25000, sf::seconds(5.0f), playerName) == sf::Socket::Done)
                     {
                         hostThread = std::thread(&HostService::Start, std::ref(hostService));
                         sceneManager.ChangeScene("lobby");
@@ -119,8 +119,9 @@ int main()
     MenuScene* lobby = new MenuScene();
     lobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, texture));
     lobby->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"LOBBY", sf::Color::Red, font));
-    lobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.5f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 12, {10, 20}));
-    lobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.5f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
+    lobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 12, {10, 20}));
+    lobby->AddSceneComponent(new TableSceneComponent({0.55f, 0.2f}, {0.4f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, 12, {10, 20}));
+    lobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &playerName](const std::string& text){
             if(clientService.IsConnected())
             {
@@ -157,10 +158,10 @@ int main()
     join->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, texture));
     join->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"JOIN", sf::Color::Red, font));
     join->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
-        [&clientService, &sceneManager](const std::string& text){
+        [&clientService, &sceneManager, &playerName](const std::string& text){
             if(!clientService.IsConnected())
             {
-                if(clientService.Connect(text, 25000, sf::seconds(5.0f)) == sf::Socket::Done)
+                if(clientService.Connect(text, 25000, sf::seconds(5.0f), playerName) == sf::Socket::Done)
                 {
                     sceneManager.ChangeScene("lobby");
                 }

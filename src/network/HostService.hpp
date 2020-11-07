@@ -4,6 +4,8 @@
 #include <string>
 #include <list>
 
+#include "Network.hpp"
+
 /*A class that represents the host-side of network communication.*/
 class HostService
 {
@@ -22,6 +24,6 @@ private:
     void RemoveClient(sf::TcpSocket*& client);
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
-    std::list<sf::TcpSocket*> clients_;
+    std::list<Client> clients_;
     bool running_ = false;
 };

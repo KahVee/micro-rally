@@ -31,7 +31,7 @@ TextInputSceneComponent::TextInputSceneComponent(const sf::Vector2f& relativePos
     cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
 }
 
-void TextInputSceneComponent::HandlePacket(sf::Packet& packet){}
+void TextInputSceneComponent::HandlePacket(sf::Packet packet){}
 
 void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
 {
