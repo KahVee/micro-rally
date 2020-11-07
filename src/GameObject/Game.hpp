@@ -9,20 +9,20 @@
 #include "GameMap.hpp"
 
 class Game {
-    public:
-        Game();
-        ~Game();
+public:
+    Game();
+    ~Game();
 
-        std::vector<DynamicObject*> GetObjects();
-        Car *GetPlayerCar();
-        GameMap *GetMap();
+    std::vector<DynamicObject*> GetObjects();
+    Car *GetPlayerCar();
+    GameMap *GetMap();
 
-        void Init();
-        void Update(float dt);
+    void Init();
+    void Update(float dt);
 
-    private:
-        Car *playerCar_;
-        b2World *world_;
-        GameMap *map_;
-        std::vector<DynamicObject*> objects_;
+private:
+    Car *playerCar_;
+    b2World *world_;
+    GameMap *map_;
+    std::vector<DynamicObject*> objects_;
 };

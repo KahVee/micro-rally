@@ -9,7 +9,7 @@
  * At most basic level, a game object has a transform (position and rotation) and a sprite.
  */
 class GameObject {
-    public:
+public:
     virtual ~GameObject() = 0;
 
     sf::Sprite GetSprite() const;
@@ -18,7 +18,7 @@ class GameObject {
     virtual b2Transform GetTransform() const = 0;
     virtual void SetTransform(b2Vec2, float) = 0;
 
-    protected:
+protected:
     void LoadSprite(std::string file);
     sf::Texture texture_;
     sf::Sprite sprite_;

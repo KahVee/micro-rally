@@ -11,7 +11,7 @@ class Tire;
 #include "Tire.hpp"
 
 class Car : public DynamicObject {
-    public:
+public:
     Car(std::string spritePath, b2World *world, int width, int height);
     virtual ~Car();
 
@@ -31,7 +31,7 @@ class Car : public DynamicObject {
 
     std::vector<Tire*> GetTires();
 
-    private:
+private:
     b2RevoluteJoint *f1Joint_, *f2Joint_;
     float enginePower_;
     float maxSpeed_;

@@ -16,7 +16,6 @@ Car::Car(std::string spritePath, b2World *world, int width, int height): Dynamic
     brakingPower_ = 50;
     tireLockAngle_ = 35 * DEG_TO_RAD;
     tireTurnSpeed_ = 160;
-    tires_ = std::vector<Tire*>();
 
     b2PolygonShape pShape;
     pShape.SetAsBox(width/2.0, height/2.0);
@@ -60,6 +59,9 @@ Car::Car(std::string spritePath, b2World *world, int width, int height): Dynamic
     jointDef.localAnchorA.Set( 0.8, -1.7 );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
+
+    // Set sprite scale
+    sprite_.setScale(PIXELS_PER_METER * width / sprite_.getLocalBounds().width, PIXELS_PER_METER * height / sprite_.getLocalBounds().height);
 }
 
 Car::~Car() {
