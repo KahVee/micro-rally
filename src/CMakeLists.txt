@@ -67,13 +67,13 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
 # set(SFML_STATIC_LIBRARIES TRUE)
 
 # Find SFML library
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/SFML/cmake/Modules")
+# set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/SFML/cmake/Modules") only needed if program is tested on aalto computers
 find_package(SFML 2.5 COMPONENTS system window graphics audio network)
 target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio sfml-network)
 
 # Find Box2D library
-find_package(box2d REQUIRED PATHS /usr/local/lib/cmake/box2d C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
-target_link_libraries(${EXECUTABLE_NAME} box2d::box2d)
+find_package(Box2D REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
+target_link_libraries(${EXECUTABLE_NAME} Box2D)
 
 # For installing targets (not mandatory)
 #install (TARGETS ${EXECUTABLE_NAME} DESTINATION bin)

@@ -1,9 +1,5 @@
 #include <SFML/Graphics/Sprite.hpp>
-#include <box2d/b2_body.h>
-#include <box2d/b2_world.h>
-#include <box2d/b2_polygon_shape.h>
-#include <box2d/b2_fixture.h>
-#include <box2d/b2_contact.h>
+
 #include <iostream>
 
 #include "../constants.hpp"

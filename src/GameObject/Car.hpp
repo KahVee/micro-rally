@@ -2,9 +2,7 @@
 
 #include <vector>
 #include <SFML/Graphics/Sprite.hpp>
-#include <box2d/b2_body.h>
-#include <box2d/b2_world.h>
-#include <box2d/b2_revolute_joint.h>
+#include <Box2D/Box2D.h>
 
 #include "DynamicObject.hpp"
 class Tire;

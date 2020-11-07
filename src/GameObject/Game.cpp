@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <box2d/b2_math.h>
+#include <Box2D/Box2D.h>
 
 #include "Game.hpp"
 

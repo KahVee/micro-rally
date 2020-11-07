@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <box2d/b2_body.h>
+#include <Box2D/Box2D.h>
 
 /* 
  * All entities in the game world are derived from GameObject (tiles, cars, obstacles)

@@ -1,9 +1,6 @@
 #pragma once
 
-#include <box2d/b2_body.h>
-#include <box2d/b2_world.h>
-#include <box2d/b2_polygon_shape.h>
-#include <box2d/b2_fixture.h>
+#include <Box2D/Box2D.h>
 
 #include "DynamicObject.hpp"
 class Car;
