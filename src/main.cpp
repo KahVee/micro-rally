@@ -61,8 +61,6 @@ int main()
     // theme1.setLoop(true);
     // This object provides delta time
     sf::Clock clock;
-    // Ping clock
-    sf::Clock pingClock;
     // The name of the local player
     std::string playerName = "player";
     // Host and client services
@@ -121,16 +119,14 @@ int main()
     MenuScene* lobby = new MenuScene();
     lobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, texture));
     lobby->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"LOBBY", sf::Color::Red, font));
-    TableSceneComponent* table = new TableSceneComponent({0.05f, 0.2f}, {0.5f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 12, {10, 20});
-    lobby->AddSceneComponent(table);
+    lobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.5f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 12, {10, 20}));
     lobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.5f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
-        [&clientService, &playerName, &pingClock](const std::string& text){
+        [&clientService, &playerName](const std::string& text){
             if(clientService.IsConnected())
             {
                 if(text == "/ping")
                 {
                     // /ping command for debugging
-                    pingClock.restart();
                     sf::Packet packet;
                     packet << "PING";
                     clientService.Send(packet);

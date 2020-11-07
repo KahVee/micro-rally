@@ -34,7 +34,24 @@ void ClientService::Send(sf::Packet& packet)
     // Check if client connected
     if(socket_.getLocalPort())
     {
-        socket_.send(packet);
+        std::string messageType;
+        packet >> messageType;
+        if(messageType == "PING")
+        {
+            pingClock_.restart();
+            sf::Packet pingPacket;
+            pingPacket << "PING";
+            socket_.send(pingPacket);
+        }
+        else if(messageType == "CHAT_MESSAGE")
+        {
+            std::string playerName;
+            std::string message;
+            packet >> playerName >> message;
+            sf::Packet messagePacket;
+            messagePacket << "CHAT_MESSAGE" << playerName << message;
+            socket_.send(messagePacket);
+        }
     }
     else
     {
