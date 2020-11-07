@@ -8,7 +8,6 @@
 
 
 Game::Game() {
-    objects_ = std::vector<DynamicObject*>();
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
     map_ = new GameMap(5.0);
