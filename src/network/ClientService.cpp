@@ -1,5 +1,10 @@
 #include "ClientService.hpp"
 
+void ClientService::Init(SceneManager* sceneManager)
+{
+    sceneManager_ = sceneManager;
+}
+
 sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout)
 {
     sf::Socket::Status status = socket_.connect(address, port, timeout);
@@ -16,7 +21,7 @@ void ClientService::Disconnect()
     selector_.clear();
     socket_.disconnect();
     sf::Packet packet;
-    messageFunctions_["DISCONNECT"](packet);
+    sceneManager_->ChangeScene("mainMenu");
 }
 
 bool ClientService::IsConnected()
@@ -49,18 +54,31 @@ void ClientService::Receive()
         std::string messageType;
         if(packet >> messageType)
         {
-            messageFunctions_[messageType](packet);
+            if(messageType == "PING")
+            {
+                sf::Time ping = pingClock_.getElapsedTime();
+                std::stringstream ss;
+                ss << std::fixed << std::setprecision(4) << ping.asSeconds();
+                ss << " seconds";
+                sf::Packet pingPacket;
+                pingPacket << "PING" << ss.str();
+                sceneManager_->HandlePacket(pingPacket);
+            }
+            else if (messageType == "CHAT_MESSAGE")
+            {
+                std::string playerName;
+                std::string message;
+                packet >> playerName >> message;
+                sf::Packet messagePacket;
+                messagePacket << "CHAT_MESSAGE" << playerName << message;
+                sceneManager_->HandlePacket(messagePacket);
+            }
         }        
     }
     else if(status == sf::Socket::Disconnected)
     {
         Disconnect();
     }
-}
-
-void ClientService::AddMessageFunction(const std::string& messageType, std::function<void(sf::Packet& packet)> function)
-{
-    messageFunctions_[messageType] = function;
 }
 
 sf::Socket::Status ClientService::ReceiveWithTimeout(sf::Packet& packet, sf::Time timeout)

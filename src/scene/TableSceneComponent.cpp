@@ -22,7 +22,27 @@ TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, c
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
 }
 
-void TableSceneComponent::HandlePacket(sf::Packet& packet){}
+void TableSceneComponent::HandlePacket(sf::Packet& packet)
+{
+    std::string messageType;
+    packet >> messageType;
+    if(componentClass_ == "chat")
+    {
+        if(messageType == "CHAT_MESSAGE")
+        {
+            std::string playerName;
+            std::string message;
+            packet >> playerName >> message;
+            AddRow({playerName, message});
+        }
+        else if (messageType == "PING")
+        {
+            std::string ping;
+            packet >> ping;
+            AddRow({"PING", ping});
+        }
+    }    
+}
 
 void TableSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
 {
