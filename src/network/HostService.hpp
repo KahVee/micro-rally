@@ -20,10 +20,13 @@ public:
     bool IsRunning();
 private:
     void SendToAll(sf::Packet& packet);
-    void SendToOne(sf::TcpSocket*& client, sf::Packet& packet);
-    void RemoveClient(sf::TcpSocket*& client);
+    void SendToOne(sf::TcpSocket*& socket, sf::Packet& packet);
+    void Receive();
+    void RunGame();
+    void HandleDisconnectedClients();
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
     std::list<Client> clients_;
     bool running_ = false;
+    bool gameRunning_ = false;
 };
