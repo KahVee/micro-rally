@@ -20,6 +20,5 @@ private:
     void SetPosition(const sf::Vector2f& position);
     void SetScale(const sf::Vector2f& scale);
 
-    sf::Texture texture_;
     sf::Sprite sprite_;
 };

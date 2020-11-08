@@ -7,6 +7,8 @@
 
 #include "../scene/SceneManager.hpp"
 
+class SceneManager;
+
 /*A class that represents the client-side of network communication.*/
 class ClientService
 {
