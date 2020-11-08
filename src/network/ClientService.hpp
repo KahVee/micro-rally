@@ -1,11 +1,13 @@
 #pragma once
 
 #include <SFML/Network.hpp>
+#include <Box2D/Box2D.h>
 #include <string>
 #include <iomanip>
 #include <sstream>
 
 #include "../scene/SceneManager.hpp"
+#include "Network.hpp"
 
 class SceneManager;
 
@@ -21,10 +23,12 @@ public:
     bool IsConnected();
     void Send(sf::Packet& packet);
     void Receive();
+    sf::Int32 GetId() const;
 private:
-    sf::Socket::Status ReceiveWithTimeout(sf::Packet& packet, sf::Time timeout);
+    sf::Socket::Status ReceiveIfReady(sf::Packet& packet);
     sf::TcpSocket socket_;
     sf::SocketSelector selector_;
     sf::Clock pingClock_;
     SceneManager* sceneManager_ = nullptr;
+    sf::Int32 id_ = -1;
 };

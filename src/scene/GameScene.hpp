@@ -5,13 +5,17 @@
 
 #include "Scene.hpp"
 #include "../GameObject/Game.hpp"
+#include "../GameObject/DynamicObject.hpp"
 #include "../constants.hpp"
+#include "../network/ClientService.hpp"
+
+class ClientService;
 
 /*A Scene that contains SceneComponents.*/
 class GameScene : public Scene
 {
 public:
-    GameScene();
+    GameScene(ClientService* clientService);
     GameScene(const GameScene& gameScene) = delete;
     GameScene& operator=(const GameScene& gameScene) = delete;
     ~GameScene();
@@ -21,8 +25,8 @@ public:
     void Draw(sf::RenderWindow& window);
     void Init();
     void Reset();
-    // Public members
 private:
     Game *game_ = nullptr;
     sf::Music theme2_;
+    ClientService* clientService_;
 };

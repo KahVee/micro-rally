@@ -61,7 +61,6 @@ void TableSceneComponent::HandlePacket(sf::Packet packet)
             ReplaceIndex(id, {"",""});
         }
     }
-    
 }
 
 void TableSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)

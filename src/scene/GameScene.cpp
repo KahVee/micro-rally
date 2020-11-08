@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-GameScene::GameScene()
+GameScene::GameScene(ClientService* clientService) : clientService_(clientService)
 {
     // Load Theme2
     if(!theme2_.openFromFile("../res/boogiewoogiestomp.wav"))
@@ -24,6 +24,63 @@ GameScene::~GameScene() {
 void GameScene::HandlePacket(sf::Packet& packet)
 {
     // TODO HANDLE CHAT, PING
+    std::string messageType;
+    packet >> messageType;
+    if(messageType == "CHAT_MESSAGE")
+    {
+        // TODO
+        // std::string playerName;
+        // std::string message;
+        // packet >> playerName >> message;
+        // AddRow({playerName, message});
+    }
+    else if (messageType == "PING")
+    {
+        // TODO
+        // std::string ping;
+        // packet >> ping;
+        // AddRow({"PING", ping});
+    }
+    else if(messageType == "CLIENT_CONNECT")
+    {
+        std::string clientName;
+        sf::Int32 id;
+        packet >> clientName >> id;
+        // Do not update the players car
+        if(clientService_->GetId() != id)
+        {
+            game_->AddCar(id, game_->CreateCar());
+        }
+    }
+    else if(messageType == "CLIENT_DISCONNECT")
+    {
+        // TODO
+        // std::string clientName;
+        // sf::Int32 id;
+        // packet >> clientName >> id;
+        // ReplaceIndex(id, {"",""});
+    }
+    else if (messageType == "PLAYER_INFO")
+    {
+        // TODO
+        sf::Int32 id;
+        b2Transform transform;
+        b2Vec2 velocity;
+        float angularVelocity;
+        packet >> id >> transform >> velocity >> angularVelocity;
+        // Do not update the players car
+        if(clientService_->GetId() != id)
+        {
+            game_->UpdateCar(id, transform, velocity, angularVelocity);
+        }
+        else
+        {
+            // Update player info on server
+            sf::Packet sendPacket;
+            sendPacket << "PLAYER_INFO" << clientService_->GetId() << game_->GetPlayerCar()->GetTransform() << game_->GetPlayerCar()->GetVelocity() << game_->GetPlayerCar()->GetAngularVelocity();
+            clientService_->Send(sendPacket);
+        }
+    }
 }
 
 void GameScene::HandleEvents(sf::RenderWindow& window)
@@ -50,6 +107,8 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
                 case sf::Keyboard::D:
                     game_->GetPlayerCar()->TurnRight(true);
                     break;
+                default:
+                    break;
             }
         }
 
@@ -66,6 +125,8 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
                     break;
                 case sf::Keyboard::D:
                     game_->GetPlayerCar()->TurnRight(false);
+                    break;
+                default:
                     break;
             }
         }

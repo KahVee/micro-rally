@@ -95,8 +95,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     hostlobby->AddSceneComponent(new ButtonSceneComponent({0.75f, 0.85f}, {0.2f, 0.1f}, "", window,"PLAY", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
         [&hostService, &clientService, this](){
             // Start playing the game in hostservice 
-            hostService.Stop();
-            clientService.Disconnect();
+            hostService.StartGame();
         }));
     AddScene("hostlobby", hostlobby);
     // Create join scene ------------------------------------------------------------------------------------------
@@ -148,7 +147,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
         }));
     AddScene("clientlobby", clientlobby);
     // Create game scene ------------------------------------------------------------------------------------------
-    GameScene* game = new GameScene();
+    GameScene* game = new GameScene(&clientService);
     AddScene("game", game);
     // Set initial scene
     SetInitialScene("mainMenu");

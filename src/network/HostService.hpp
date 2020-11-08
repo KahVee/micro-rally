@@ -17,16 +17,21 @@ public:
     sf::Socket::Status Listen(unsigned short port);
     void Start();
     void Stop();
+    void StartGame();
+    void StopGame();
     bool IsRunning();
+    bool IsGameRunning();
 private:
     void SendToAll(sf::Packet& packet);
     void SendToOne(sf::TcpSocket*& socket, sf::Packet& packet);
     void Receive();
     void RunGame();
     void HandleDisconnectedClients();
+    sf::Socket::Status ReceiveIfReady(sf::TcpSocket& socket, sf::Packet& packet);
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
     std::list<Client> clients_;
     bool running_ = false;
     bool gameRunning_ = false;
+    bool gameInit_ = false;
 };
