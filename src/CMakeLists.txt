@@ -78,7 +78,7 @@ if(MINGW)
     target_link_libraries(${EXECUTABLE_NAME} box2d::box2d)
 endif()
 
-if(LINUX)
+if(UNIX AND NOT APPLE) # Linux
     # for detecting Linux compilers
     find_package(Box2D REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
     target_link_libraries(${EXECUTABLE_NAME} Box2D)
