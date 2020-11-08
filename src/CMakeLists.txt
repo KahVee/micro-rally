@@ -68,12 +68,21 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
 
 # Find SFML library
 # set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/SFML/cmake/Modules") only needed if program is tested on aalto computers
-find_package(SFML 2.5 COMPONENTS system window graphics audio network)
+find_package(SFML 2.5 COMPONENTS system window graphics audio network REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/SFML-2.5.1/lib/cmake/SFML)
 target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics sfml-audio sfml-network)
 
-# Find Box2D library
-find_package(Box2D REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
-target_link_libraries(${EXECUTABLE_NAME} Box2D)
+# Find Box2D library 
+if(MINGW)
+    # for detecting MinGW compiler
+    find_package(box2d REQUIRED PATHS /usr/local/lib/cmake/box2d C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
+    target_link_libraries(${EXECUTABLE_NAME} box2d::box2d)
+endif()
+
+if(LINUX)
+    # for detecting Linux compilers
+    find_package(Box2D REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
+    target_link_libraries(${EXECUTABLE_NAME} Box2D)
+endif()
 
 # For installing targets (not mandatory)
 #install (TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
