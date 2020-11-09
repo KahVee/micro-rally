@@ -1,17 +1,20 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "Scene.hpp"
+#include "../GameObject/Game.hpp"
+#include "../constants.hpp"
 
 /*A Scene that contains SceneComponents.*/
 class GameScene : public Scene
 {
 public:
-    GameScene() = default;
-    GameScene(const GameScene& menuScene) = delete;
-    GameScene& operator=(const GameScene& menuScene) = delete;
-    ~GameScene() = default;
+    GameScene();
+    GameScene(const GameScene& gameScene) = delete;
+    GameScene& operator=(const GameScene& gameScene) = delete;
+    ~GameScene();
     void HandleEvents(sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);
@@ -19,5 +22,6 @@ public:
     void Reset();
     // Public members
 private:
-    // Private members
+    Game *game_;
+    sf::Music theme2_;
 };
