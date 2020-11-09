@@ -10,6 +10,7 @@ struct Client
     b2Transform transform;
     b2Vec2 velocity;
     float angularVelocity;
+    float steeringAngle;
 };
 
 enum NetworkMessageType : sf::Uint8

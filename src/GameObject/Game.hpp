@@ -23,7 +23,7 @@ public:
     Car* CreateCar();
     void AddCar(sf::Int32 id, Car* car);
     void RemoveCar(sf::Int32 id);
-    void UpdateCar(sf::Int32 id, const b2Transform& transform, const b2Vec2& velocity, float angularVelocity);
+    void UpdateCar(sf::Int32 id, const b2Transform& transform, const b2Vec2& velocity, float angularVelocity, float steeringAngle);
 private:
     Car *playerCar_;
     b2World *world_;

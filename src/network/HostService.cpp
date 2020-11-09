@@ -156,7 +156,7 @@ void HostService::Receive()
                                 else if (messageType == CLIENT_DATA)
                                 {
                                     // Update player info
-                                    packet >> client.id >> client.transform >> client.velocity >> client.angularVelocity;
+                                    packet >> client.id >> client.transform >> client.velocity >> client.angularVelocity >> client.steeringAngle;
                                 }
                             }
                         }
@@ -202,7 +202,7 @@ void HostService::RunGame()
         for(auto& client : clients_)
         {
             sf::Packet sendPacket;
-            sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity;
+            sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity << client.steeringAngle;
             SendToAll(sendPacket);
         }
     }

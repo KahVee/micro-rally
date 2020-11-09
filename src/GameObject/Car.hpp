@@ -27,6 +27,8 @@ public:
     float GetBrakingPower() const;
     void SetBrakingPower(float newPower);
 
+    float GetSteeringAngle() const;
+    void SetSteeringAngle(float steeringAngle);
     std::vector<Tire*> GetTires();
 
 private:
@@ -44,4 +46,6 @@ private:
 
     //Player-input-controlled parameters
     bool isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
+
+    float steeringAngle_;
 };

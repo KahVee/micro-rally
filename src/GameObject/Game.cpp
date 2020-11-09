@@ -70,8 +70,8 @@ void Game::RemoveCar(sf::Int32 id)
     // TODO probably requires some code restructuring
 }
 
-void Game::UpdateCar(sf::Int32 id, const b2Transform& transform, const b2Vec2& velocity, float angularVelocity)
+void Game::UpdateCar(sf::Int32 id, const b2Transform& transform, const b2Vec2& velocity, float angularVelocity, float steeringAngle)
 {
     players_[id]->SetTransform(transform.p, transform.q.GetAngle());
-    // TODO set velocity, angularvelocity
+    // TODO set velocity, angularvelocity, steeringAngle
 }
