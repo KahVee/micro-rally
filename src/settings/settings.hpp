@@ -9,4 +9,4 @@ public:
     std::string getName();
 private:
     std::string PlayerName;
-}
+};

@@ -1,12 +1,15 @@
 #include "settings.hpp"
+#include "../lib/json.hpp"
+
+using json = nlohmann::json;
 
 int settings::setName(std::string name)
 {
+    json j;
+    std::ofstream file("settings.json");
     PlayerName = name;
-    std::string turha;
-    std::ofstream file;
-    file.open("settings.json");
-    file << "PlayerName:" << name << std::endl;
+    j["PlayerName"]  = name;
+    file << j << std::endl;
     file.close();
     return 0;
 }
@@ -14,19 +17,18 @@ int settings::setName(std::string name)
 std::string settings::getName()
 {
     std::string name = "player";
-    std::string turha = "a";
-    std::ifstream file;
-    int a = 0;
-    file.open("settings.json");
-    while (!file.eof() && turha != "PlayerName" && a < 100)
+    std::ifstream file("settings.json");
+    json j;
+    if (!(file.peek() == std::ifstream::traits_type::eof()))
     {
-        a++;
-        std::getline(file, turha, ':');
-        if (turha == "PlayerName")
+        file >> j;
+        if (j.find("PlayerName") != j.end())
         {
-            std::getline(file, name, '\n');
+        name = j["PlayerName"].get<std::string>();  
         }
-    }   
-    file.close();
+        file.close();
+        PlayerName = name;
+    }
     return name;
 }
+
