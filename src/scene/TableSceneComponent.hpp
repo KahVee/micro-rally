@@ -6,6 +6,7 @@
 #include <deque>
 
 #include "SceneComponent.hpp"
+#include "../network/Network.hpp"
 
 /*A SceneComponent that represents a table on screen.*/
 class TableSceneComponent : public SceneComponent

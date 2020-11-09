@@ -13,7 +13,7 @@ sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned
         selector_.add(socket_);
         // Send client info to host
         sf::Packet connectPacket;
-        connectPacket << "CLIENT_CONNECT" << playerName;
+        connectPacket << CLIENT_CONNECT << playerName;
         socket_.send(connectPacket);
     }
     return status;
@@ -38,25 +38,25 @@ void ClientService::Send(sf::Packet& packet)
     // Check if client connected
     if(socket_.getLocalPort())
     {
-        std::string messageType;
+        NetworkMessageType messageType;
         packet >> messageType;
-        if(messageType == "PING")
+        if(messageType == PING)
         {
             pingClock_.restart();
             sf::Packet pingPacket;
-            pingPacket << "PING";
+            pingPacket << PING;
             socket_.send(pingPacket);
         }
-        else if(messageType == "CHAT_MESSAGE")
+        else if(messageType == CHAT_MESSAGE)
         {
             std::string playerName;
             std::string message;
             packet >> playerName >> message;
             sf::Packet messagePacket;
-            messagePacket << "CHAT_MESSAGE" << playerName << message;
+            messagePacket << CHAT_MESSAGE << playerName << message;
             socket_.send(messagePacket);
         }
-        else if (messageType == "PLAYER_INFO")
+        else if (messageType == CLIENT_DATA)
         {
             sf::Int32 id;
             b2Transform transform;
@@ -64,7 +64,7 @@ void ClientService::Send(sf::Packet& packet)
             float angularVelocity;
             packet >> id >> transform >> velocity >> angularVelocity;
             sf::Packet sendPacket;
-            sendPacket << "PLAYER_INFO" << id << transform << velocity << angularVelocity;
+            sendPacket << CLIENT_DATA << id << transform << velocity << angularVelocity;
             socket_.send(sendPacket);
         }
     }
@@ -87,29 +87,29 @@ void ClientService::Receive()
         if(status == sf::Socket::Done)
         {
             // Received data in packet
-            std::string messageType;
+            NetworkMessageType messageType;
             if(packet >> messageType)
             {
-                if(messageType == "PING")
+                if(messageType == PING)
                 {
                     sf::Time ping = pingClock_.getElapsedTime();
                     std::stringstream ss;
                     ss << std::fixed << std::setprecision(4) << ping.asSeconds();
                     ss << " seconds";
                     sf::Packet sendPacket;
-                    sendPacket << "PING" << ss.str();
+                    sendPacket << PING << ss.str();
                     sceneManager_->HandlePacket(sendPacket);
                 }
-                else if (messageType == "CHAT_MESSAGE")
+                else if (messageType == CHAT_MESSAGE)
                 {
                     std::string playerName;
                     std::string message;
                     packet >> playerName >> message;
                     sf::Packet sendPacket;
-                    sendPacket << "CHAT_MESSAGE" << playerName << message;
+                    sendPacket << CHAT_MESSAGE << playerName << message;
                     sceneManager_->HandlePacket(sendPacket);
                 }
-                else if (messageType == "CLIENT_CONNECT")
+                else if (messageType == CLIENT_CONNECT)
                 {
                     sf::Int32 numberOfClients;
                     packet >> numberOfClients;
@@ -119,29 +119,29 @@ void ClientService::Receive()
                         sf::Int32 id;
                         packet >> clientName >> id;
                         sf::Packet sendPacket;
-                        sendPacket << "CLIENT_CONNECT" << clientName << id;
+                        sendPacket << CLIENT_CONNECT << clientName << id;
                         sceneManager_->HandlePacket(sendPacket);      
                     }
                 }
                 
-                else if (messageType == "CLIENT_DISCONNECT")
+                else if (messageType == CLIENT_DISCONNECT)
                 {
                     std::string clientName;
                     sf::Int32 id;
                     packet >> clientName >> id;
                     sf::Packet sendPacket;
-                    sendPacket << "CLIENT_DISCONNECT" << clientName << id;
+                    sendPacket << CLIENT_DISCONNECT << clientName << id;
                     sceneManager_->HandlePacket(sendPacket);
                 }
-                else if (messageType == "GAME_START")
+                else if (messageType == GAME_START)
                 {
                     sceneManager_->ChangeScene("game");
                 }
-                else if (messageType == "CLIENT_ID")
+                else if (messageType == CLIENT_ID)
                 {
                     packet >> id_;
                 }
-                else if (messageType == "PLAYER_INFO")
+                else if (messageType == CLIENT_DATA)
                 {
                     sf::Int32 numberOfClients;
                     packet >> numberOfClients;
@@ -153,7 +153,7 @@ void ClientService::Receive()
                         float angularVelocity;
                         packet >> id >> transform >> velocity >> angularVelocity;
                         sf::Packet sendPacket;
-                        sendPacket << "PLAYER_INFO" << id << transform << velocity << angularVelocity;
+                        sendPacket << CLIENT_DATA << id << transform << velocity << angularVelocity;
                         sceneManager_->HandlePacket(sendPacket);      
                     }
                 }

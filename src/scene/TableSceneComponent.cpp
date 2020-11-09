@@ -26,18 +26,18 @@ TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, c
 
 void TableSceneComponent::HandlePacket(sf::Packet packet)
 {
-    std::string messageType;
+    NetworkMessageType messageType;
     packet >> messageType;
     if(componentClass_ == "chat")
     {
-        if(messageType == "CHAT_MESSAGE")
+        if(messageType == CHAT_MESSAGE)
         {
             std::string playerName;
             std::string message;
             packet >> playerName >> message;
             AddRow({playerName, message});
         }
-        else if (messageType == "PING")
+        else if (messageType == PING)
         {
             std::string ping;
             packet >> ping;
@@ -46,14 +46,14 @@ void TableSceneComponent::HandlePacket(sf::Packet packet)
     }
     else if (componentClass_ == "playerlist")
     {
-        if(messageType == "CLIENT_CONNECT")
+        if(messageType == CLIENT_CONNECT)
         {
             std::string clientName;
             sf::Int32 id;
             packet >> clientName >> id;
             ReplaceIndex(id, {std::to_string(id), clientName});
         }
-        else if(messageType == "CLIENT_DISCONNECT")
+        else if(messageType == CLIENT_DISCONNECT)
         {
             std::string clientName;
             sf::Int32 id;

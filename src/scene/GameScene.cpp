@@ -24,9 +24,9 @@ GameScene::~GameScene() {
 void GameScene::HandlePacket(sf::Packet& packet)
 {
     // TODO HANDLE CHAT, PING
-    std::string messageType;
+    NetworkMessageType messageType;
     packet >> messageType;
-    if(messageType == "CHAT_MESSAGE")
+    if(messageType == CHAT_MESSAGE)
     {
         // TODO
         // std::string playerName;
@@ -34,14 +34,14 @@ void GameScene::HandlePacket(sf::Packet& packet)
         // packet >> playerName >> message;
         // AddRow({playerName, message});
     }
-    else if (messageType == "PING")
+    else if (messageType == PING)
     {
         // TODO
         // std::string ping;
         // packet >> ping;
         // AddRow({"PING", ping});
     }
-    else if(messageType == "CLIENT_CONNECT")
+    else if(messageType == CLIENT_CONNECT)
     {
         std::string clientName;
         sf::Int32 id;
@@ -52,7 +52,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
             game_->AddCar(id, game_->CreateCar());
         }
     }
-    else if(messageType == "CLIENT_DISCONNECT")
+    else if(messageType == CLIENT_DISCONNECT)
     {
         // TODO
         // std::string clientName;
@@ -60,7 +60,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         // packet >> clientName >> id;
         // ReplaceIndex(id, {"",""});
     }
-    else if (messageType == "PLAYER_INFO")
+    else if (messageType == CLIENT_DATA)
     {
         // TODO
         sf::Int32 id;
@@ -77,7 +77,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         {
             // Update player info on server
             sf::Packet sendPacket;
-            sendPacket << "PLAYER_INFO" << clientService_->GetId() << game_->GetPlayerCar()->GetTransform() << game_->GetPlayerCar()->GetVelocity() << game_->GetPlayerCar()->GetAngularVelocity();
+            sendPacket << CLIENT_DATA << clientService_->GetId() << game_->GetPlayerCar()->GetTransform() << game_->GetPlayerCar()->GetVelocity() << game_->GetPlayerCar()->GetAngularVelocity();
             clientService_->Send(sendPacket);
         }
     }

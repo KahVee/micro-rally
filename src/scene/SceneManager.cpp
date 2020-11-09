@@ -70,13 +70,13 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
                 {
                     // /ping command for debugging
                     sf::Packet packet;
-                    packet << "PING";
+                    packet << PING;
                     clientService.Send(packet);
                 }
                 else
                 {
                     sf::Packet packet;
-                    packet << "CHAT_MESSAGE" << playerName << text;
+                    packet << CHAT_MESSAGE << playerName << text;
                     clientService.Send(packet);
                 }
             }
@@ -129,13 +129,13 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
                 {
                     // /ping command for debugging
                     sf::Packet packet;
-                    packet << "PING";
+                    packet << PING;
                     clientService.Send(packet);
                 }
                 else
                 {
                     sf::Packet packet;
-                    packet << "CHAT_MESSAGE" << playerName << text;
+                    packet << CHAT_MESSAGE << playerName << text;
                     clientService.Send(packet);
                 }
             }

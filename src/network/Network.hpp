@@ -12,6 +12,30 @@ struct Client
     float angularVelocity;
 };
 
+enum NetworkMessageType : sf::Uint8
+{
+    PING,
+    CHAT_MESSAGE,
+    CLIENT_CONNECT,
+    CLIENT_DISCONNECT,
+    CLIENT_DATA,
+    CLIENT_ID,
+    GAME_START
+};
+
+inline sf::Packet& operator <<(sf::Packet& packet, const NetworkMessageType& networkMessageType)
+{
+    return packet << static_cast<sf::Uint8>(networkMessageType);
+}
+
+inline sf::Packet& operator >>(sf::Packet& packet, NetworkMessageType& networkMessageType)
+{
+    sf::Uint8 temp;
+    packet >> temp;
+    networkMessageType = static_cast<NetworkMessageType>(temp);
+    return packet;
+}
+
 inline sf::Packet& operator <<(sf::Packet& packet, const b2Transform& transform)
 {
     return packet << transform.p.x << transform.p.y << transform.q.c << transform.q.s;

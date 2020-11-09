@@ -134,32 +134,32 @@ void HostService::Receive()
                     {
                         // Receive data on socket
                         sf::Packet packet;
-                        status = ReceiveIfReady(*client.socket, packet);//client.socket->receive(packet);
+                        status = ReceiveIfReady(*client.socket, packet);
                         if(status == sf::Socket::Done)
                         {
                             // Received data in packet
-                            std::string messageType;
+                            NetworkMessageType messageType;
                             if(packet >> messageType)
                             {
-                                if(messageType == "CHAT_MESSAGE")
+                                if(messageType == CHAT_MESSAGE)
                                 {
                                     // Handle chat message
                                     std::string clientName;
                                     std::string chatMessage;
                                     packet >> clientName >> chatMessage;
                                     sf::Packet sendPacket;
-                                    sendPacket << "CHAT_MESSAGE" << clientName << chatMessage;
+                                    sendPacket << CHAT_MESSAGE << clientName << chatMessage;
                                     // Send to all chatters
                                     SendToAll(sendPacket);
                                 }
-                                else if (messageType == "PING")
+                                else if (messageType == PING)
                                 {
                                     // Handle ping
                                     sf::Packet sendPacket;
-                                    sendPacket << "PING";
+                                    sendPacket << PING;
                                     SendToOne(client.socket, sendPacket);
                                 }
-                                else if (messageType == "CLIENT_CONNECT")
+                                else if (messageType == CLIENT_CONNECT)
                                 {
                                     // Handle client connection message
                                     std::string clientName;
@@ -167,12 +167,12 @@ void HostService::Receive()
                                     client.name = clientName;
                                     // Send client id to client
                                     sf::Packet idPacket;
-                                    idPacket << "CLIENT_ID" << client.id;
+                                    idPacket << CLIENT_ID << client.id;
                                     SendToOne(client.socket, idPacket);
                                     // Send updated list of clients to clients
                                     sf::Int32 numberOfClients = clients_.size();
                                     sf::Packet sendPacket;
-                                    sendPacket << "CLIENT_CONNECT" << numberOfClients;
+                                    sendPacket << CLIENT_CONNECT << numberOfClients;
                                     for(auto client2 : clients_)
                                     {
                                         sendPacket << client2.name << client2.id;
@@ -180,7 +180,7 @@ void HostService::Receive()
                                     // Send to all chatters
                                     SendToAll(sendPacket);
                                 }
-                                else if (messageType == "PLAYER_INFO")
+                                else if (messageType == CLIENT_DATA)
                                 {
                                     // Update player info
                                     packet >> client.id >> client.transform >> client.velocity >> client.angularVelocity;
@@ -212,12 +212,12 @@ void HostService::RunGame()
         {
             // Send info of game starting to clients
             sf::Packet sendPacket;
-            sendPacket << "GAME_START";
+            sendPacket << GAME_START;
             SendToAll( sendPacket);
 
             sf::Int32 numberOfClients = clients_.size();
             sf::Packet sendPacket2;
-            sendPacket2 << "CLIENT_CONNECT" << numberOfClients;
+            sendPacket2 << CLIENT_CONNECT << numberOfClients;
             for(auto client : clients_)
             {
                 sendPacket2 << client.name << client.id;
@@ -229,7 +229,7 @@ void HostService::RunGame()
         // Game loop here
         sf::Int32 numberOfClients = clients_.size();
         sf::Packet sendPacket;
-        sendPacket << "PLAYER_INFO" << numberOfClients;
+        sendPacket << CLIENT_DATA << numberOfClients;
         for(auto& client : clients_)
         {
             sendPacket << client.id << client.transform << client.velocity << client.angularVelocity;
@@ -246,7 +246,7 @@ void HostService::HandleDisconnectedClients()
         if(!client.socket->getLocalPort())
         {
             sf::Packet sendPacket;
-            sendPacket << "CLIENT_DISCONNECT" << client.name << client.id;
+            sendPacket << CLIENT_DISCONNECT << client.name << client.id;
             // Send to all chatters
             SendToAll(sendPacket);
         }
