@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameObject.hpp"
-#include <box2d/b2_body.h>
+#include <Box2D/Box2D.h>
 #include <string>
 
 class MapTile {

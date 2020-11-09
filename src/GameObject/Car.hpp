@@ -2,16 +2,14 @@
 
 #include <vector>
 #include <SFML/Graphics/Sprite.hpp>
-#include <box2d/b2_body.h>
-#include <box2d/b2_world.h>
-#include <box2d/b2_revolute_joint.h>
+#include <Box2D/Box2D.h>
 
 #include "DynamicObject.hpp"
 class Tire;
 #include "Tire.hpp"
 
 class Car : public DynamicObject {
-    public:
+public:
     Car(std::string spritePath, b2World *world, int width, int height);
     virtual ~Car();
 
@@ -29,9 +27,11 @@ class Car : public DynamicObject {
     float GetBrakingPower() const;
     void SetBrakingPower(float newPower);
 
+    float GetSteeringAngle() const;
+    void SetSteeringAngle(float steeringAngle);
     std::vector<Tire*> GetTires();
 
-    private:
+private:
     b2RevoluteJoint *f1Joint_, *f2Joint_;
     float enginePower_;
     float maxSpeed_;
@@ -46,4 +46,6 @@ class Car : public DynamicObject {
 
     //Player-input-controlled parameters
     bool isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
+
+    float steeringAngle_;
 };

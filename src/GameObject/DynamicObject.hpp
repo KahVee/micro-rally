@@ -1,7 +1,6 @@
 #pragma once
 
-#include <box2d/b2_body.h>
-#include <box2d/b2_world.h>
+#include <Box2D/Box2D.h>
 
 #include "GameObject.hpp"
 
@@ -10,7 +9,7 @@
  * It has a reference to its world, and physics body
  */
 class DynamicObject : public GameObject {
-    public:
+public:
     DynamicObject(std::string spritePath, b2World *world);
     virtual ~DynamicObject() = 0;
 
@@ -28,7 +27,7 @@ class DynamicObject : public GameObject {
 
     b2Body *body_;
 
-    protected:    
+protected:    
     b2World *world_;
     virtual void PrivateUpdate(float dt);
 };

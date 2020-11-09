@@ -14,6 +14,7 @@ public:
     MenuScene(const MenuScene& menuScene) = delete;
     MenuScene& operator=(const MenuScene& menuScene) = delete;
     ~MenuScene();
+    void HandlePacket(sf::Packet& packet);
     void HandleEvents(sf::RenderWindow& window);
     void Update(const sf::Time& deltaTime);
     void Draw(sf::RenderWindow& window);

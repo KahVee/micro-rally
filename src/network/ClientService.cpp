@@ -1,11 +1,20 @@
 #include "ClientService.hpp"
 
-sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout)
+void ClientService::Init(SceneManager* sceneManager)
+{
+    sceneManager_ = sceneManager;
+}
+
+sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout, const std::string& playerName)
 {
     sf::Socket::Status status = socket_.connect(address, port, timeout);
     if(status == sf::Socket::Done)
     {
         selector_.add(socket_);
+        // Send client info to host
+        sf::Packet connectPacket;
+        connectPacket << CLIENT_CONNECT << playerName;
+        socket_.send(connectPacket);
     }
     return status;
 }
@@ -15,8 +24,8 @@ void ClientService::Disconnect()
     // Reset clientservice
     selector_.clear();
     socket_.disconnect();
-    sf::Packet packet;
-    messageFunctions_["DISCONNECT"](packet);
+    id_ = -1;
+    sceneManager_->ChangeScene("mainMenu");
 }
 
 bool ClientService::IsConnected()
@@ -29,43 +38,89 @@ void ClientService::Send(sf::Packet& packet)
     // Check if client connected
     if(socket_.getLocalPort())
     {
-        socket_.send(packet);
+        sf::Packet packetCopy(packet);
+        NetworkMessageType messageType;
+        packet >> messageType;
+        if(messageType == PING)
+        {
+            pingClock_.restart();
+        }
+        socket_.send(packetCopy);
     }
     else
     {
-        // If not connected reset and set running_ = false
+        // If not connected run Disconnect-method
         Disconnect();
     }
 }
 
 void ClientService::Receive()
 {
-    // Wait for data on socket
-    sf::Packet packet;
-    sf::Socket::Status status = ReceiveWithTimeout(packet, sf::microseconds(1));
-    if(status == sf::Socket::Done)
+    // Loop through all data on socket
+    sf::Socket::Status status = sf::Socket::Done;
+    while (status == sf::Socket::Done)
     {
         // Received data in packet
-        std::string messageType;
-        if(packet >> messageType)
+        sf::Packet packet;
+        // Receive data if ready
+        status = ReceiveIfReady(packet);
+        if(status == sf::Socket::Done)
         {
-            messageFunctions_[messageType](packet);
-        }        
-    }
-    else if(status == sf::Socket::Disconnected)
-    {
-        Disconnect();
+            sf::Packet packetCopy(packet);
+            NetworkMessageType messageType;
+            if(packet >> messageType)
+            {
+                // Handle different message types
+                if(messageType == PING)
+                {
+                    sf::Time ping = pingClock_.getElapsedTime();
+                    std::stringstream ss;
+                    ss << std::fixed << std::setprecision(4) << ping.asSeconds();
+                    ss << " seconds";
+                    packetCopy << ss.str();
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_ID)
+                {
+                    packet >> id_;
+                }
+                else if (messageType == GAME_START)
+                {
+                    sceneManager_->ChangeScene("game");
+                }
+                else if (messageType == CHAT_MESSAGE)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_CONNECT)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_DISCONNECT)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_DATA)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+            }        
+        }
+        else if(status == sf::Socket::Disconnected)
+        {
+            Disconnect();
+        }
     }
 }
 
-void ClientService::AddMessageFunction(const std::string& messageType, std::function<void(sf::Packet& packet)> function)
+sf::Int32 ClientService::GetId() const
 {
-    messageFunctions_[messageType] = function;
+    return id_;
 }
 
-sf::Socket::Status ClientService::ReceiveWithTimeout(sf::Packet& packet, sf::Time timeout)
+sf::Socket::Status ClientService::ReceiveIfReady(sf::Packet& packet)
 {   
-    if (selector_.wait(timeout))
+    if (selector_.wait(sf::microseconds(1)))
         return socket_.receive(packet);
     else
         return sf::Socket::NotReady;

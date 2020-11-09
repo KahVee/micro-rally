@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 
-GameScene::GameScene()
+GameScene::GameScene(ClientService* clientService) : clientService_(clientService)
 {
     // Load Theme2
     if(!theme2_.openFromFile("../res/boogiewoogiestomp.wav"))
@@ -15,7 +15,75 @@ GameScene::GameScene()
 }
 
 GameScene::~GameScene() {
-    delete game_;
+    if(game_ != nullptr)
+    {
+        delete game_;
+    }
+}
+
+void GameScene::HandlePacket(sf::Packet& packet)
+{
+    // TODO HANDLE CHAT, PING
+    NetworkMessageType messageType;
+    packet >> messageType;
+    if(messageType == CHAT_MESSAGE)
+    {
+        // TODO
+        // std::string playerName;
+        // std::string message;
+        // packet >> playerName >> message;
+        // AddRow({playerName, message});
+    }
+    else if (messageType == PING)
+    {
+        // TODO
+        // std::string ping;
+        // packet >> ping;
+        // AddRow({"PING", ping});
+    }
+    else if(messageType == CLIENT_CONNECT)
+    {
+        std::string clientName;
+        sf::Int32 id;
+        packet >> clientName >> id;
+        // Do not update the players car
+        if(clientService_->GetId() != id)
+        {
+            game_->AddCar(id, game_->CreateCar());
+        }
+    }
+    else if(messageType == CLIENT_DISCONNECT)
+    {
+        std::string clientName;
+        sf::Int32 id;
+        packet >> clientName >> id;
+        if(clientService_->GetId() != id)
+        {
+            game_->RemoveCar(id);
+        }
+    }
+    else if (messageType == CLIENT_DATA)
+    {
+        sf::Int32 id;
+        b2Transform transform;
+        b2Vec2 velocity;
+        float angularVelocity;
+        float steeringAngle;
+        packet >> id >> transform >> velocity >> angularVelocity >> steeringAngle;
+        // Do not update the players car
+        if(clientService_->GetId() != id)
+        {
+            game_->UpdateCar(id, transform, velocity, angularVelocity, steeringAngle);
+        }
+        else
+        {
+            // Update player info on server
+            sf::Packet sendPacket;
+            sendPacket << CLIENT_DATA << clientService_->GetId() << game_->GetPlayerCar()->GetTransform() << game_->GetPlayerCar()->GetVelocity() << game_->GetPlayerCar()->GetAngularVelocity() << game_->GetPlayerCar()->GetSteeringAngle();
+            clientService_->Send(sendPacket);
+            
+        }
+    }
 }
 
 void GameScene::HandleEvents(sf::RenderWindow& window)
@@ -42,6 +110,8 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
                 case sf::Keyboard::D:
                     game_->GetPlayerCar()->TurnRight(true);
                     break;
+                default:
+                    break;
             }
         }
 
@@ -58,6 +128,8 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
                     break;
                 case sf::Keyboard::D:
                     game_->GetPlayerCar()->TurnRight(false);
+                    break;
+                default:
                     break;
             }
         }
@@ -120,5 +192,9 @@ void GameScene::Init()
 void GameScene::Reset()
 {
     theme2_.stop();
-    delete game_;
+    if(game_ != nullptr)
+    {
+        delete game_;
+        game_ = nullptr;
+    }
 }
