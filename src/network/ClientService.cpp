@@ -38,39 +38,18 @@ void ClientService::Send(sf::Packet& packet)
     // Check if client connected
     if(socket_.getLocalPort())
     {
+        sf::Packet packetCopy(packet);
         NetworkMessageType messageType;
         packet >> messageType;
         if(messageType == PING)
         {
             pingClock_.restart();
-            sf::Packet pingPacket;
-            pingPacket << PING;
-            socket_.send(pingPacket);
         }
-        else if(messageType == CHAT_MESSAGE)
-        {
-            std::string playerName;
-            std::string message;
-            packet >> playerName >> message;
-            sf::Packet messagePacket;
-            messagePacket << CHAT_MESSAGE << playerName << message;
-            socket_.send(messagePacket);
-        }
-        else if (messageType == CLIENT_DATA)
-        {
-            sf::Int32 id;
-            b2Transform transform;
-            b2Vec2 velocity;
-            float angularVelocity;
-            packet >> id >> transform >> velocity >> angularVelocity;
-            sf::Packet sendPacket;
-            sendPacket << CLIENT_DATA << id << transform << velocity << angularVelocity;
-            socket_.send(sendPacket);
-        }
+        socket_.send(packetCopy);
     }
     else
     {
-        // If not connected reset and set running_ = false
+        // If not connected run Disconnect-method
         Disconnect();
     }
 }
@@ -81,81 +60,49 @@ void ClientService::Receive()
     sf::Socket::Status status = sf::Socket::Done;
     while (status == sf::Socket::Done)
     {
-        // Wait for data on socket
+        // Received data in packet
         sf::Packet packet;
+        // Receive data if ready
         status = ReceiveIfReady(packet);
         if(status == sf::Socket::Done)
         {
-            // Received data in packet
+            sf::Packet packetCopy(packet);
             NetworkMessageType messageType;
             if(packet >> messageType)
             {
+                // Handle different message types
                 if(messageType == PING)
                 {
                     sf::Time ping = pingClock_.getElapsedTime();
                     std::stringstream ss;
                     ss << std::fixed << std::setprecision(4) << ping.asSeconds();
                     ss << " seconds";
-                    sf::Packet sendPacket;
-                    sendPacket << PING << ss.str();
-                    sceneManager_->HandlePacket(sendPacket);
-                }
-                else if (messageType == CHAT_MESSAGE)
-                {
-                    std::string playerName;
-                    std::string message;
-                    packet >> playerName >> message;
-                    sf::Packet sendPacket;
-                    sendPacket << CHAT_MESSAGE << playerName << message;
-                    sceneManager_->HandlePacket(sendPacket);
-                }
-                else if (messageType == CLIENT_CONNECT)
-                {
-                    sf::Int32 numberOfClients;
-                    packet >> numberOfClients;
-                    for(int i = 0; i < numberOfClients; i++)
-                    {
-                        std::string clientName;
-                        sf::Int32 id;
-                        packet >> clientName >> id;
-                        sf::Packet sendPacket;
-                        sendPacket << CLIENT_CONNECT << clientName << id;
-                        sceneManager_->HandlePacket(sendPacket);      
-                    }
-                }
-                
-                else if (messageType == CLIENT_DISCONNECT)
-                {
-                    std::string clientName;
-                    sf::Int32 id;
-                    packet >> clientName >> id;
-                    sf::Packet sendPacket;
-                    sendPacket << CLIENT_DISCONNECT << clientName << id;
-                    sceneManager_->HandlePacket(sendPacket);
-                }
-                else if (messageType == GAME_START)
-                {
-                    sceneManager_->ChangeScene("game");
+                    packetCopy << ss.str();
+                    sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == CLIENT_ID)
                 {
                     packet >> id_;
                 }
+                else if (messageType == GAME_START)
+                {
+                    sceneManager_->ChangeScene("game");
+                }
+                else if (messageType == CHAT_MESSAGE)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_CONNECT)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_DISCONNECT)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
                 else if (messageType == CLIENT_DATA)
                 {
-                    sf::Int32 numberOfClients;
-                    packet >> numberOfClients;
-                    for(int i = 0; i < numberOfClients; i++)
-                    {
-                        sf::Int32 id;
-                        b2Transform transform;
-                        b2Vec2 velocity;
-                        float angularVelocity;
-                        packet >> id >> transform >> velocity >> angularVelocity;
-                        sf::Packet sendPacket;
-                        sendPacket << CLIENT_DATA << id << transform << velocity << angularVelocity;
-                        sceneManager_->HandlePacket(sendPacket);      
-                    }
+                    sceneManager_->HandlePacket(packetCopy);
                 }
             }        
         }

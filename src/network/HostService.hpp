@@ -27,6 +27,7 @@ private:
     void Receive();
     void RunGame();
     void HandleDisconnectedClients();
+    sf::Int32 GetUnusedId();
     sf::Socket::Status ReceiveIfReady(sf::TcpSocket& socket, sf::Packet& packet);
     sf::TcpListener listener_;
     sf::SocketSelector selector_;

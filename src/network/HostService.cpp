@@ -88,37 +88,16 @@ void HostService::Receive()
         // Test the listener
         if(selector_.isReady(listener_))
         {
-            sf::TcpSocket* client = new sf::TcpSocket;
-            if(listener_.accept(*client) == sf::Socket::Done)
+            sf::TcpSocket* socket = new sf::TcpSocket;
+            if(listener_.accept(*socket) == sf::Socket::Done)
             {
-                // TODO CHECK MAX CLIENTS
-                // TODO IF CLIENTS MORE THAN 100
-                // Find unused id
-                sf::Int32 id = 0;
-                for(sf::Int32 i = 0; i < 100; i++)
-                {
-                    bool idUsed = false;
-                    for(auto& client : clients_)
-                    {
-                        if(client.id == i)
-                        {
-                            idUsed = true;
-                            break;
-                        }
-                    }
-                    if(!idUsed)
-                    {
-                        id = i;
-                        break;
-                    }
-                }
                 // Add new client
-                clients_.push_back({id, client, ""});
-                selector_.add(*client);
+                clients_.push_back({GetUnusedId(), socket, ""});
+                selector_.add(*socket);
             }
             else
             {
-                delete client;
+                delete socket;
             }
         }
         else
@@ -132,32 +111,26 @@ void HostService::Receive()
                     sf::Socket::Status status = sf::Socket::Done;
                     while (status == sf::Socket::Done)
                     {
-                        // Receive data on socket
+                        // Received data in packet
                         sf::Packet packet;
+                        // Receive data on socket
                         status = ReceiveIfReady(*client.socket, packet);
                         if(status == sf::Socket::Done)
                         {
-                            // Received data in packet
+                            sf::Packet packetCopy(packet);
                             NetworkMessageType messageType;
                             if(packet >> messageType)
                             {
+                                // Handle different message types
                                 if(messageType == CHAT_MESSAGE)
                                 {
                                     // Handle chat message
-                                    std::string clientName;
-                                    std::string chatMessage;
-                                    packet >> clientName >> chatMessage;
-                                    sf::Packet sendPacket;
-                                    sendPacket << CHAT_MESSAGE << clientName << chatMessage;
-                                    // Send to all chatters
-                                    SendToAll(sendPacket);
+                                    SendToAll(packetCopy);
                                 }
                                 else if (messageType == PING)
                                 {
                                     // Handle ping
-                                    sf::Packet sendPacket;
-                                    sendPacket << PING;
-                                    SendToOne(client.socket, sendPacket);
+                                    SendToOne(client.socket, packetCopy);
                                 }
                                 else if (messageType == CLIENT_CONNECT)
                                 {
@@ -169,16 +142,16 @@ void HostService::Receive()
                                     sf::Packet idPacket;
                                     idPacket << CLIENT_ID << client.id;
                                     SendToOne(client.socket, idPacket);
-                                    // Send updated list of clients to clients
-                                    sf::Int32 numberOfClients = clients_.size();
-                                    sf::Packet sendPacket;
-                                    sendPacket << CLIENT_CONNECT << numberOfClients;
-                                    for(auto client2 : clients_)
+                                    // Send other clients info of new client
+                                    packetCopy << client.id;
+                                    SendToAll(packetCopy);
+                                    // Send new client info of other clients
+                                    for(auto& client2 : clients_)
                                     {
-                                        sendPacket << client2.name << client2.id;
+                                        sf::Packet sendPacket;
+                                        sendPacket << CLIENT_CONNECT << client2.name << client2.id;
+                                        SendToOne(client.socket, sendPacket);
                                     }
-                                    // Send to all chatters
-                                    SendToAll(sendPacket);
                                 }
                                 else if (messageType == CLIENT_DATA)
                                 {
@@ -215,26 +188,23 @@ void HostService::RunGame()
             sendPacket << GAME_START;
             SendToAll( sendPacket);
 
-            sf::Int32 numberOfClients = clients_.size();
-            sf::Packet sendPacket2;
-            sendPacket2 << CLIENT_CONNECT << numberOfClients;
-            for(auto client : clients_)
+            // Inform all clients of other players
+            for(auto& client : clients_)
             {
-                sendPacket2 << client.name << client.id;
+                sf::Packet sendPacket2;
+                sendPacket2 << CLIENT_CONNECT << client.name << client.id;
+                SendToAll(sendPacket2);
             }
-            // Send to all chatters
-            SendToAll(sendPacket2);
             gameInit_ = false;
         }
         // Game loop here
-        sf::Int32 numberOfClients = clients_.size();
-        sf::Packet sendPacket;
-        sendPacket << CLIENT_DATA << numberOfClients;
+        // Send info of other clients to clients
         for(auto& client : clients_)
         {
-            sendPacket << client.id << client.transform << client.velocity << client.angularVelocity;
+            sf::Packet sendPacket;
+            sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity;
+            SendToAll(sendPacket);
         }
-        SendToAll(sendPacket);
     }
 }
 
@@ -272,4 +242,28 @@ sf::Socket::Status HostService::ReceiveIfReady(sf::TcpSocket& socket, sf::Packet
         return socket.receive(packet);
     else
         return sf::Socket::NotReady;
+}
+
+sf::Int32 HostService::GetUnusedId()
+{
+    // TODO CHECK MAX CLIENTS
+    // TODO IF CLIENTS MORE THAN 100
+    // Find unused id
+    for(sf::Int32 i = 0; i < 100; i++)
+    {
+        bool idUsed = false;
+        for(auto& client : clients_)
+        {
+            if(client.id == i)
+            {
+                idUsed = true;
+                break;
+            }
+        }
+        if(!idUsed)
+        {
+            return i;
+        }
+    }
+    return -1;
 }

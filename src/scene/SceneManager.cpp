@@ -120,7 +120,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     clientlobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     clientlobby->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"LOBBY", sf::Color::Red, font));
     clientlobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 15, {10, 20}));
-    clientlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.25f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, 10, {3, 10}));
+    clientlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.2f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, 10, {3, 10}));
     clientlobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &playerName](const std::string& text){
             if(clientService.IsConnected())
