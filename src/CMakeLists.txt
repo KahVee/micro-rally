@@ -74,13 +74,13 @@ target_link_libraries(${EXECUTABLE_NAME} sfml-system sfml-window sfml-graphics s
 # Find Box2D library 
 if(MINGW)
     # for detecting MinGW compiler
-    find_package(box2d REQUIRED PATHS /usr/local/lib/cmake/box2d C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
+    find_package(box2d REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
     target_link_libraries(${EXECUTABLE_NAME} box2d::box2d)
 endif()
 
-if(UNIX AND NOT APPLE) # Linux
+if(UNIX AND NOT APPLE)
     # for detecting Linux compilers
-    find_package(Box2D REQUIRED PATHS C:/Users/User/Desktop/cpp_libs/box2d/lib/cmake/box2d)
+    find_package(Box2D REQUIRED)
     target_link_libraries(${EXECUTABLE_NAME} Box2D)
 endif()
 

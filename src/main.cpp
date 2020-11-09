@@ -1,10 +1,8 @@
 #include <iostream>
 #include <string>
-#include <functional>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/Audio.hpp>
-#include <vector>
 #include <thread>
 
 #include "scene/SceneManager.hpp"
