@@ -54,15 +54,16 @@ void GameScene::HandlePacket(sf::Packet& packet)
     }
     else if(messageType == CLIENT_DISCONNECT)
     {
-        // TODO
-        // std::string clientName;
-        // sf::Int32 id;
-        // packet >> clientName >> id;
-        // ReplaceIndex(id, {"",""});
+        std::string clientName;
+        sf::Int32 id;
+        packet >> clientName >> id;
+        if(clientService_->GetId() != id)
+        {
+            game_->RemoveCar(id);
+        }
     }
     else if (messageType == CLIENT_DATA)
     {
-        // TODO
         sf::Int32 id;
         b2Transform transform;
         b2Vec2 velocity;
