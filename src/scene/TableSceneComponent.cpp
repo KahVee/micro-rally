@@ -1,6 +1,6 @@
 #include "TableSceneComponent.hpp"
 
-TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, int rowLimit, const std::vector<int>& columnCharacterLimits) : SceneComponent(relativePosition, relativeSize), rowLimit_(rowLimit), columnCharacterLimits_(columnCharacterLimits)
+TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, int rowLimit, const std::vector<int>& columnCharacterLimits) : SceneComponent(relativePosition, relativeSize, componentClass), rowLimit_(rowLimit), columnCharacterLimits_(columnCharacterLimits)
 {
     // Set text
     text_.setFillColor(textColor);
@@ -20,6 +20,47 @@ TableSceneComponent::TableSceneComponent(const sf::Vector2f& relativePosition, c
     // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
+    // Set size of deque
+    table_.resize(rowLimit_);
+}
+
+void TableSceneComponent::HandlePacket(sf::Packet packet)
+{
+    NetworkMessageType messageType;
+    packet >> messageType;
+    if(componentClass_ == "chat")
+    {
+        if(messageType == CHAT_MESSAGE)
+        {
+            std::string playerName;
+            std::string message;
+            packet >> playerName >> message;
+            AddRow({playerName, message});
+        }
+        else if (messageType == PING)
+        {
+            std::string ping;
+            packet >> ping;
+            AddRow({"PING", ping});
+        }
+    }
+    else if (componentClass_ == "playerlist")
+    {
+        if(messageType == CLIENT_CONNECT)
+        {
+            std::string clientName;
+            sf::Int32 id;
+            packet >> clientName >> id;
+            ReplaceIndex(id, {std::to_string(id), clientName});
+        }
+        else if(messageType == CLIENT_DISCONNECT)
+        {
+            std::string clientName;
+            sf::Int32 id;
+            packet >> clientName >> id;
+            ReplaceIndex(id, {"",""});
+        }
+    }
 }
 
 void TableSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window)
@@ -62,6 +103,7 @@ void TableSceneComponent::Init(){}
 void TableSceneComponent::Reset()
 {
     table_.clear();
+    table_.resize(rowLimit_);
     text_.setString("");
 }
 

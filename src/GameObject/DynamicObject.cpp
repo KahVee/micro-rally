@@ -31,6 +31,19 @@ b2Transform DynamicObject::GetTransform() const {
     return body_->GetTransform();
 }
 
+b2Vec2 DynamicObject::GetVelocity()
+{
+    // TODO proper implementation
+    return b2Vec2_zero;
+}
+
+float DynamicObject::GetAngularVelocity()
+{
+    // TODO proper implementation
+    return 0.0f;
+}
+
 void DynamicObject::SetTransform(b2Vec2 t, float a) {
     body_->SetTransform(t, a);
 }
+

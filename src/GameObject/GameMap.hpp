@@ -3,7 +3,7 @@
 #include "GameObject.hpp"
 #include "MapTile.hpp"
 #include "GameMapDrawable.hpp"
-#include <box2d/b2_body.h>
+#include <Box2D/Box2D.h>
 #include <vector>
 #include <map>
 #include <string>

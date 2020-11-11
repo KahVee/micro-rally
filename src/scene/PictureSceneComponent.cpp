@@ -1,17 +1,19 @@
 #include "PictureSceneComponent.hpp"
 
-PictureSceneComponent::PictureSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const sf::Texture& texture) : SceneComponent(relativePosition, relativeSize), texture_(texture)
+PictureSceneComponent::PictureSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Texture& texture) : SceneComponent(relativePosition, relativeSize, componentClass)
 {
     // Set sprite
-    sprite_.setTexture(texture_);
+    sprite_.setTexture(texture);
     sf::Vector2f scale(
-        (relativeSize.x * window.getSize().x) / static_cast<float>(texture_.getSize().x),
-        (relativeSize.y * window.getSize().y) / static_cast<float>(texture_.getSize().y)
+        (relativeSize.x * window.getSize().x) / static_cast<float>(texture.getSize().x),
+        (relativeSize.y * window.getSize().y) / static_cast<float>(texture.getSize().y)
     );
     // Set size and position
     SetScale(scale);
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
 }
+
+void PictureSceneComponent::HandlePacket(sf::Packet packet){}
 
 void PictureSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window){}
 

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font) : SceneComponent(relativePosition, relativeSize)
+TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font) : SceneComponent(relativePosition, relativeSize, componentClass)
 {
     // Set text
     text_.setString(text);
@@ -13,6 +13,8 @@ TextSceneComponent::TextSceneComponent(const sf::Vector2f& relativePosition, con
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
 }
+
+void TextSceneComponent::HandlePacket(sf::Packet packet){}
 
 void TextSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& window){}
 

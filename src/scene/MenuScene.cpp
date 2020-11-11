@@ -8,6 +8,14 @@ MenuScene::~MenuScene()
     }
 }
 
+void MenuScene::HandlePacket(sf::Packet& packet)
+{
+    for(auto sceneComponent : sceneComponents_)
+    {
+        sceneComponent->HandlePacket(packet);
+    }
+}
+
 void MenuScene::HandleEvents(sf::RenderWindow& window)
 {
     sf::Event event;

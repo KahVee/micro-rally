@@ -1,9 +1,5 @@
 #include <SFML/Graphics/Sprite.hpp>
-#include <box2d/b2_body.h>
-#include <box2d/b2_world.h>
-#include <box2d/b2_polygon_shape.h>
-#include <box2d/b2_fixture.h>
-#include <box2d/b2_contact.h>
+
 #include <iostream>
 
 #include "../constants.hpp"
@@ -16,7 +12,6 @@ Car::Car(std::string spritePath, b2World *world, int width, int height): Dynamic
     brakingPower_ = 50;
     tireLockAngle_ = 35 * DEG_TO_RAD;
     tireTurnSpeed_ = 160;
-    tires_ = std::vector<Tire*>();
 
     b2PolygonShape pShape;
     pShape.SetAsBox(width/2.0, height/2.0);
@@ -60,6 +55,10 @@ Car::Car(std::string spritePath, b2World *world, int width, int height): Dynamic
     jointDef.localAnchorA.Set( 0.8, -1.7 );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
+
+    // Set sprite scale
+    sprite_.setScale(PIXELS_PER_METER * width / sprite_.getLocalBounds().width, PIXELS_PER_METER * height / sprite_.getLocalBounds().height);
+    steeringAngle_ = 0.f;
 }
 
 Car::~Car() {
@@ -98,9 +97,9 @@ void Car::PrivateUpdate(float dt) {
     float currentAngle = f1Joint_->GetJointAngle();
     float turnSpeed = tireTurnSpeed_ * dt * DEG_TO_RAD;
     float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
-    float newAngle = currentAngle + deltaAngle;
-    f1Joint_->SetLimits( newAngle, newAngle );
-    f2Joint_->SetLimits( newAngle, newAngle );
+    steeringAngle_ = currentAngle + deltaAngle;
+    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
 }
 
 void Car::Accelerate(bool in) {
@@ -149,6 +148,16 @@ float Car::GetBrakingPower() const {
 
 void Car::SetBrakingPower(float newPower) {
     brakingPower_ = newPower;
+}
+
+float Car::GetSteeringAngle() const
+{
+    return steeringAngle_;
+}
+
+void Car::SetSteeringAngle(float steeringAngle)
+{
+    steeringAngle_ = steeringAngle;
 }
 
 std::vector<Tire*> Car::GetTires() {
