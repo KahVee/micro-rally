@@ -5,17 +5,25 @@
 #include <SFML/Audio.hpp>
 #include <thread>
 
+
 #include "scene/SceneManager.hpp"
 
 // INCLUDED IN GameScene already (circular dependency if uncommented)
 //#include "constants.hpp"
+//included in scenemanager already
+//#include "settings/Settings.hpp"
 
 int main()
 {
+    Settings settings;
+    if (!settings.LoadSettings())
+    {
+        return 1;
+    }
     //sf::ContextSettings contextSettings;
     //contextSettings.antialiasingLevel = 8; TO ENABLE ANTI-ALIASING UNCOMMENT THE LINES WITH CONTEXTSETTINGS
     // The window of the program
-    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "PhysicsTest", sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
+    sf::RenderWindow window(sf::VideoMode(settings.GetWidth(), settings.GetHeight()), "PhysicsTest", sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
 
     // The font of the program
     sf::Font font;
@@ -59,7 +67,7 @@ int main()
     // The object that manages scenes of the program
     SceneManager sceneManager;
     // Initialize SceneManager
-    sceneManager.Init(hostService, clientService, hostThread, playerName, window, font, menuBackgroundTexture, buttonSoundBuffer);
+    sceneManager.Init(hostService, clientService, hostThread, settings, window, font, menuBackgroundTexture, buttonSoundBuffer);
     // Initialize ClientService
     clientService.Init(&sceneManager);
     // Limit framerate to 60
@@ -88,5 +96,6 @@ int main()
     {
         hostThread.join();
     }
+    settings.SaveSettings();
     return 0;
 }
