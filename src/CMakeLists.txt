@@ -61,6 +61,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "network/HostService.cpp"
     "network/ClientService.hpp"
     "network/ClientService.cpp"
+    "settings/Settings.cpp"
+    "settings/Settings.hpp"
 )
 
 ## If you want to link SFML statically
