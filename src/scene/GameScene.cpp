@@ -1,6 +1,7 @@
 #include "GameScene.hpp"
 
 #include <vector>
+#include <algorithm>
 #include <iostream>
 
 GameScene::GameScene(ClientService* clientService) : clientService_(clientService)
@@ -49,7 +50,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         // Do not update the players car
         if(clientService_->GetId() != id)
         {
-            game_->AddCar(id, game_->CreateCar());
+            //game_->AddCar(ids);
         }
     }
     else if(messageType == CLIENT_DISCONNECT)
@@ -68,12 +69,11 @@ void GameScene::HandlePacket(sf::Packet& packet)
         b2Transform transform;
         b2Vec2 velocity;
         float angularVelocity;
-        float steeringAngle;
-        packet >> id >> transform >> velocity >> angularVelocity >> steeringAngle;
+        packet >> id >> transform >> velocity >> angularVelocity;
         // Do not update the players car
-        if(clientService_->GetId() != id)
+        if(std::find(game_->GetPlayerCarIDs().begin(), game_->GetPlayerCarIDs().end(), id) == game_->GetPlayerCarIDs().end())
         {
-            game_->UpdateCar(id, transform, velocity, angularVelocity, steeringAngle);
+            game_->UpdateObject(id, transform, velocity, angularVelocity);
         }
         else
         {
@@ -157,6 +157,11 @@ void GameScene::Draw(sf::RenderWindow& window)
     for(auto o: objects) {
         window.draw(o->GetSprite());
     }
+
+    for(auto o: game_->GetPlayerCarIDs()) {
+        window.draw(game_->GetObjectMap()[o]->GetSprite());
+    }
+
     // Draw minimap border
     window.setView(window.getDefaultView());
     sf::RectangleShape rectangle({window.getSize().x * 0.25f, window.getSize().y * 0.25f});
@@ -181,10 +186,6 @@ void GameScene::Draw(sf::RenderWindow& window)
 void GameScene::Init()
 {
     game_ = new Game();
-    game_->GetPlayerCar()->Accelerate(false);
-    game_->GetPlayerCar()->Brake(false);
-    game_->GetPlayerCar()->TurnLeft(false);
-    game_->GetPlayerCar()->TurnRight(false);
     theme2_.play();
 }
 

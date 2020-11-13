@@ -5,7 +5,7 @@
 #include "../constants.hpp"
 #include "Car.hpp"
 
-Car::Car(std::string spritePath, b2World *world, int width, int height): DynamicObject(spritePath, world) {
+Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height): DynamicObject(ids[0], spritePath, world) {
     enginePower_ = 100;
     maxSpeed_ = 40;
     reverseSpeed_ = 20;
@@ -32,25 +32,25 @@ Car::Car(std::string spritePath, b2World *world, int width, int height): Dynamic
     jointDef.localAnchorB.SetZero();
 
     //front tires are created first
-    Tire *tire = new Tire("../res/tire.png", world, this);
+    Tire *tire = new Tire(ids[1], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( -0.8, 1.1 );
     f1Joint_ =(b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire("../res/tire.png", world, this);
+    tire = new Tire(ids[2], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( 0.8, 1.1 );
     f2Joint_ = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire("../res/tire.png", world, this);
+    tire = new Tire(ids[3], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( -0.8, -1.7 );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire("../res/tire.png", world, this);
+    tire = new Tire(ids[4], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( 0.8, -1.7 );
     world->CreateJoint( &jointDef );

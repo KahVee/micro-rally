@@ -3,7 +3,7 @@
 #include "DynamicObject.hpp"
 #include "../constants.hpp"
 
-DynamicObject::DynamicObject(std::string spritePath, b2World *world): world_(world) {
+DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *world): id_(id), world_(world) {
     b2BodyDef bDef;
     bDef.type = b2_dynamicBody;
     body_ = world->CreateBody(&bDef);
@@ -26,24 +26,31 @@ void DynamicObject::PrivateUpdate(float dt) {
 
 }
 
+sf::Int32 DynamicObject::GetID() const {
+    return id_;
+}
+
 //TODO: fix usage of transform_, maybe make it a reference?
 b2Transform DynamicObject::GetTransform() const {
     return body_->GetTransform();
-}
-
-b2Vec2 DynamicObject::GetVelocity()
-{
-    // TODO proper implementation
-    return b2Vec2_zero;
-}
-
-float DynamicObject::GetAngularVelocity()
-{
-    // TODO proper implementation
-    return 0.0f;
 }
 
 void DynamicObject::SetTransform(b2Vec2 t, float a) {
     body_->SetTransform(t, a);
 }
 
+b2Vec2 DynamicObject::GetVelocity() {
+    return body_->GetLinearVelocity();
+}
+
+void DynamicObject::SetVelocity(b2Vec2 v) {
+    body_->SetLinearVelocity(v);
+}
+
+float DynamicObject::GetAngularVelocity() {
+    return body_->GetAngularVelocity();
+}
+
+void DynamicObject::SetAngularVelocity(float a) {
+    body_->SetAngularVelocity(a);
+}

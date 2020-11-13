@@ -10,7 +10,7 @@ class Tire;
 
 class Car : public DynamicObject {
 public:
-    Car(std::string spritePath, b2World *world, int width, int height);
+    Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height);
     virtual ~Car();
 
     void Accelerate(bool in);
