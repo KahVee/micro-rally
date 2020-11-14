@@ -69,11 +69,12 @@ void GameScene::HandlePacket(sf::Packet& packet)
         b2Transform transform;
         b2Vec2 velocity;
         float angularVelocity;
-        packet >> id >> transform >> velocity >> angularVelocity;
+        float steeringAngle;
+        packet >> id >> transform >> velocity >> angularVelocity >> steeringAngle;
         // Do not update the players car
         if(clientService_->GetId() != id)
         {
-            game_->UpdateObject(id, transform, velocity, angularVelocity);
+            game_->UpdateCar(id, transform, velocity, angularVelocity, steeringAngle);
         }
         else
         {

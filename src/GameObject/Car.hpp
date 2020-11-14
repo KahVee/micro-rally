@@ -32,7 +32,7 @@ public:
     float GetSteeringAngle() const;
     void SetSteeringAngle(float steeringAngle);
     std::vector<Tire*> GetTires();
-
+    bool isLocalPlayer_;
 private:
     b2RevoluteJoint *f1Joint_, *f2Joint_;
     std::vector<std::pair<float, float>> localTirePositions_;
@@ -48,7 +48,7 @@ private:
     void PrivateUpdate(float dt);
 
     //Player-input-controlled parameters
-    bool isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
+    bool isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_;
 
     float steeringAngle_;
 };

@@ -9,6 +9,7 @@ Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int
     :DynamicObject(ids[0], spritePath, world) {
 
     localTirePositions_ = localTirePositions;
+    isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
 
     //TODO: magic numbers begone
     enginePower_ = 100;
@@ -68,7 +69,9 @@ Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int
 
 Car::~Car() {
     for(Tire *t: tires_) {
-        delete t;
+        if(t != nullptr) {
+            delete t;
+        }
     }
     world_->DestroyBody(body_);
 }
@@ -93,16 +96,18 @@ void Car::PrivateUpdate(float dt) {
     //tires_[1]->UpdateTurningTorque(isTurningLeft_, isTurningRight_); 
 
     //Force the front tires to a specific turn angle.
-    float desiredAngle = 0;
-    if(isTurningLeft_) {
-        desiredAngle = tireLockAngle_;
-    } else if(isTurningRight_) {
-        desiredAngle = -tireLockAngle_;
+    if(isLocalPlayer_) {
+        float desiredAngle = 0;
+        if(isTurningLeft_) {
+            desiredAngle = tireLockAngle_;
+        } else if(isTurningRight_) {
+            desiredAngle = -tireLockAngle_;
+        }
+        float currentAngle = f1Joint_->GetJointAngle();
+        float turnSpeed = tireTurnSpeed_ * dt * DEG_TO_RAD;
+        float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
+        steeringAngle_ = currentAngle + deltaAngle;
     }
-    float currentAngle = f1Joint_->GetJointAngle();
-    float turnSpeed = tireTurnSpeed_ * dt * DEG_TO_RAD;
-    float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
-    steeringAngle_ = currentAngle + deltaAngle;
     f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
     f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
 }
@@ -113,12 +118,15 @@ void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity
     SetAngularVelocity(angularVelocity);
     SetSteeringAngle(steeringAngle);
 
-    b2Transform t = GetTransform();
-    for (int i = 0; i < 4; i++) {        
-        b2Vec2 pos = b2Vec2(t.p.x + localTirePositions_[i].first, t.p.y + localTirePositions_[i].second);
-        //TODO: If front tire flickering is noticeable, add steeringAngle to their angle
-        tires_[i]->body_->SetTransform(pos, t.q.GetAngle());
-    }
+    b2Transform t = GetTransform();    
+    b2Vec2 pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[0].first, localTirePositions_[0].second));
+    tires_[0]->body_->SetTransform(pos, t.q.GetAngle() + steeringAngle_);
+    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[1].first, localTirePositions_[1].second));
+    tires_[1]->body_->SetTransform(pos, t.q.GetAngle() + steeringAngle_);
+    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[2].first, localTirePositions_[2].second));
+    tires_[2]->body_->SetTransform(pos, t.q.GetAngle());
+    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[3].first, localTirePositions_[3].second));
+    tires_[3]->body_->SetTransform(pos, t.q.GetAngle());
     
 }
 

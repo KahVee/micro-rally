@@ -21,7 +21,8 @@ public:
 
     void Init();
     void Update(float dt);
-    virtual void UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity);
+    void UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity);
+    void UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
 
     Car* CreatePlayerCar();
     Car* AddCar(sf::Int32 id);

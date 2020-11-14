@@ -62,6 +62,11 @@ void Game::UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, fl
     o->SetState(transform, velocity, angularVelocity);
 }
 
+void Game::UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {
+    Car *car = (Car*)objectMap_[id];
+    car->SetState(transform, velocity, angularVelocity, steeringAngle);
+}
+
 Car* Game::CreatePlayerCar()
 {
     std::vector<sf::Int32> ids;
@@ -79,6 +84,7 @@ Car* Game::CreatePlayerCar()
     for(int i = 0; i < 4; i++) {
         objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i+1], tires[i]));
     }
+    car->isLocalPlayer_ = true;
     return car;
 }
 
@@ -99,7 +105,7 @@ Car* Game::AddCar(sf::Int32 id)
         objects_.push_back(tires[i]);
         objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i], tires[i]));
     }
-
+    car->isLocalPlayer_ = false;
     return car;
 }
 
