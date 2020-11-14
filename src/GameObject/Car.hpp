@@ -10,8 +10,10 @@ class Tire;
 
 class Car : public DynamicObject {
 public:
-    Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height);
-    virtual ~Car();
+    Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height, std::vector<std::pair<float, float>> localTirePositions);
+    ~Car();
+
+    void SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
 
     void Accelerate(bool in);
     void Brake(bool in);
@@ -33,6 +35,7 @@ public:
 
 private:
     b2RevoluteJoint *f1Joint_, *f2Joint_;
+    std::vector<std::pair<float, float>> localTirePositions_;
     float enginePower_;
     float maxSpeed_;
     float reverseSpeed_;

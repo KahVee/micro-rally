@@ -17,6 +17,8 @@ public:
     //Common update for all DynamicObjects
     void Update(float dt);
 
+    void SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity);
+
     b2Transform GetTransform() const;
     void SetTransform(b2Vec2, float);
 

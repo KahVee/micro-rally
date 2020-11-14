@@ -24,6 +24,7 @@ Game::~Game() {
     for(auto o: objects_) {
         delete o;
     }
+    delete playerCar_;
     delete world_;
     delete map_;
 }
@@ -51,15 +52,14 @@ void Game::Update(float dt) {
     for(auto object: objects_) {
         object->Update(dt);
     }
+    playerCar_->Update(dt);
     map_->Update();
     world_->Step(dt, 16, 16);
 }
 
 void Game::UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity) {
     DynamicObject *o = objectMap_[id];
-    o->SetTransform(transform.p, transform.q.GetAngle());
-    o->SetVelocity(velocity);
-    o->SetAngularVelocity(angularVelocity);
+    o->SetState(transform, velocity, angularVelocity);
 }
 
 Car* Game::CreatePlayerCar()
@@ -71,7 +71,8 @@ Car* Game::CreatePlayerCar()
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4);
+    std::vector<std::pair<float, float>> tirePositions = { {-0.8, 1.1 }, {0.8, 1.1}, {-0.8, -1.7}, {0.8, -1.7}};
+    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4, tirePositions);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -89,7 +90,8 @@ Car* Game::AddCar(sf::Int32 id)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4);   
+    std::vector<std::pair<float, float>> tirePositions = { {-0.8, 1.1 }, {0.8, 1.1}, {-0.8, -1.7}, {0.8, -1.7}};
+    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4, tirePositions);   
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     std::vector<Tire*> tires = car->GetTires();

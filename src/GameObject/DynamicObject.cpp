@@ -26,6 +26,12 @@ void DynamicObject::PrivateUpdate(float dt) {
 
 }
 
+void DynamicObject::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity) {
+    SetTransform(transform.p, transform.q.GetAngle());
+    SetVelocity(velocity);
+    SetAngularVelocity(angularVelocity);
+}
+
 sf::Int32 DynamicObject::GetID() const {
     return id_;
 }

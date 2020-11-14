@@ -5,7 +5,12 @@
 #include "../constants.hpp"
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height): DynamicObject(ids[0], spritePath, world) {
+Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height, std::vector<std::pair<float, float>> localTirePositions)
+    :DynamicObject(ids[0], spritePath, world) {
+
+    localTirePositions_ = localTirePositions;
+
+    //TODO: magic numbers begone
     enginePower_ = 100;
     maxSpeed_ = 40;
     reverseSpeed_ = 20;
@@ -34,25 +39,25 @@ Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int
     //front tires are created first
     Tire *tire = new Tire(ids[1], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( -0.8, 1.1 );
+    jointDef.localAnchorA.Set( localTirePositions[0].first, localTirePositions[0].second );
     f1Joint_ =(b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     tire = new Tire(ids[2], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( 0.8, 1.1 );
+    jointDef.localAnchorA.Set( localTirePositions[1].first, localTirePositions[1].second );
     f2Joint_ = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     tire = new Tire(ids[3], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( -0.8, -1.7 );
+    jointDef.localAnchorA.Set( localTirePositions[2].first, localTirePositions[2].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     tire = new Tire(ids[4], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( 0.8, -1.7 );
+    jointDef.localAnchorA.Set( localTirePositions[3].first, localTirePositions[3].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
@@ -69,7 +74,6 @@ Car::~Car() {
 }
 
 void Car::PrivateUpdate(float dt) {
-
     //All-wheel drive
     for(Tire *t: tires_) {
         t->UpdateFriction();
@@ -101,6 +105,21 @@ void Car::PrivateUpdate(float dt) {
     steeringAngle_ = currentAngle + deltaAngle;
     f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
     f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+}
+
+void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {
+    SetTransform(transform.p, transform.q.GetAngle());
+    SetVelocity(velocity);
+    SetAngularVelocity(angularVelocity);
+    SetSteeringAngle(steeringAngle);
+
+    b2Transform t = GetTransform();
+    for (int i = 0; i < 4; i++) {        
+        b2Vec2 pos = b2Vec2(t.p.x + localTirePositions_[i].first, t.p.y + localTirePositions_[i].second);
+        //TODO: If front tire flickering is noticeable, add steeringAngle to their angle
+        tires_[i]->body_->SetTransform(pos, t.q.GetAngle());
+    }
+    
 }
 
 void Car::Accelerate(bool in) {
@@ -151,13 +170,11 @@ void Car::SetBrakingPower(float newPower) {
     brakingPower_ = newPower;
 }
 
-float Car::GetSteeringAngle() const
-{
+float Car::GetSteeringAngle() const {
     return steeringAngle_;
 }
 
-void Car::SetSteeringAngle(float steeringAngle)
-{
+void Car::SetSteeringAngle(float steeringAngle) {
     steeringAngle_ = steeringAngle;
 }
 
