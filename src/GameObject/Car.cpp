@@ -62,10 +62,10 @@ Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int
 }
 
 Car::~Car() {
-    /*
     for(Tire *t: tires_) {
         delete t;
-    }*/
+    }
+    world_->DestroyBody(body_);
 }
 
 void Car::PrivateUpdate(float dt) {
@@ -74,6 +74,7 @@ void Car::PrivateUpdate(float dt) {
     for(Tire *t: tires_) {
         t->UpdateFriction();
         t->UpdateDrive(isAccelerating_, isBraking_);
+        t->Update(dt);
     }
 
     //Rear-wheel drive, steering not working yet...

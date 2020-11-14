@@ -50,7 +50,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         // Do not update the players car
         if(clientService_->GetId() != id)
         {
-            //game_->AddCar(ids);
+            game_->AddCar(id);
         }
     }
     else if(messageType == CLIENT_DISCONNECT)
@@ -71,7 +71,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         float angularVelocity;
         packet >> id >> transform >> velocity >> angularVelocity;
         // Do not update the players car
-        if(std::find(game_->GetPlayerCarIDs().begin(), game_->GetPlayerCarIDs().end(), id) == game_->GetPlayerCarIDs().end())
+        if(clientService_->GetId() != id)
         {
             game_->UpdateObject(id, transform, velocity, angularVelocity);
         }
@@ -145,21 +145,25 @@ void GameScene::Update(const sf::Time& deltaTime)
 }
 void GameScene::Draw(sf::RenderWindow& window)
 {
-    // Draw map and objects
+    //Camera positioning
     sf::View view(sf::FloatRect(0.f, 0.f, 640.f, 360.f));
     view.setCenter(game_->GetPlayerCar()->GetSprite().getPosition());
     //view.setRotation(game_->GetPlayerCar()->GetTransform().q.GetAngle() * -RAD_TO_DEG);
     window.setView(view);
+
     // Draw map
     window.draw(game_->GetMap()->GetMapDrawable());
+
     // Draw dynamic objects
     std::vector<DynamicObject*> objects = game_->GetObjects();
     for(auto o: objects) {
         window.draw(o->GetSprite());
     }
 
-    for(auto o: game_->GetPlayerCarIDs()) {
-        window.draw(game_->GetObjectMap()[o]->GetSprite());
+    //Draw player car and tires
+    window.draw(game_->GetPlayerCar()->GetSprite());
+    for(auto o: game_->GetPlayerCar()->GetTires()) {
+        window.draw(o->GetSprite());
     }
 
     // Draw minimap border
@@ -169,11 +173,13 @@ void GameScene::Draw(sf::RenderWindow& window)
     rectangle.setOutlineThickness(5.0f);
     rectangle.setOutlineColor(sf::Color::Black);
     window.draw(rectangle);
+
     // Draw minimap
     sf::View minimapView(sf::FloatRect(0.f, 0.f, game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER, game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER));
     minimapView.setViewport(sf::FloatRect(0.75f, 0.f, 0.25f, 0.25f)); // TODO Stop using magic numbers
     window.setView(minimapView);
-    // Draw map
+
+    // TODO: CHECK ORDERING
     window.draw(game_->GetMap()->GetMapDrawable());
     for(auto o: objects) {
         window.draw(o->GetSprite());
@@ -185,7 +191,7 @@ void GameScene::Draw(sf::RenderWindow& window)
 // This is called when the current scene is changed to this one
 void GameScene::Init()
 {
-    game_ = new Game();
+    game_ = new Game(clientService_->GetId());
     theme2_.play();
 }
 

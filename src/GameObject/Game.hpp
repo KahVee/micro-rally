@@ -10,7 +10,7 @@
 
 class Game {
 public:
-    Game();
+    Game(sf::Int32 id);
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();
@@ -24,14 +24,14 @@ public:
     void UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity);
 
     Car* CreatePlayerCar();
-    Car* AddCar(std::vector<sf::Int32> ids);
+    Car* AddCar(sf::Int32 id);
     void RemoveCar(sf::Int32 id);
 
     sf::Int32 GenerateID();
 
 private:
+    sf::Int32 id_;
     Car *playerCar_;
-    std::vector<sf::Int32> playerCarIDs_;
     b2World *world_;
     GameMap *map_;
     //All objects in the world except player-car and its tires
