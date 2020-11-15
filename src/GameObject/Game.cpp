@@ -22,7 +22,8 @@ Game::Game(sf::Int32 id): id_(id) {
 
 Game::~Game() {
     for(auto o: objects_) {
-        delete o;
+        if(o != nullptr)
+            delete o;
     }
     delete playerCar_;
     delete world_;
