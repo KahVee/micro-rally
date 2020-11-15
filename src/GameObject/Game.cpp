@@ -54,7 +54,7 @@ void Game::Update(float dt) {
     }
     playerCar_->Update(dt);
     map_->Update();
-    world_->Step(dt, 16, 16);
+    world_->Step(dt, 3, 8);
 }
 
 void Game::UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity) {
