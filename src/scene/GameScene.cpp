@@ -180,11 +180,20 @@ void GameScene::Draw(sf::RenderWindow& window)
     minimapView.setViewport(sf::FloatRect(0.75f, 0.f, 0.25f, 0.25f)); // TODO Stop using magic numbers
     window.setView(minimapView);
 
-    // TODO: CHECK ORDERING
+    // Draw map
     window.draw(game_->GetMap()->GetMapDrawable());
+
+    // Draw dynamic objects
     for(auto o: objects) {
         window.draw(o->GetSprite());
     }
+
+    //Draw player car and tires
+    window.draw(game_->GetPlayerCar()->GetSprite());
+    for(auto o: game_->GetPlayerCar()->GetTires()) {
+        window.draw(o->GetSprite());
+    }
+
     // Set default view back
     window.setView(window.getDefaultView());
 }
