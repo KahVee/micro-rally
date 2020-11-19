@@ -14,3 +14,8 @@ Box::~Box() {
     world_->DestroyBody(body_);
 }
 
+void Box::PrivateUpdate(float dt)
+{
+
+}
+
