@@ -21,12 +21,13 @@ Tire::~Tire() {
     world_->DestroyBody(body_);
 }
 
-void Tire::UpdateFriction() {
+void Tire::UpdateFriction(float friction) {
     //TODO: Test ApplyForce() too
     //Stops tire from sliding sideways, TODO: add a variable multiplier
     body_->ApplyLinearImpulse(body_->GetMass() * -LateralVelocity() * body_->GetWorldVector(b2Vec2(1,0)), body_->GetWorldCenter(), true);
     //"Rolling resistance", TODO: add surface traction to this
     body_->ApplyForce(-dragForceMultiplier * ForwardVelocity() * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
+    frictionMultiplier_ = friction;
 }
 
 void Tire::UpdateDrive(bool isAccelerating, bool isBraking) {

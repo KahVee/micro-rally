@@ -60,3 +60,8 @@ float DynamicObject::GetAngularVelocity() {
 void DynamicObject::SetAngularVelocity(float a) {
     body_->SetAngularVelocity(a);
 }
+
+void DynamicObject::UpdateFriction(float friction)
+{
+    frictionMultiplier_ = friction;
+}

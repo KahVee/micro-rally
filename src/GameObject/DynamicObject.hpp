@@ -30,8 +30,11 @@ public:
 
     b2Body *body_;
 
+    void UpdateFriction(float friction);
+
 protected:    
     const sf::Int32 id_;
     b2World *world_;
     virtual void PrivateUpdate(float dt);
+    float frictionMultiplier_;
 };

@@ -11,7 +11,7 @@ public:
     Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car);
     virtual ~Tire();
 
-    void UpdateFriction();
+    void UpdateFriction(float friction);
     void UpdateDrive(bool isAccelerating, bool isBraking);
     void UpdateTurningTorque(bool isTurningLeft, bool isTurningRight);
 

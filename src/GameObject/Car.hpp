@@ -13,6 +13,8 @@ public:
     Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height, std::vector<std::pair<float, float>> localTirePositions);
     ~Car();
 
+    void UpdateFriction(float friction);
+
     void SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
 
     void Accelerate(bool in);

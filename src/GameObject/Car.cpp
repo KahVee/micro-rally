@@ -79,7 +79,7 @@ Car::~Car() {
 void Car::PrivateUpdate(float dt) {
     //All-wheel drive
     for(Tire *t: tires_) {
-        t->UpdateFriction();
+        t->UpdateFriction(frictionMultiplier_);
         t->UpdateDrive(isAccelerating_, isBraking_);
         t->Update(dt);
     }
@@ -188,4 +188,12 @@ void Car::SetSteeringAngle(float steeringAngle) {
 
 std::vector<Tire*> Car::GetTires() {
     return tires_;
+}
+
+void Car::UpdateFriction(float friction)
+{
+    for (auto tire: tires_)
+    {
+        tire->UpdateFriction(friction);
+    }
 }

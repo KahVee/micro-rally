@@ -19,7 +19,9 @@ Game::Game(sf::Int32 id): id_(id) {
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
     Box *box = new Box(GenerateID(), "../res/box.png", world_);
-    box->SetTransform(b2Vec2(0,0), 0.0);
+    box->SetTransform(b2Vec2(0,10), 0.0);
+    objects_.push_back(box);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
 
 }
 
@@ -55,6 +57,7 @@ void Game::Init() {
 void Game::Update(float dt) {
     for(auto object: objects_) {
         object->Update(dt);
+        object->UpdateFriction(map_->GetFriction(object->GetTransform().p) );
     }
     playerCar_->Update(dt);
     map_->Update();
@@ -123,6 +126,11 @@ void Game::RemoveCar(sf::Int32 id)
     }
     objects_.erase(std::remove(objects_.begin(), objects_.end(), carToRemove), objects_.end());
     delete carToRemove;
+}
+
+float Game::GetFriction(b2Vec2 coords) const
+{
+    return map_->GetFriction(coords);
 }
 
 sf::Int32 Game::GenerateID() {
