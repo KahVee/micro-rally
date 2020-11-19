@@ -37,6 +37,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "GameObject/Tire.hpp"
     "GameObject/Car.hpp"
     "GameObject/Car.cpp"
+    "GameObject/box.hpp"
+    "GameObject/box.cpp"
     "scene/SceneManager.hpp"
     "scene/SceneManager.cpp"
     "scene/Scene.hpp"
@@ -63,6 +65,7 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "network/ClientService.cpp"
     "settings/Settings.cpp"
     "settings/Settings.hpp"
+
 )
 
 ## If you want to link SFML statically

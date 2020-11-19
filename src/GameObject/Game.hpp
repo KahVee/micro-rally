@@ -7,6 +7,7 @@
 #include "DynamicObject.hpp"
 #include "Car.hpp"
 #include "GameMap.hpp"
+#include "box.hpp"
 
 class Game {
 public:

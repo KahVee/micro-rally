@@ -18,6 +18,9 @@ Game::Game(sf::Int32 id): id_(id) {
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
+    Box *box = new Box(GenerateID(), "../res/box.png", world_);
+    box->SetTransform(b2Vec2(10,10), 0.0);
+
 }
 
 Game::~Game() {
