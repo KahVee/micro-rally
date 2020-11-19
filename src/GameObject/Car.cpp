@@ -68,11 +68,6 @@ Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int
 }
 
 Car::~Car() {
-    for(Tire *t: tires_) {
-        if(t != nullptr) {
-            delete t;
-        }
-    }
     world_->DestroyBody(body_);
 }
 

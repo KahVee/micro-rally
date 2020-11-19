@@ -10,10 +10,6 @@ DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *worl
     LoadSprite(spritePath);
 }
 
-DynamicObject::~DynamicObject() {
-    
-}
-
 void DynamicObject::Update(float dt) {
     b2Vec2 worldPos = body_->GetTransform().p;
     float worldRot = body_->GetTransform().q.GetAngle();

@@ -10,7 +10,7 @@
  */
 class GameObject {
 public:
-    virtual ~GameObject() = 0;
+    virtual ~GameObject() = default;
 
     sf::Sprite GetSprite() const;
     void SetSprite(sf::Sprite);
