@@ -83,7 +83,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             return "";
         }));
     hostlobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
-        [&hostService, &hostThread, &clientService, this](){
+        [&hostService, &hostThread, &clientService](){
             hostService.Stop();
             // Terminate thread if needed
             if(hostThread.joinable())
@@ -93,9 +93,11 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             clientService.Disconnect();
         }));
     hostlobby->AddSceneComponent(new ButtonSceneComponent({0.75f, 0.85f}, {0.2f, 0.1f}, "", window,"PLAY", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
-        [&hostService, &clientService, this](){
-            // Start playing the game in hostservice 
-            hostService.StartGame();
+        [&clientService](){
+            // Send start message to the hostService
+            sf::Packet packet;
+            packet << GAME_START;
+            clientService.Send(packet);
         }));
     AddScene("hostlobby", hostlobby);
     // Create join scene ------------------------------------------------------------------------------------------

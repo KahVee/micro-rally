@@ -2,6 +2,8 @@
 #include <SFML/Network.hpp>
 #include <Box2D/Box2D.h>
 
+#define MAX_CLIENTS 10
+
 struct Client
 {
     sf::Int32 id;
