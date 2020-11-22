@@ -4,15 +4,26 @@ GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, con
     chat_({0.05f, 0.05f}, {0.4f, 0.75f}, "chat", window, sf::Color::Black, font, backgroundColor, 15, {10, 20}),
     playerList_({0.3f, 0.2f}, {0.4f, 0.6f}, "playerlist", window, sf::Color::Black, font, backgroundColor, MAX_CLIENTS, {3, 10}),
     textInput_({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, backgroundColor, sf::Color::White, 20,
-        [clientService, &settings](const std::string& text){
+        [clientService, &settings, this, &window](const std::string& text){
             if(clientService->IsConnected())
             {
-                if(text == "/ping")
+                if(text.size() > 0 && text.at(0) == '/')
                 {
-                    // /ping command for debugging
-                    sf::Packet packet;
-                    packet << PING;
-                    clientService->Send(packet);
+                    if(text == "/ping")
+                    {
+                        // /ping command for debugging
+                        sf::Packet packet;
+                        packet << PING;
+                        clientService->Send(packet);
+                    }
+                    else if(text == "/quit")
+                    {
+                        window.close();
+                    }
+                    else
+                    {
+                        this->chat_.AddRow({"ERROR", "Invalid command!"});
+                    }
                 }
                 else
                 {
