@@ -265,6 +265,9 @@ void GameScene::Draw(sf::RenderWindow& window)
 // This is called when the current scene is changed to this one
 void GameScene::Init()
 {
+    chat_.Init();
+    playerList_.Init();
+    textInput_.Init();
     game_ = new Game(clientService_->GetId());
     theme2_.play();
 }
@@ -272,6 +275,9 @@ void GameScene::Init()
 // This is called when the current scene is changed to another one from this
 void GameScene::Reset()
 {
+    chat_.Reset();
+    playerList_.Reset();
+    textInput_.Reset();
     theme2_.stop();
     if(game_ != nullptr)
     {
