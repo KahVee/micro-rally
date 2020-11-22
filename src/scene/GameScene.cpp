@@ -1,10 +1,28 @@
 #include "GameScene.hpp"
 
-#include <vector>
-#include <algorithm>
-#include <iostream>
-
-GameScene::GameScene(ClientService* clientService) : clientService_(clientService)
+GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, const sf::Font& font, Settings& settings, const sf::Color& backgroundColor) : clientService_(clientService),
+    chat_({0.05f, 0.05f}, {0.4f, 0.75f}, "chat", window, sf::Color::Black, font, backgroundColor, 15, {10, 20}),
+    playerList_({0.3f, 0.2f}, {0.4f, 0.6f}, "playerlist", window, sf::Color::Black, font, backgroundColor, MAX_CLIENTS, {3, 10}),
+    textInput_({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, backgroundColor, sf::Color::White, 20,
+        [clientService, &settings](const std::string& text){
+            if(clientService->IsConnected())
+            {
+                if(text == "/ping")
+                {
+                    // /ping command for debugging
+                    sf::Packet packet;
+                    packet << PING;
+                    clientService->Send(packet);
+                }
+                else
+                {
+                    sf::Packet packet;
+                    packet << CHAT_MESSAGE << settings.GetName() << text;
+                    clientService->Send(packet);
+                }
+            }
+            return "";
+        })
 {
     // Load Theme2
     if(!theme2_.openFromFile("../res/boogiewoogiestomp.wav"))
@@ -29,24 +47,24 @@ void GameScene::HandlePacket(sf::Packet& packet)
     packet >> messageType;
     if(messageType == CHAT_MESSAGE)
     {
-        // TODO
-        // std::string playerName;
-        // std::string message;
-        // packet >> playerName >> message;
-        // AddRow({playerName, message});
+        std::string playerName;
+        std::string message;
+        packet >> playerName >> message;
+        chat_.AddRow({playerName, message});
     }
     else if (messageType == PING)
     {
-        // TODO
-        // std::string ping;
-        // packet >> ping;
-        // AddRow({"PING", ping});
+        std::string ping;
+        packet >> ping;
+        chat_.AddRow({"PING", ping});
     }
     else if(messageType == CLIENT_CONNECT)
-    {
+    {   
         std::string clientName;
         sf::Int32 id;
         packet >> clientName >> id;
+        // Add to the list of players
+        playerList_.ReplaceIndex(id, {std::to_string(id), clientName});
         // Do not update the players car
         if(clientService_->GetId() != id)
         {
@@ -58,6 +76,9 @@ void GameScene::HandlePacket(sf::Packet& packet)
         std::string clientName;
         sf::Int32 id;
         packet >> clientName >> id;
+        // Remove from the list of players
+        playerList_.ReplaceIndex(id, {"",""});
+        // Do not update the players car
         if(clientService_->GetId() != id)
         {
             game_->RemoveCar(id);
@@ -92,12 +113,17 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
     sf::Event event;
     while (window.pollEvent(event))
     {
+        // Handle events
         if(event.type == sf::Event::Closed)
         {
             window.close();
         }
-        // Handle events
-        if(event.type == sf::Event::KeyPressed) {
+        else if(drawChat_)
+        {
+            textInput_.HandleEvent(event, window);
+        }
+        else if(event.type == sf::Event::KeyPressed)
+        {
             switch(event.key.code) {
                 case sf::Keyboard::W:
                     game_->GetPlayerCar()->Accelerate(true);
@@ -111,12 +137,20 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
                 case sf::Keyboard::D:
                     game_->GetPlayerCar()->TurnRight(true);
                     break;
+                case sf::Keyboard::Tab:
+                    drawPlayerList_ = true;
+                    break;
+                case sf::Keyboard::Enter:
+                    drawChat_ = true;
+                    textInput_.SetSelected(true);
+                    break;
                 default:
                     break;
             }
         }
-
-        if(event.type == sf::Event::KeyReleased) {
+        // No else if here because important for exiting chat for example
+        if(event.type == sf::Event::KeyReleased)
+        {
             switch(event.key.code) {
                 case sf::Keyboard::W:
                     game_->GetPlayerCar()->Accelerate(false);
@@ -129,6 +163,13 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
                     break;
                 case sf::Keyboard::D:
                     game_->GetPlayerCar()->TurnRight(false);
+                    break;
+                case sf::Keyboard::Tab:
+                    drawPlayerList_ = false;
+                    break;
+                case sf::Keyboard::Escape:
+                    drawChat_ = false;
+                    textInput_.SetSelected(false);
                     break;
                 default:
                     break;
@@ -196,6 +237,18 @@ void GameScene::Draw(sf::RenderWindow& window)
 
     // Set default view back
     window.setView(window.getDefaultView());
+
+    // Draw chat
+    if(drawChat_)
+    {
+        chat_.Draw(window);
+        textInput_.Draw(window);
+    }
+    // Draw playerlist
+    if(drawPlayerList_)
+    {
+        playerList_.Draw(window);
+    }
 }
 
 // This is called when the current scene is changed to this one

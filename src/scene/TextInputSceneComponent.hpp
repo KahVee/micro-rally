@@ -19,6 +19,8 @@ public:
     void Draw(sf::RenderWindow& window);
     void Init();
     void Reset();
+    void SetSelected(bool selected);
+    bool GetSelected();
 private:
     void SetPosition(const sf::Vector2f& position);
     void SetSize(const sf::Vector2f& size);
