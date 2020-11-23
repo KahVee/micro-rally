@@ -17,8 +17,6 @@ public:
     sf::Socket::Status Listen(unsigned short port);
     void Start();
     void Stop();
-    void StartGame();
-    void StopGame();
     bool IsRunning();
     bool IsGameRunning();
 private:
@@ -34,5 +32,4 @@ private:
     std::list<Client> clients_;
     bool running_ = false;
     bool gameRunning_ = false;
-    bool gameInit_ = false;
 };

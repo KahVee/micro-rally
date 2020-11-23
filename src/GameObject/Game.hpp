@@ -10,24 +10,32 @@
 
 class Game {
 public:
-    Game();
+    Game(sf::Int32 id);
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();
+    std::map<sf::Int32, DynamicObject*> GetObjectMap();
+    std::vector<sf::Int32> GetPlayerCarIDs();
     Car *GetPlayerCar();
     GameMap *GetMap();
 
     void Init();
     void Update(float dt);
+    void UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity);
+    void UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
 
-    Car* CreateCar();
-    void AddCar(sf::Int32 id, Car* car);
+    Car* CreatePlayerCar();
+    Car* AddCar(sf::Int32 id);
     void RemoveCar(sf::Int32 id);
-    void UpdateCar(sf::Int32 id, const b2Transform& transform, const b2Vec2& velocity, float angularVelocity, float steeringAngle);
+
+    sf::Int32 GenerateID();
+
 private:
+    sf::Int32 id_;
     Car *playerCar_;
     b2World *world_;
     GameMap *map_;
+    //All objects in the world except player-car and its tires
     std::vector<DynamicObject*> objects_;
-    std::map<sf::Int32, Car*> players_;
+    std::map<sf::Int32, DynamicObject*> objectMap_;
 };

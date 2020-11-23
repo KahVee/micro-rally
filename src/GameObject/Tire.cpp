@@ -3,7 +3,7 @@
 
 #include "Tire.hpp"
 
-Tire::Tire(std::string spritePath, b2World *world, Car *car): DynamicObject(spritePath, world) {
+Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car): DynamicObject(id, spritePath, world) {
     car_ = car;
 
     b2PolygonShape pShape;
@@ -65,9 +65,7 @@ void Tire::UpdateTurningTorque(bool isTurningLeft, bool isTurningRight) {
 }
 
 void Tire::PrivateUpdate(float dt) {
-    //std::cout << body_->GetTransform().p.x <<", "<< body_->GetTransform().p.y <<", "<< body_->GetTransform().q.GetAngle() << std::endl;
-    // This is called in Car already
-    //UpdateFriction();
+    
 }
 
 float Tire::ForwardVelocity() {

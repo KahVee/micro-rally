@@ -41,7 +41,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     MenuScene* settingsMenu = new MenuScene();
     settingsMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     settingsMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"SETTINGS", sf::Color::Red, font));
-    settingsMenu->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "", window, settings.GetName(), sf::Color::Black, font, Gray, sf::Color::White, 10,
+    settingsMenu->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "deselectonsubmit", window, settings.GetName(), sf::Color::Black, font, Gray, sf::Color::White, 10,
         [&settings](const std::string& text){
             settings.SetName(text);
             return text;
@@ -61,7 +61,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     hostlobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     hostlobby->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"LOBBY", sf::Color::Red, font));
     hostlobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 15, {10, 20}));
-    hostlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.2f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, 10, {3, 10}));
+    hostlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.2f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, MAX_CLIENTS, {3, 10}));
     hostlobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &settings](const std::string& text){
             if(clientService.IsConnected())
@@ -83,7 +83,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             return "";
         }));
     hostlobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
-        [&hostService, &hostThread, &clientService, this](){
+        [&hostService, &hostThread, &clientService](){
             hostService.Stop();
             // Terminate thread if needed
             if(hostThread.joinable())
@@ -93,16 +93,18 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             clientService.Disconnect();
         }));
     hostlobby->AddSceneComponent(new ButtonSceneComponent({0.75f, 0.85f}, {0.2f, 0.1f}, "", window,"PLAY", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
-        [&hostService, &clientService, this](){
-            // Start playing the game in hostservice 
-            hostService.StartGame();
+        [&clientService](){
+            // Send start message to the hostService
+            sf::Packet packet;
+            packet << GAME_START;
+            clientService.Send(packet);
         }));
     AddScene("hostlobby", hostlobby);
     // Create join scene ------------------------------------------------------------------------------------------
     MenuScene* join = new MenuScene();
     join->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     join->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"JOIN", sf::Color::Red, font));
-    join->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
+    join->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "deselectonsubmit", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, this, &settings](const std::string& text){
             if(!clientService.IsConnected())
             {
@@ -120,7 +122,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     clientlobby->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     clientlobby->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"LOBBY", sf::Color::Red, font));
     clientlobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 15, {10, 20}));
-    clientlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.2f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, 10, {3, 10}));
+    clientlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.2f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, MAX_CLIENTS, {3, 10}));
     clientlobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &settings](const std::string& text){
             if(clientService.IsConnected())
@@ -147,7 +149,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
         }));
     AddScene("clientlobby", clientlobby);
     // Create game scene ------------------------------------------------------------------------------------------
-    GameScene* game = new GameScene(&clientService);
+    GameScene* game = new GameScene(&clientService, window, font, settings, Gray);
     AddScene("game", game);
     // Set initial scene
     SetInitialScene("mainMenu");

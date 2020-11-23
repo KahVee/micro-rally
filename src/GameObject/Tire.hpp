@@ -8,8 +8,8 @@ class Car;
 
 class Tire : public DynamicObject {
 public:
-    Tire(std::string spritePath, b2World *world, Car *car);
-    virtual ~Tire();
+    Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car);
+    ~Tire();
 
     void UpdateFriction();
     void UpdateDrive(bool isAccelerating, bool isBraking);

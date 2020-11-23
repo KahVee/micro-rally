@@ -1,10 +1,6 @@
 #include "GameObject.hpp"
 #include <iostream>
 
-GameObject::~GameObject() {
-
-}
-
 sf::Sprite GameObject::GetSprite() const {
     return sprite_;
 }

@@ -42,17 +42,6 @@ void HostService::Stop()
     running_ = false;
 }
 
-void HostService::StartGame()
-{
-    gameRunning_ = true;
-    gameInit_ = true;
-}
-
-void HostService::StopGame()
-{
-    gameRunning_ = false;
-}
-
 bool HostService::IsRunning()
 {
     return running_;
@@ -91,9 +80,17 @@ void HostService::Receive()
             sf::TcpSocket* socket = new sf::TcpSocket;
             if(listener_.accept(*socket) == sf::Socket::Done)
             {
-                // Add new client
-                clients_.push_back({GetUnusedId(), socket, ""});
-                selector_.add(*socket);
+                if(gameRunning_ || clients_.size() >= MAX_CLIENTS)
+                {
+                    socket->disconnect();
+                    delete socket;
+                }
+                else
+                {
+                    // Add new client
+                    clients_.push_back({GetUnusedId(), socket, ""});
+                    selector_.add(*socket);   
+                }
             }
             else
             {
@@ -158,6 +155,23 @@ void HostService::Receive()
                                     // Update player info
                                     packet >> client.id >> client.transform >> client.velocity >> client.angularVelocity >> client.steeringAngle;
                                 }
+                                else if (messageType == GAME_START && client.id == 0)
+                                {
+                                    // Send game init packets here
+                                    gameRunning_ = true;
+                                    // Send info of game starting to clients
+                                    sf::Packet sendPacket;
+                                    sendPacket << GAME_START;
+                                    SendToAll( sendPacket);
+
+                                    // Inform all clients of other players
+                                    for(auto& client2 : clients_)
+                                    {
+                                        sf::Packet sendPacket2;
+                                        sendPacket2 << CLIENT_CONNECT << client2.name << client2.id;
+                                        SendToAll(sendPacket2);
+                                    }
+                                }
                             }
                         }
                         else if (status == sf::Socket::Disconnected)
@@ -180,23 +194,6 @@ void HostService::RunGame()
 {
     if(gameRunning_)
     {
-        // Send game packets here
-        if(gameInit_)
-        {
-            // Send info of game starting to clients
-            sf::Packet sendPacket;
-            sendPacket << GAME_START;
-            SendToAll( sendPacket);
-
-            // Inform all clients of other players
-            for(auto& client : clients_)
-            {
-                sf::Packet sendPacket2;
-                sendPacket2 << CLIENT_CONNECT << client.name << client.id;
-                SendToAll(sendPacket2);
-            }
-            gameInit_ = false;
-        }
         // Game loop here
         // Send info of other clients to clients
         for(auto& client : clients_)
@@ -246,10 +243,8 @@ sf::Socket::Status HostService::ReceiveIfReady(sf::TcpSocket& socket, sf::Packet
 
 sf::Int32 HostService::GetUnusedId()
 {
-    // TODO CHECK MAX CLIENTS
-    // TODO IF CLIENTS MORE THAN 100
     // Find unused id
-    for(sf::Int32 i = 0; i < 100; i++)
+    for(sf::Int32 i = 0; i < MAX_CLIENTS; i++)
     {
         bool idUsed = false;
         for(auto& client : clients_)

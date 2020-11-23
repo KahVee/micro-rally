@@ -18,7 +18,8 @@
 #include "SliderSceneComponent.hpp"
 #include "../network/HostService.hpp"
 #include "../network/ClientService.hpp"
-#include "../settings/Settings.hpp"
+// commented because of circular dependency
+//#include "../settings/Settings.hpp"
 
 class ClientService;
 
