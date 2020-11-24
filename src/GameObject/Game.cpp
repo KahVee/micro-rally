@@ -22,7 +22,7 @@ Game::Game(sf::Int32 id): id_(id) {
     playerCar_->SetTransform(b2Vec2(50, 50), 0);
 
     Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_);
-    box->SetTransform(b2Vec2(0,10), 0.0);
+    box->SetTransform(b2Vec2(20,30), 0.0);
     objects_.push_back(box);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
 
