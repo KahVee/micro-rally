@@ -1,21 +1,26 @@
-# Sample README file for C++ programming project
+# Micro machines
 
-This is an initial git repository for your programming project.
-It contains an initial directory structure that we wish you could
-use as follows:
+## Required libraries
 
-  * `plan/` -- Your project plan should be put here. You may use different sources,
-    but we hope to get the plan **also as a pdf file**.
+**Box-2D:**  
+Install on Linux:
+```
+sudo apt-get install libbox2d-dev
+```
 
-  * `doc/` -- The documentation sources related to your project should be put here.
-    You may use different tools for documentation (e.g. latex),
-    but we hope to get the final version of the document
-    **also as pdf file**.
+**SFML**  
+Install on Linux:
+```
+sudo apt-get install libsfml-dev
+```
 
-  * `src/` -- Here are the C++ source files. You can have subfolders as needed.
+## Required build tools
+**Gcc**
+```
+sudo apt-get install build-essential manpages-dev
+```
 
-  * `README.md` -- This file. You should modify it to represent
-    your project.
-
-You may also add other new directories as needed, for example
-for testing tools.
+**CMake**
+```
+sudo apt-get install cmake
+```
