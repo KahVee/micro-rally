@@ -47,14 +47,24 @@ bool Settings::LoadSettings()
     {
         std::ifstream file("../config/settings.json");
         json j;
-        file >> j;
-        playerName_ = j["PlayerName"].get<std::string>();  
-        width_ =j["Width"].get<int>();
-        height_ =j["Height"].get<int>();
-        volume_ =j["Volume"].get<float>();
-        sf::Listener::setGlobalVolume(volume_);
-        file.close();
+        if (file.peek() == std::ifstream::traits_type::eof())
+        {
+            playerName_ = "player";
+            width_ = 1280;
+            height_ = 720;
+            volume_ = 50;
 
+        }
+        else
+        {
+            file >> j;
+            playerName_ = j["PlayerName"].get<std::string>();  
+            width_ =j["Width"].get<int>();
+            height_ =j["Height"].get<int>();
+            volume_ =j["Volume"].get<float>();
+            sf::Listener::setGlobalVolume(volume_);
+            file.close();
+        }
     }
     catch (const std::exception& e)
     {
