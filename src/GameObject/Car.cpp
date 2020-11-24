@@ -14,7 +14,7 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
     pShape.SetAsBox(carData_.bodyWidth/2.0, carData_.bodyHeight/2.0);
     b2FixtureDef fDef;
     fDef.shape = &pShape;
-    fDef.density = 1;
+    fDef.density = carData_.bodyDensity;
     body_->CreateFixture(&fDef);
 
     //Constructing the tires

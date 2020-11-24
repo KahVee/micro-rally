@@ -70,6 +70,6 @@ private:
     10, // reverse speed
     20 * DEG_TO_RAD, // max steering angle
     120, // steering speed
-    5 // body density
+    2 // body density
     };
 };
