@@ -8,6 +8,7 @@
 #include "Car.hpp"
 #include "GameMap.hpp"
 #include "box.hpp"
+#include "tirestack.hpp"
 
 class Game {
 public:

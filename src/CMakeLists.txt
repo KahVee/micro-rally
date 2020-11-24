@@ -39,6 +39,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "GameObject/Car.cpp"
     "GameObject/box.hpp"
     "GameObject/box.cpp"
+    "GameObject/tirestack.hpp"
+    "GameObject/tirestack.cpp"
     "scene/SceneManager.hpp"
     "scene/SceneManager.cpp"
     "scene/Scene.hpp"

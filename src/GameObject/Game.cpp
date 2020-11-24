@@ -19,10 +19,13 @@ Game::Game(sf::Int32 id): id_(id) {
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
     Box *box = new Box(GenerateID(), "../res/box.png", world_);
-    box->SetTransform(b2Vec2(0,10), 0.0);
+    box->SetTransform(b2Vec2(0,15), 0.0);
     objects_.push_back(box);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
-
+    Tirestack *tirestack = new Tirestack(GenerateID(), "../res/tirestack.png", world_);
+    tirestack->SetTransform(b2Vec2(0,10), 0.0);
+    objects_.push_back(tirestack);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tirestack->GetID(), box) );
 }
 
 Game::~Game() {
