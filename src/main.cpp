@@ -46,16 +46,15 @@ int main()
         std::cout << "audio load error" << std::endl;
         window.close();
     }
-    //Load Theme1
-    sf::Music theme1;
-    if(!theme1.openFromFile("../res/Theme1.wav"))
-    {
-        std::cout << "audio load error" << std::endl;
-        window.close();
-    }
-    theme1.setVolume(15.f);
-    theme1.setLoop(true);
-    
+    // Load Theme1
+    // sf::Music theme1;
+    // if(!theme1.openFromFile("../res/Theme1.wav"))
+    // {
+    //     std::cout << "audio load error" << std::endl;
+    //     window.close();
+    // }
+    // theme1.setVolume(15.f);
+    // theme1.setLoop(true);
     // This object provides delta time
     sf::Clock clock;
     // The name of the local player
