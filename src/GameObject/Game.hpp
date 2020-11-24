@@ -9,6 +9,7 @@
 #include "GameMap.hpp"
 #include "box.hpp"
 #include "tirestack.hpp"
+#include "oilspill.hpp"
 
 class Game {
 public:

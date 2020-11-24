@@ -25,7 +25,11 @@ Game::Game(sf::Int32 id): id_(id) {
     Tirestack *tirestack = new Tirestack(GenerateID(), "../res/tirestack.png", world_);
     tirestack->SetTransform(b2Vec2(0,10), 0.0);
     objects_.push_back(tirestack);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tirestack->GetID(), box) );
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tirestack->GetID(), tirestack) );
+    Oilspill *oilspill = new Oilspill(GenerateID(), "../res/oilspill.png", world_);
+    oilspill->SetTransform(b2Vec2(0,11), 0.0);
+    objects_.push_back(oilspill);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(oilspill->GetID(), oilspill) );
 }
 
 Game::~Game() {

@@ -41,6 +41,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "GameObject/box.cpp"
     "GameObject/tirestack.hpp"
     "GameObject/tirestack.cpp"
+    "GameObject/oilspill.hpp"
+    "GameObject/oilspill.cpp"
     "scene/SceneManager.hpp"
     "scene/SceneManager.cpp"
     "scene/Scene.hpp"
