@@ -7,12 +7,12 @@
 GameScene::GameScene(ClientService* clientService) : clientService_(clientService)
 {
     // Load Theme2
-    if(!theme2_.openFromFile("../res/Theme1.wav"))
+    if(!theme2_.openFromFile("../res/dejavu.wav"))
     {
         std::cout << "audio load error" << std::endl;
     }
     theme2_.setVolume(15.f);
-    theme2_.setLoop(true);
+    theme2_.setLoop(false);
 }
 
 GameScene::~GameScene() {
