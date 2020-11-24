@@ -99,8 +99,11 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
                 else if (event.key.code == sf::Keyboard::Enter)
                 {
                     // When input is submitted
-                    selected_ = false;
-                    rectangleShape_.setFillColor(backgroundColor_);
+                    if(componentClass_ == "deselectonsubmit")
+                    {
+                        selected_ = false;
+                        rectangleShape_.setFillColor(backgroundColor_);   
+                    }
                     unsubmittedTextString_ = onSubmit_(unsubmittedTextString_);
                     textString_ = unsubmittedTextString_;
                     text_.setString(textString_);
@@ -170,4 +173,13 @@ bool TextInputSceneComponent::IsMouseHovering(sf::RenderWindow &window)
     {
         return false;
     }
+}
+
+void TextInputSceneComponent::SetSelected(bool selected)
+{
+    selected_ = selected;
+}
+bool TextInputSceneComponent::GetSelected()
+{
+    return selected_;
 }

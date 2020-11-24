@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <time.h>
+#include <algorithm>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <Box2D/Box2D.h>
@@ -29,8 +30,10 @@ Game::Game(sf::Int32 id): id_(id) {
 
 Game::~Game() {
     for(auto o: objects_) {
-        if(o != nullptr)
-            delete o;
+        delete o;
+    }
+    for(Tire *t: playerCar_->GetTires()) {
+        delete t;
     }
     delete playerCar_;
     delete world_;
@@ -113,7 +116,7 @@ Car* Game::AddCar(sf::Int32 id)
     std::vector<Tire*> tires = car->GetTires();
     for(int i = 0; i < 4; i++) {
         objects_.push_back(tires[i]);
-        objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i], tires[i]));
+        objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i+1], tires[i]));
     }
     car->isLocalPlayer_ = false;
     return car;
@@ -124,10 +127,20 @@ void Game::RemoveCar(sf::Int32 id)
     //TODO add exception handling
     Car *carToRemove = (Car*)objectMap_.at(id);
     objectMap_.erase(id);
-    for(auto t: carToRemove->GetTires()) {
+    for(auto t: carToRemove->GetTires())
+    {
         objectMap_.erase(t->GetID());
     }
+    // Car
     objects_.erase(std::remove(objects_.begin(), objects_.end(), carToRemove), objects_.end());
+    // Tires
+    for(auto t: carToRemove->GetTires())
+    {
+        objects_.erase(std::remove(objects_.begin(), objects_.end(), t), objects_.end());
+    }
+    for(Tire *t: carToRemove->GetTires()) {
+        delete t;
+    }
     delete carToRemove;
 }
 

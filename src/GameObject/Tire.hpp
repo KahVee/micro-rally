@@ -9,7 +9,7 @@ class Car;
 class Tire : public DynamicObject {
 public:
     Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car);
-    virtual ~Tire();
+    ~Tire();
 
     void UpdateFriction(float friction);
     void UpdateDrive(bool isAccelerating, bool isBraking);

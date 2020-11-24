@@ -11,7 +11,7 @@
 class DynamicObject : public GameObject {
 public:
     DynamicObject(sf::Int32 id, std::string spritePath, b2World *world);
-    virtual ~DynamicObject() = 0;
+    virtual ~DynamicObject() = default;
     sf::Int32 GetID() const;
 
     //Common update for all DynamicObjects
