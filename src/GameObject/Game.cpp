@@ -30,6 +30,10 @@ Game::Game(sf::Int32 id): id_(id) {
     oilspill->SetTransform(b2Vec2(0,11), 0.0);
     objects_.push_back(oilspill);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(oilspill->GetID(), oilspill) );
+    Boost *boost = new Boost(GenerateID(), "../res/boost.png", world_);
+    boost->SetTransform(b2Vec2(0,5), 0.0);
+    objects_.push_back(boost);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
 }
 
 Game::~Game() {

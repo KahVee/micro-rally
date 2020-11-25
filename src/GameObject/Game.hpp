@@ -10,6 +10,7 @@
 #include "box.hpp"
 #include "tirestack.hpp"
 #include "oilspill.hpp"
+#include "boost.hpp"
 
 class Game {
 public:
