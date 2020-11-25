@@ -23,7 +23,7 @@ Tirestack::~Tirestack()
 
 void Tirestack::PrivateUpdate(float dt)
 {
-    std::cout << GetTransform().p.x << " " << GetTransform().p.y << " Olen taalla" << std::endl;
+    //std::cout << GetTransform().p.x << " " << GetTransform().p.y << " Olen taalla" << std::endl;
     body_->ApplyForceToCenter(10 * frictionMultiplier_ * -GetVelocity(), true);
     body_->ApplyTorque(10 * frictionMultiplier_ * -GetAngularVelocity(), true);
 }
