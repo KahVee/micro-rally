@@ -14,3 +14,7 @@ void GameObject::LoadSprite(std::string file) {
     //Sets the rotation axis to center of the sprite (needed for displaying box2d rotations)
     sprite_.setOrigin(size.x/2.0, size.y/2.0);
 }
+
+sf::Int32 GameObject::GetID() const {
+    return id_;
+}

@@ -4,16 +4,23 @@
 #include <fstream>
 #include <iostream>
 #include "../constants.hpp"
+#include <SFML/Graphics/Sprite.hpp>
+#include "RaceLine.hpp"
+#include <map>
 
 using json = nlohmann::json;
 
-GameMap::GameMap(float tileSize) : tileSize_(tileSize) {
-    LoadMapFile("../res/maps/test_map_file.json");
+GameMap::GameMap(float tileSize, sf::Int32 id) : tileSize_(tileSize), GameObject(id) {
+    
 }
 
 GameMap::~GameMap() {
     for (auto const& it : this->tileTypes_) {
         delete it.second;
+    }
+
+    for (auto const& raceLine : this->raceLines_) {
+        delete raceLine;
     }
 }
 
@@ -39,7 +46,7 @@ const float GameMap::GetFriction(b2Vec2 v) const {
 /* 
  * Loads the config file for tiles and loads a saved map file.
  */
-void GameMap::LoadMapFile(const std::string& filepath) {
+void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
     // Read json file (tile types)
     std::ifstream tilesFile("../config/map_tile_config.json");
     json tileTypeJson;
@@ -77,19 +84,25 @@ void GameMap::LoadMapFile(const std::string& filepath) {
     for (auto tileChar : tileLayoutString) {
         map_.push_back(tileTypes_[tileChar]);
     }
-
+    // Load map textures
     mapDrawable_.load("../res/mc_texture.png",
         PIXELS_PER_METER*tileSize_, map_, width_, height_);
-    std::cout << "Map loaded!" << std::endl;
+    // Set map position, so that left bottom coordinate is at (0,0) in box2d
+    mapDrawable_.setPosition(sf::Vector2f(0,WINDOW_HEIGHT- PIXELS_PER_METER*tileSize_*height_));
+
+    // Load finish line and checkpoints
+    for (int i = 0; i < mapJson["raceLines"].size(); i++) {
+        float xPos = mapJson["raceLines"][i]["mapX"].get<float>()*tileSize_;
+        float yPos = mapJson["raceLines"][i]["mapY"].get<float>()*tileSize_;
+        float rotation = mapJson["raceLines"][i]["rotation"].get<float>()*DEG_TO_RAD;
+        float length = mapJson["raceLines"][i]["length"].get<float>()*tileSize_;
+        b2Vec2 pos = b2Vec2(xPos, yPos);
+        raceLines_.push_back(new RaceLine(length, tileSize_, pos, rotation, world, -100 -i)); //TODO: ID setting
+    }
 }
 
 void GameMap::Update() {
-    // This currently works without these lines. Only left here just in case
-    // b2Vec2 worldPos = transform_.p;
-    // float worldRot = transform_.q.GetAngle();
-    // mapDrawable_.setPosition(sf::Vector2f(PIXELS_PER_METER*worldPos.x, 
-    //    WINDOW_HEIGHT- PIXELS_PER_METER*(worldPos.y + tileSize_*height_)));
-    // mapDrawable_.setRotation(-worldRot*RAD_TO_DEG);
+
 }
 
 b2Transform GameMap::GetTransform() const {

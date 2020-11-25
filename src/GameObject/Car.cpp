@@ -24,7 +24,8 @@ Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int
     b2FixtureDef fDef;
     fDef.shape = &pShape;    
     fDef.density = 1;
-    body_->CreateFixture(&fDef);
+    b2Fixture *fixture = body_->CreateFixture(&fDef);
+    fixture->SetUserData(this);
 
     //Constructing the tires
     b2RevoluteJointDef jointDef;

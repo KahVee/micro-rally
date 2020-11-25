@@ -12,7 +12,6 @@ class DynamicObject : public GameObject {
 public:
     DynamicObject(sf::Int32 id, std::string spritePath, b2World *world);
     virtual ~DynamicObject() = default;
-    sf::Int32 GetID() const;
 
     //Common update for all DynamicObjects
     void Update(float dt);
@@ -31,7 +30,6 @@ public:
     b2Body *body_;
 
 protected:    
-    const sf::Int32 id_;
     b2World *world_;
     virtual void PrivateUpdate(float dt);
 };

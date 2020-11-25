@@ -7,12 +7,21 @@
 #include <Box2D/Box2D.h>
 
 #include "Game.hpp"
+#include "ContactListener.cpp"
+#include "RaceLine.hpp"
+
+ContactListener gameContactListener;
 
 
 Game::Game(sf::Int32 id): id_(id) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
-    map_ = new GameMap(5.0);
+
+    // Set world contact event listener
+    world_->SetContactListener(&gameContactListener);
+
+    map_ = new GameMap(5.0, -2);
+    map_->LoadMapFile("../res/maps/test_map_file.json", world_);
 
     playerCar_ = CreatePlayerCar();
     playerCar_->Accelerate(false);
@@ -21,6 +30,8 @@ Game::Game(sf::Int32 id): id_(id) {
     playerCar_->TurnRight(false);
 }
 
+
+// TODO: Maybe change destruction from objects_ to objectMap_?
 Game::~Game() {
     for(auto o: objects_) {
         delete o;
@@ -36,7 +47,7 @@ Game::~Game() {
 std::vector<DynamicObject*> Game::GetObjects(){
     return objects_;
 }
-std::map<sf::Int32, DynamicObject*> Game::GetObjectMap() {
+std::map<sf::Int32, GameObject*> Game::GetObjectMap() {
     return objectMap_;
 }
 
@@ -57,12 +68,14 @@ void Game::Update(float dt) {
         object->Update(dt);
     }
     playerCar_->Update(dt);
-    map_->Update();
     world_->Step(dt, 3, 8);
 }
 
+/*
+* BE CAREFUL WHEN CALLING THIS (only call on objects which are dynamicobjects)
+*/  
 void Game::UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity) {
-    DynamicObject *o = objectMap_[id];
+    DynamicObject *o = static_cast<DynamicObject*>(objectMap_[id]);
     o->SetState(transform, velocity, angularVelocity);
 }
 

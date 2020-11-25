@@ -7,6 +7,7 @@
 #include "DynamicObject.hpp"
 #include "Car.hpp"
 #include "GameMap.hpp"
+#include "RaceLine.hpp"
 
 class Game {
 public:
@@ -14,7 +15,7 @@ public:
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();
-    std::map<sf::Int32, DynamicObject*> GetObjectMap();
+    std::map<sf::Int32, GameObject*> GetObjectMap();
     std::vector<sf::Int32> GetPlayerCarIDs();
     Car *GetPlayerCar();
     GameMap *GetMap();
@@ -37,5 +38,5 @@ private:
     GameMap *map_;
     //All objects in the world except player-car and its tires
     std::vector<DynamicObject*> objects_;
-    std::map<sf::Int32, DynamicObject*> objectMap_;
+    std::map<sf::Int32, GameObject*> objectMap_;
 };
