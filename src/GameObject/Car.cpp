@@ -94,8 +94,8 @@ void Car::PrivateUpdate(float dt) {
         float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
         steeringAngle_ = currentAngle + deltaAngle;
     }
-    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
-    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
+    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
 }
 
 void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {
