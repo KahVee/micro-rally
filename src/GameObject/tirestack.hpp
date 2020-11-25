@@ -10,4 +10,5 @@ private:
     void PrivateUpdate(float dt);
     b2CircleShape shape_;
     b2FixtureDef fDef_;
+    b2BodyDef bodyDef_;
 };

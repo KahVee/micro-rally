@@ -3,6 +3,7 @@
 
 Tirestack::Tirestack(sf::Int32 id, std::string spritePath, b2World *world) : DynamicObject(id, spritePath, world)
 {
+    body_->SetType(b2_staticBody);
     b2CircleShape pShape;
     pShape.m_p.Set(0, 0);
     pShape.m_radius = 0.5;
