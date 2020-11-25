@@ -3,7 +3,7 @@
 #include "DynamicObject.hpp"
 #include "../constants.hpp"
 
-DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *world): id_(id), world_(world) {
+DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *world): GameObject(id), world_(world) {
     b2BodyDef bDef;
     bDef.type = b2_dynamicBody;
     body_ = world->CreateBody(&bDef);
@@ -26,10 +26,6 @@ void DynamicObject::SetState(b2Transform transform, b2Vec2 velocity, float angul
     SetTransform(transform.p, transform.q.GetAngle());
     SetVelocity(velocity);
     SetAngularVelocity(angularVelocity);
-}
-
-sf::Int32 DynamicObject::GetID() const {
-    return id_;
 }
 
 //TODO: fix usage of transform_, maybe make it a reference?

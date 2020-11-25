@@ -7,10 +7,11 @@
 #include <vector>
 #include <map>
 #include <string>
+#include "RaceLine.hpp"
 
 class GameMap : public GameObject {
 public:
-    GameMap(float tileSize);
+    GameMap(float tileSize, sf::Int32 id);
     virtual ~GameMap();
 
     b2Transform GetTransform() const;
@@ -19,7 +20,7 @@ public:
     void Update();
 
     const float GetFriction(b2Vec2) const;
-    void LoadMapFile(const std::string&);
+    void LoadMapFile(const std::string&, b2World* world);
     GameMapDrawable GetMapDrawable() const;
     int GetWidth() const;
     int GetHeight() const;
@@ -31,4 +32,5 @@ private:
     float tileSize_ = 1.0; // In respect to simluation coordinates
     std::map<char, MapTile*> tileTypes_;
     std::vector<MapTile*> map_;
+    std::vector<RaceLine*> raceLines_;
 };

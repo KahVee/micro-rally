@@ -17,6 +17,12 @@
             "fileChar": ",",
             "friction": 0.3,
             "texture": 18
+        },
+        {
+            "name": "finish",
+            "fileChar": "#",
+            "friction": 1,
+            "texture": 53
         }
     ]
 }
