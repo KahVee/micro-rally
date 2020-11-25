@@ -11,7 +11,7 @@ public:
     Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car);
     ~Tire();
 
-    void UpdateFriction();
+    void UpdateFriction(float friction);
     void UpdateDrive(bool isAccelerating, bool isBraking);
     void UpdateTurningTorque(bool isTurningLeft, bool isTurningRight);
 
@@ -20,7 +20,7 @@ private:
     b2PolygonShape shape_;
     b2FixtureDef fDef_;
     const float angularVelocityDampeningMultiplier = 10;
-    const float dragForceMultiplier = 2;
+    const float dragForceMultiplier = 0.1;
     void PrivateUpdate(float dt);
 
     float ForwardVelocity();

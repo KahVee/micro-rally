@@ -5,13 +5,17 @@
 #include <Box2D/Box2D.h>
 
 #include "DynamicObject.hpp"
+#include "../constants.hpp"
+#include "CarData.hpp"
 class Tire;
 #include "Tire.hpp"
 
 class Car : public DynamicObject {
 public:
-    Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height, std::vector<std::pair<float, float>> localTirePositions);
+    Car(std::vector<sf::Int32> ids, b2World *world, CarData carData);
     ~Car();
+
+    void UpdateFriction(float friction);
 
     void SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
 
@@ -34,16 +38,8 @@ public:
     std::vector<Tire*> GetTires();
     bool isLocalPlayer_;
 private:
+    CarData carData_;
     b2RevoluteJoint *f1Joint_, *f2Joint_;
-    std::vector<std::pair<float, float>> localTirePositions_;
-    float enginePower_;
-    float maxSpeed_;
-    float reverseSpeed_;
-    float brakingPower_;
-    //Front tire lock angle
-    float tireLockAngle_;
-    //Front tire turning speed in degrees per time-step
-    float tireTurnSpeed_;
     std::vector<Tire*> tires_;
     void PrivateUpdate(float dt);
 

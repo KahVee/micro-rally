@@ -28,6 +28,13 @@ Game::Game(sf::Int32 id): id_(id) {
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
+    playerCar_->SetTransform(b2Vec2(50, 50), 0);
+
+    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_);
+    box->SetTransform(b2Vec2(20,30), 0.0);
+    objects_.push_back(box);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
+
 }
 
 
@@ -66,8 +73,13 @@ void Game::Init() {
 void Game::Update(float dt) {
     for(auto object: objects_) {
         object->Update(dt);
+        object->UpdateFriction(map_->GetFriction(object->GetTransform().p) );
     }
     playerCar_->Update(dt);
+    for(Tire *t : playerCar_->GetTires()) {
+        t->UpdateFriction(map_->GetFriction(t->GetTransform().p));
+    }
+    map_->Update();
     world_->Step(dt, 3, 8);
 }
 
@@ -93,8 +105,7 @@ Car* Game::CreatePlayerCar()
     {
         ids.push_back(GenerateID());
     }
-    std::vector<std::pair<float, float>> tirePositions = { {-0.8, 1.1 }, {0.8, 1.1}, {-0.8, -1.7}, {0.8, -1.7}};
-    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4, tirePositions);
+    Car* car = new Car(ids, world_, TRUCK);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -113,8 +124,7 @@ Car* Game::AddCar(sf::Int32 id)
     {
         ids.push_back(GenerateID());
     }
-    std::vector<std::pair<float, float>> tirePositions = { {-0.8, 1.1 }, {0.8, 1.1}, {-0.8, -1.7}, {0.8, -1.7}};
-    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4, tirePositions);   
+    Car* car = new Car(ids, world_, TRUCK);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     std::vector<Tire*> tires = car->GetTires();
@@ -146,6 +156,11 @@ void Game::RemoveCar(sf::Int32 id)
         delete t;
     }
     delete carToRemove;
+}
+
+float Game::GetFriction(b2Vec2 coords) const
+{
+    return map_->GetFriction(coords);
 }
 
 sf::Int32 Game::GenerateID() {
