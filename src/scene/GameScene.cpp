@@ -36,12 +36,12 @@ GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, con
         })
 {
     // Load Theme2
-    if(!theme2_.openFromFile("../res/boogiewoogiestomp.wav"))
+    if(!theme2_.openFromFile("../res/dejavu.wav"))
     {
         std::cout << "audio load error" << std::endl;
     }
     theme2_.setVolume(15.f);
-    theme2_.setLoop(true);
+    theme2_.setLoop(false);
 }
 
 GameScene::~GameScene() {
@@ -214,10 +214,10 @@ void GameScene::Draw(sf::RenderWindow& window)
     }
 
     //Draw player car and tires
-    window.draw(game_->GetPlayerCar()->GetSprite());
     for(auto o: game_->GetPlayerCar()->GetTires()) {
         window.draw(o->GetSprite());
     }
+    window.draw(game_->GetPlayerCar()->GetSprite());
 
     // Draw minimap border
     window.setView(window.getDefaultView());
@@ -241,10 +241,10 @@ void GameScene::Draw(sf::RenderWindow& window)
     }
 
     //Draw player car and tires
-    window.draw(game_->GetPlayerCar()->GetSprite());
     for(auto o: game_->GetPlayerCar()->GetTires()) {
         window.draw(o->GetSprite());
     }
+    window.draw(game_->GetPlayerCar()->GetSprite());
 
     // Set default view back
     window.setView(window.getDefaultView());
