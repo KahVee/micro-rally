@@ -56,7 +56,7 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
 
     // Set sprite scale
     sprite_.setScale(PIXELS_PER_METER * carData_.bodyWidth / sprite_.getLocalBounds().width, PIXELS_PER_METER * carData_.bodyHeight / sprite_.getLocalBounds().height);
-    steeringAngle_ = 0;
+    steeringAngle_ = 0.f;
 }
 
 Car::~Car() {
@@ -89,13 +89,14 @@ void Car::PrivateUpdate(float dt) {
         } else if(isTurningRight_) {
             desiredAngle = -carData_.tireLockAngle;
         }
-        float currentAngle = f1Joint_->GetJointAngle();
+        float currentAngle = steeringAngle_;
         float turnSpeed = carData_.tireTurnSpeed * dt * DEG_TO_RAD;
         float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
         steeringAngle_ = currentAngle + deltaAngle;
     }
-    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
-    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
+
+    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
 }
 
 void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {
