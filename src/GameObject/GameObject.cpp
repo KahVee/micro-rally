@@ -1,10 +1,6 @@
 #include "GameObject.hpp"
 #include <iostream>
 
-GameObject::~GameObject() {
-
-}
-
 sf::Sprite GameObject::GetSprite() const {
     return sprite_;
 }
@@ -17,4 +13,8 @@ void GameObject::LoadSprite(std::string file) {
     sf::Vector2u size = texture_.getSize();
     //Sets the rotation axis to center of the sprite (needed for displaying box2d rotations)
     sprite_.setOrigin(size.x/2.0, size.y/2.0);
+}
+
+sf::Int32 GameObject::GetID() const {
+    return id_;
 }

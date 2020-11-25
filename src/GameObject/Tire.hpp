@@ -9,7 +9,7 @@ class Car;
 class Tire : public DynamicObject {
 public:
     Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car);
-    virtual ~Tire();
+    ~Tire();
 
     void UpdateFriction(float friction);
     void UpdateDrive(bool isAccelerating, bool isBraking);
@@ -20,7 +20,7 @@ private:
     b2PolygonShape shape_;
     b2FixtureDef fDef_;
     const float angularVelocityDampeningMultiplier = 10;
-    const float dragForceMultiplier = 2;
+    const float dragForceMultiplier = 0.1;
     void PrivateUpdate(float dt);
 
     float ForwardVelocity();

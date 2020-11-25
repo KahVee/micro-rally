@@ -9,14 +9,20 @@
         {
             "name": "dirt",
             "fileChar": ".",
-            "friction": 1.6,
+            "friction": 0.5,
             "texture": 2
         },
         {
             "name": "sand",
             "fileChar": ",",
-            "friction": 2.1,
+            "friction": 0.3,
             "texture": 18
+        },
+        {
+            "name": "finish",
+            "fileChar": "#",
+            "friction": 1,
+            "texture": 53
         }
     ]
 }

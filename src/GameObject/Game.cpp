@@ -1,25 +1,37 @@
 #include <vector>
 #include <iostream>
 #include <time.h>
+#include <algorithm>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <Box2D/Box2D.h>
 
 #include "Game.hpp"
+#include "ContactListener.cpp"
+#include "RaceLine.hpp"
+
+ContactListener gameContactListener;
 
 
 Game::Game(sf::Int32 id): id_(id) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
-    map_ = new GameMap(5.0);
+
+    // Set world contact event listener
+    world_->SetContactListener(&gameContactListener);
+
+    map_ = new GameMap(5.0, -2);
+    map_->LoadMapFile("../res/maps/test_map_file.json", world_);
 
     playerCar_ = CreatePlayerCar();
     playerCar_->Accelerate(false);
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
-    Box *box = new Box(GenerateID(), "../res/box.png", world_);
-    box->SetTransform(b2Vec2(0,15), 0.0);
+    playerCar_->SetTransform(b2Vec2(50, 50), 0);
+
+    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_);
+    box->SetTransform(b2Vec2(20,30), 0.0);
     objects_.push_back(box);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
     Tirestack *tirestack = new Tirestack(GenerateID(), "../res/tirestack.png", world_);
@@ -36,10 +48,14 @@ Game::Game(sf::Int32 id): id_(id) {
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
 }
 
+
+// TODO: Maybe change destruction from objects_ to objectMap_?
 Game::~Game() {
     for(auto o: objects_) {
-        if(o != nullptr)
-            delete o;
+        delete o;
+    }
+    for(Tire *t: playerCar_->GetTires()) {
+        delete t;
     }
     delete playerCar_;
     delete world_;
@@ -49,7 +65,7 @@ Game::~Game() {
 std::vector<DynamicObject*> Game::GetObjects(){
     return objects_;
 }
-std::map<sf::Int32, DynamicObject*> Game::GetObjectMap() {
+std::map<sf::Int32, GameObject*> Game::GetObjectMap() {
     return objectMap_;
 }
 
@@ -71,12 +87,18 @@ void Game::Update(float dt) {
         object->UpdateFriction(map_->GetFriction(object->GetTransform().p) );
     }
     playerCar_->Update(dt);
+    for(Tire *t : playerCar_->GetTires()) {
+        t->UpdateFriction(map_->GetFriction(t->GetTransform().p));
+    }
     map_->Update();
     world_->Step(dt, 3, 8);
 }
 
+/*
+* BE CAREFUL WHEN CALLING THIS (only call on objects which are dynamicobjects)
+*/  
 void Game::UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity) {
-    DynamicObject *o = objectMap_[id];
+    DynamicObject *o = static_cast<DynamicObject*>(objectMap_[id]);
     o->SetState(transform, velocity, angularVelocity);
 }
 
@@ -94,8 +116,7 @@ Car* Game::CreatePlayerCar()
     {
         ids.push_back(GenerateID());
     }
-    std::vector<std::pair<float, float>> tirePositions = { {-0.8, 1.1 }, {0.8, 1.1}, {-0.8, -1.7}, {0.8, -1.7}};
-    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4, tirePositions);
+    Car* car = new Car(ids, world_, TRUCK);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -114,14 +135,13 @@ Car* Game::AddCar(sf::Int32 id)
     {
         ids.push_back(GenerateID());
     }
-    std::vector<std::pair<float, float>> tirePositions = { {-0.8, 1.1 }, {0.8, 1.1}, {-0.8, -1.7}, {0.8, -1.7}};
-    Car* car = new Car(ids, "../res/f1.png", world_, 2, 4, tirePositions);   
+    Car* car = new Car(ids, world_, TRUCK);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     std::vector<Tire*> tires = car->GetTires();
     for(int i = 0; i < 4; i++) {
         objects_.push_back(tires[i]);
-        objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i], tires[i]));
+        objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i+1], tires[i]));
     }
     car->isLocalPlayer_ = false;
     return car;
@@ -132,10 +152,20 @@ void Game::RemoveCar(sf::Int32 id)
     //TODO add exception handling
     Car *carToRemove = (Car*)objectMap_.at(id);
     objectMap_.erase(id);
-    for(auto t: carToRemove->GetTires()) {
+    for(auto t: carToRemove->GetTires())
+    {
         objectMap_.erase(t->GetID());
     }
+    // Car
     objects_.erase(std::remove(objects_.begin(), objects_.end(), carToRemove), objects_.end());
+    // Tires
+    for(auto t: carToRemove->GetTires())
+    {
+        objects_.erase(std::remove(objects_.begin(), objects_.end(), t), objects_.end());
+    }
+    for(Tire *t: carToRemove->GetTires()) {
+        delete t;
+    }
     delete carToRemove;
 }
 

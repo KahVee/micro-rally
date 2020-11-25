@@ -7,6 +7,7 @@ Boost::Boost(sf::Int32 id, std::string spritePath, b2World *world): DynamicObjec
     b2PolygonShape pShape;
     pShape.SetAsBox(0.5,0.5);
     shape_ = pShape;
+
 }
 
 Boost::~Boost() {

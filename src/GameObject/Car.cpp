@@ -5,26 +5,18 @@
 #include "../constants.hpp"
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int width, int height, std::vector<std::pair<float, float>> localTirePositions)
-    :DynamicObject(ids[0], spritePath, world) {
+Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
+    :DynamicObject(ids[0], carData.spritePath, world), carData_(carData) {
 
-    localTirePositions_ = localTirePositions;
     isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
 
-    //TODO: magic numbers begone
-    enginePower_ = 100;
-    maxSpeed_ = 40;
-    reverseSpeed_ = 20;
-    brakingPower_ = 50;
-    tireLockAngle_ = 35 * DEG_TO_RAD;
-    tireTurnSpeed_ = 160;
-
     b2PolygonShape pShape;
-    pShape.SetAsBox(width/2.0, height/2.0);
+    pShape.SetAsBox(carData_.bodyWidth/2.0, carData_.bodyHeight/2.0);
     b2FixtureDef fDef;
     fDef.shape = &pShape;    
-    fDef.density = 1;
-    body_->CreateFixture(&fDef);
+    fDef.density = carData_.bodyDensity;
+    b2Fixture *fixture = body_->CreateFixture(&fDef);
+    fixture->SetUserData(this);
 
     //Constructing the tires
     b2RevoluteJointDef jointDef;
@@ -40,46 +32,40 @@ Car::Car(std::vector<sf::Int32> ids, std::string spritePath, b2World *world, int
     //front tires are created first
     Tire *tire = new Tire(ids[1], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( localTirePositions[0].first, localTirePositions[0].second );
+    jointDef.localAnchorA.Set( carData_.tirePositions[0].first, carData_.tirePositions[0].second );
     f1Joint_ =(b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     tire = new Tire(ids[2], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( localTirePositions[1].first, localTirePositions[1].second );
+    jointDef.localAnchorA.Set( carData_.tirePositions[1].first, carData_.tirePositions[1].second );
     f2Joint_ = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     tire = new Tire(ids[3], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( localTirePositions[2].first, localTirePositions[2].second );
+    jointDef.localAnchorA.Set( carData_.tirePositions[2].first, carData_.tirePositions[2].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     tire = new Tire(ids[4], "../res/tire.png", world, this);
     jointDef.bodyB = tire->body_;
-    jointDef.localAnchorA.Set( localTirePositions[3].first, localTirePositions[3].second );
+    jointDef.localAnchorA.Set( carData_.tirePositions[3].first, carData_.tirePositions[3].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     // Set sprite scale
-    sprite_.setScale(PIXELS_PER_METER * width / sprite_.getLocalBounds().width, PIXELS_PER_METER * height / sprite_.getLocalBounds().height);
-    steeringAngle_ = 0.f;
+    sprite_.setScale(PIXELS_PER_METER * carData_.bodyWidth / sprite_.getLocalBounds().width, PIXELS_PER_METER * carData_.bodyHeight / sprite_.getLocalBounds().height);
+    steeringAngle_ = 0;
 }
 
 Car::~Car() {
-    for(Tire *t: tires_) {
-        if(t != nullptr) {
-            delete t;
-        }
-    }
     world_->DestroyBody(body_);
 }
 
 void Car::PrivateUpdate(float dt) {
     //All-wheel drive
     for(Tire *t: tires_) {
-        t->UpdateFriction(frictionMultiplier_);
         t->UpdateDrive(isAccelerating_, isBraking_);
         t->Update(dt);
     }
@@ -99,17 +85,17 @@ void Car::PrivateUpdate(float dt) {
     if(isLocalPlayer_) {
         float desiredAngle = 0;
         if(isTurningLeft_) {
-            desiredAngle = tireLockAngle_;
+            desiredAngle = carData_.tireLockAngle;
         } else if(isTurningRight_) {
-            desiredAngle = -tireLockAngle_;
+            desiredAngle = -carData_.tireLockAngle;
         }
         float currentAngle = f1Joint_->GetJointAngle();
-        float turnSpeed = tireTurnSpeed_ * dt * DEG_TO_RAD;
+        float turnSpeed = carData_.tireTurnSpeed * dt * DEG_TO_RAD;
         float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
         steeringAngle_ = currentAngle + deltaAngle;
     }
-    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
-    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
+    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
 }
 
 void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {
@@ -119,13 +105,13 @@ void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity
     SetSteeringAngle(steeringAngle);
 
     b2Transform t = GetTransform();    
-    b2Vec2 pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[0].first, localTirePositions_[0].second));
+    b2Vec2 pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[0].first, carData_.tirePositions[0].second));
     tires_[0]->body_->SetTransform(pos, t.q.GetAngle() + steeringAngle_);
-    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[1].first, localTirePositions_[1].second));
+    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[1].first, carData_.tirePositions[1].second));
     tires_[1]->body_->SetTransform(pos, t.q.GetAngle() + steeringAngle_);
-    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[2].first, localTirePositions_[2].second));
+    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[2].first, carData_.tirePositions[2].second));
     tires_[2]->body_->SetTransform(pos, t.q.GetAngle());
-    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(localTirePositions_[3].first, localTirePositions_[3].second));
+    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[3].first, carData_.tirePositions[3].second));
     tires_[3]->body_->SetTransform(pos, t.q.GetAngle());
     
 }
@@ -147,35 +133,35 @@ void Car::TurnRight(bool in) {
 }
 
 float Car::GetEnginePower() const {
-    return enginePower_;
+    return carData_.enginePower;
 }
 
 void Car::SetEnginePower(float newPower) {
-    enginePower_ = newPower;
+    carData_.enginePower = newPower;
 }
 
 float Car::GetMaxSpeed() const {
-    return maxSpeed_;
+    return carData_.maxSpeed;
 }
 
 void Car::SetMaxSpeed(float newSpeed) {
-    maxSpeed_ = newSpeed;
+    carData_.maxSpeed = newSpeed;
 }
 
 float Car::GetReverseSpeed() const {
-    return reverseSpeed_;
+    return carData_.reverseSpeed;
 }
 
 void Car::SetReverseSpeed(float newSpeed) {
-    reverseSpeed_ = newSpeed;
+    carData_.reverseSpeed = newSpeed;
 }
 
 float Car::GetBrakingPower() const {
-    return brakingPower_;
+    return carData_.brakingPower;
 }
 
 void Car::SetBrakingPower(float newPower) {
-    brakingPower_ = newPower;
+    carData_.brakingPower = newPower;
 }
 
 float Car::GetSteeringAngle() const {

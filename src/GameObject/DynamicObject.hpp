@@ -11,8 +11,7 @@
 class DynamicObject : public GameObject {
 public:
     DynamicObject(sf::Int32 id, std::string spritePath, b2World *world);
-    virtual ~DynamicObject() = 0;
-    sf::Int32 GetID() const;
+    virtual ~DynamicObject() = default;
 
     //Common update for all DynamicObjects
     void Update(float dt);
@@ -33,7 +32,6 @@ public:
     void UpdateFriction(float friction);
 
 protected:    
-    const sf::Int32 id_;
     b2World *world_;
     virtual void PrivateUpdate(float dt);
     float frictionMultiplier_;

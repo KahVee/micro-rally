@@ -10,7 +10,7 @@ Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car): Dyna
     pShape.SetAsBox(0.15, 0.25);
     shape_ = pShape;
     b2FixtureDef fDef;
-    fDef.shape = &shape_;    
+    fDef.shape = &shape_;
     fDef.density = 1;
     fDef.friction = 1;
     fDef_ = fDef;
@@ -22,11 +22,6 @@ Tire::~Tire() {
 }
 
 void Tire::UpdateFriction(float friction) {
-    //TODO: Test ApplyForce() too
-    //Stops tire from sliding sideways, TODO: add a variable multiplier
-    body_->ApplyLinearImpulse(body_->GetMass() * -LateralVelocity() * body_->GetWorldVector(b2Vec2(1,0)), body_->GetWorldCenter(), true);
-    //"Rolling resistance", TODO: add surface traction to this
-    body_->ApplyForce(-dragForceMultiplier * ForwardVelocity() * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
     frictionMultiplier_ = friction;
 }
 
@@ -47,8 +42,14 @@ void Tire::UpdateDrive(bool isAccelerating, bool isBraking) {
     }
 
     if(force != 0) {
-        body_->ApplyForce(/*TRACTION*/ force * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
+        body_->ApplyForce(frictionMultiplier_ * force * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
     }
+
+    //TODO: Test ApplyForce() too
+    //Stops tire from sliding sideways, TODO: add a variable multiplier
+    body_->ApplyLinearImpulse(body_->GetMass() * -LateralVelocity() * body_->GetWorldVector(b2Vec2(1,0)), body_->GetWorldCenter(), true);
+    //"Rolling resistance" to stop car from sliding forever
+    body_->ApplyForce(frictionMultiplier_ * car_->body_->GetMass() * dragForceMultiplier * -ForwardVelocity() * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
 }
 
 //NOT USED ATM
