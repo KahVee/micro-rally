@@ -18,6 +18,7 @@ public:
     void UpdateFriction(float friction);
 
     void SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
+    void SetTransform(b2Vec2 pos, float angle);
 
     void Accelerate(bool in);
     void Brake(bool in);
