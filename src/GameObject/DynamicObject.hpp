@@ -19,7 +19,7 @@ public:
     void SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity);
 
     b2Transform GetTransform() const;
-    void SetTransform(b2Vec2, float);
+    virtual void SetTransform(b2Vec2, float);
 
     b2Vec2 GetVelocity();
     void SetVelocity(b2Vec2);
@@ -34,5 +34,5 @@ public:
 protected:    
     b2World *world_;
     virtual void PrivateUpdate(float dt);
-    float frictionMultiplier_;
+    float frictionMultiplier_ = 1;
 };

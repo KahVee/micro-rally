@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "../constants.hpp"
+#include <cmath>
 #include "Car.hpp"
 
 Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
@@ -61,6 +62,16 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
 
 Car::~Car() {
     world_->DestroyBody(body_);
+}
+
+void Car::SetTransform(b2Vec2 pos, float angle) {
+    body_->SetTransform(pos, angle);
+    for(int i = 0; i < 4; i++) {
+        b2Vec2 originalPos = b2Vec2(carData_.tirePositions[i].first, carData_.tirePositions[i].second);
+        float tireDistance = originalPos.Length();
+        b2Vec2 newPos = originalPos + body_->GetWorldVector(b2Vec2(sin(angle)*tireDistance, cos(angle)*tireDistance));
+        tires_[i]->SetTransform(newPos, angle);
+    }
 }
 
 void Car::PrivateUpdate(float dt) {
