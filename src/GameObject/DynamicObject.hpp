@@ -34,5 +34,5 @@ public:
 protected:    
     b2World *world_;
     virtual void PrivateUpdate(float dt);
-    float frictionMultiplier_;
+    float frictionMultiplier_ = 1;
 };
