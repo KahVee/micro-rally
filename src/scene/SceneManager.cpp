@@ -41,6 +41,21 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     MenuScene* settingsMenu = new MenuScene();
     settingsMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     settingsMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"SETTINGS", sf::Color::Red, font));
+    settingsMenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetResolutionIndex(), settings.resolutions.size(),
+        [&settings](int currentIndex){
+            settings.SetResolutionIndex(currentIndex);
+            int width = settings.resolutions[currentIndex].width;
+            int height = settings.resolutions[currentIndex].height;
+            std::stringstream ssLeft;
+            ssLeft << std::setw(4) << std::setfill(' ') << width;
+
+            std::stringstream ssRight;
+            ssRight << std::left << std::setw(4) << std::setfill(' ') << height;
+
+            std::stringstream ss;
+            ss << ssLeft.str() << "x" << ssRight.str();
+            return ss.str();
+        }));
     settingsMenu->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "deselectonsubmit", window, settings.GetName(), sf::Color::Black, font, Gray, sf::Color::White, 10,
         [&settings](const std::string& text){
             settings.SetName(text);

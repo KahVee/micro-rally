@@ -16,6 +16,7 @@
 #include "TextInputSceneComponent.hpp"
 #include "TableSceneComponent.hpp"
 #include "SliderSceneComponent.hpp"
+#include "ListSelectorSceneComponent.hpp"
 #include "../network/HostService.hpp"
 #include "../network/ClientService.hpp"
 // commented because of circular dependency

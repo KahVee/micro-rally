@@ -13,21 +13,14 @@ std::string Settings::GetName()
     return playerName_;
 }
 
-
-void Settings::SetResolution(int width, int height)
-{
-    width_ = width;
-    height_ = height;
-}
-
 int Settings::GetWidth()
 {
-    return width_;
+    return resolutions[resolutionIndex_].width;
 }
 
 int Settings::GetHeight()
 {
-    return height_;
+    return resolutions[resolutionIndex_].height;
 }
 
 void Settings::SetVolume(float volume)
@@ -39,6 +32,16 @@ void Settings::SetVolume(float volume)
 float Settings::GetVolume()
 {
     return volume_;
+}
+
+void Settings::SetResolutionIndex(int resolutionIndex)
+{
+    resolutionIndex_ = resolutionIndex;
+}
+
+int Settings::GetResolutionIndex()
+{
+    return resolutionIndex_;
 }
 
 void Settings::SetLaps(int laps)
@@ -57,24 +60,23 @@ bool Settings::LoadSettings()
     {
         std::ifstream file("../config/settings.json");
         json j;
-        if (file.peek() == std::ifstream::traits_type::eof())
-        {
-            playerName_ = "player";
-            width_ = 1280;
-            height_ = 720;
-            volume_ = 50;
-
-        }
-        else
+        if (!(file.peek() == std::ifstream::traits_type::eof()))
         {
             file >> j;
-            playerName_ = j["PlayerName"].get<std::string>();  
-            width_ =j["Width"].get<int>();
-            height_ =j["Height"].get<int>();
-            volume_ =j["Volume"].get<float>();
-            sf::Listener::setGlobalVolume(volume_);
-            file.close();
+            if(j.contains("PlayerName"))
+            {
+                playerName_ = j["PlayerName"].get<std::string>();
+            }
+            if(j.contains("ResolutionIndex"))
+            {
+                resolutionIndex_ = j["ResolutionIndex"].get<int>();
+            }
+            if(j.contains("Volume"))
+            {
+                volume_ =j["Volume"].get<float>();
+            }
         }
+        sf::Listener::setGlobalVolume(volume_);
     }
     catch (const std::exception& e)
     {
@@ -92,8 +94,7 @@ bool Settings::SaveSettings()
         json j;
         std::ofstream file("../config/settings.json");
         j["PlayerName"]  = playerName_;
-        j["Width"]  = width_;
-        j["Height"] = height_;
+        j["ResolutionIndex"] = resolutionIndex_;
         j["Volume"]  = volume_;
         file << j << std::endl;
         file.close();
@@ -106,3 +107,5 @@ bool Settings::SaveSettings()
     }
     return true;
 }
+
+const std::vector<Resolution> Settings::resolutions = {{854, 480}, {1280, 720}, {1920, 1080}};

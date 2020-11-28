@@ -8,7 +8,7 @@
 
 #include "SceneComponent.hpp"
 
-/*A SceneComponent that represents a clickable button on screen.*/
+/*A SceneComponent that represents a slider on screen.*/
 class SliderSceneComponent : public SceneComponent
 {
 public:
