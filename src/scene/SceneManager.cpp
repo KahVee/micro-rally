@@ -41,27 +41,40 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     MenuScene* settingsMenu = new MenuScene();
     settingsMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     settingsMenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"SETTINGS", sf::Color::Red, font));
-    settingsMenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetResolutionIndex(), settings.resolutions.size(),
+    settingsMenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetFullscreen(), 2, 14,
+        [&settings](int currentIndex){
+            settings.SetFullscreen(currentIndex);
+            if(currentIndex)
+            {
+                return "  FULLSCREEN  ";
+            }
+            else
+            {
+                return "NOT FULLSCREEN";
+            }
+        }));
+    settingsMenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetResolutionIndex(), sf::VideoMode::getFullscreenModes().size(), 12,
         [&settings](int currentIndex){
             settings.SetResolutionIndex(currentIndex);
-            int width = settings.resolutions[currentIndex].width;
-            int height = settings.resolutions[currentIndex].height;
-            std::stringstream ssLeft;
-            ssLeft << std::setw(4) << std::setfill(' ') << width;
+            std::stringstream widthSs;
+            widthSs << std::setw(4) << std::setfill(' ') << settings.GetVideoMode().width;
 
-            std::stringstream ssRight;
-            ssRight << std::left << std::setw(4) << std::setfill(' ') << height;
+            std::stringstream heightSs;
+            heightSs << std::setw(4) << std::setfill(' ') << settings.GetVideoMode().height;
+
+            std::stringstream bpsSs;
+            bpsSs << std::setw(2) << std::setfill(' ') << settings.GetVideoMode().bitsPerPixel;
 
             std::stringstream ss;
-            ss << ssLeft.str() << "x" << ssRight.str();
+            ss << widthSs.str() << "-" << heightSs.str() << "-" << bpsSs.str();
             return ss.str();
         }));
-    settingsMenu->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "deselectonsubmit", window, settings.GetName(), sf::Color::Black, font, Gray, sf::Color::White, 10,
+    settingsMenu->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, "deselectonsubmit", window, settings.GetName(), sf::Color::Black, font, Gray, sf::Color::White, 10,
         [&settings](const std::string& text){
             settings.SetName(text);
             return text;
         }));
-    settingsMenu->AddSceneComponent(new SliderSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, "", window,"Volume: ", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, sf::Color::Black, settings.GetVolume()/100,
+    settingsMenu->AddSceneComponent(new SliderSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window,"Volume: ", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, sf::Color::Black, settings.GetVolume()/100,
         [&settings](float relativeButtonPosition){
             float volume = relativeButtonPosition * 100.0f;
             settings.SetVolume(volume);
@@ -69,7 +82,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             ss << std::setw(3) << std::setfill(' ') << static_cast<int>(volume);
             return ss.str();
         }));
-    settingsMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, [this](){this->ChangeScene("mainMenu");}));
+    settingsMenu->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, [this](){this->ChangeScene("mainMenu");}));
     AddScene("settings", settingsMenu);
     // Create hostlobby scene ------------------------------------------------------------------------------------------
     MenuScene* hostlobby = new MenuScene();
@@ -122,6 +135,21 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             ss << std::setw(3) << std::setfill(' ') << static_cast<int>(laps);
             return ss.str();
         }));
+    // settingsMenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetResolutionIndex(), settings.resolutions.size(),
+    //     [&settings](int currentIndex){
+    //         settings.SetResolutionIndex(currentIndex);
+    //         int width = settings.resolutions[currentIndex].width;
+    //         int height = settings.resolutions[currentIndex].height;
+    //         std::stringstream ssLeft;
+    //         ssLeft << std::setw(4) << std::setfill(' ') << width;
+
+    //         std::stringstream ssRight;
+    //         ssRight << std::left << std::setw(4) << std::setfill(' ') << height;
+
+    //         std::stringstream ss;
+    //         ss << ssLeft.str() << "x" << ssRight.str();
+    //         return ss.str();
+    //     }));
     AddScene("hostlobby", hostlobby);
     // Create join scene ------------------------------------------------------------------------------------------
     MenuScene* join = new MenuScene();

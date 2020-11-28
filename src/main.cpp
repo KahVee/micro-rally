@@ -22,9 +22,13 @@ int main()
     }
     //sf::ContextSettings contextSettings;
     //contextSettings.antialiasingLevel = 8; TO ENABLE ANTI-ALIASING UNCOMMENT THE LINES WITH CONTEXTSETTINGS
+    int style = sf::Style::Titlebar | sf::Style::Close;
+    if(settings.GetFullscreen())
+    {
+        style = sf::Style::Fullscreen;
+    }
     // The window of the program
-    sf::RenderWindow window(sf::VideoMode(settings.GetWidth(), settings.GetHeight()), "PhysicsTest", sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
-
+    sf::RenderWindow window(settings.GetVideoMode(), "PhysicsTest", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))

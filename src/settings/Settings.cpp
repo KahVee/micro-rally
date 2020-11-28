@@ -3,6 +3,27 @@
 
 using json = nlohmann::json;
 
+void Settings::SetVolume(float volume)
+{
+    sf::Listener::setGlobalVolume(volume);
+    volume_ = volume;
+}
+
+float Settings::GetVolume()
+{
+    return volume_;
+}
+
+void Settings::SetLaps(int laps)
+{
+    laps_ = laps;
+}
+
+int Settings::GetLaps()
+{
+    return laps_;
+}
+
 void Settings::SetName(const std::string& name)
 {
     playerName_ = name;
@@ -13,25 +34,9 @@ std::string Settings::GetName()
     return playerName_;
 }
 
-int Settings::GetWidth()
+sf::VideoMode Settings::GetVideoMode()
 {
-    return resolutions[resolutionIndex_].width;
-}
-
-int Settings::GetHeight()
-{
-    return resolutions[resolutionIndex_].height;
-}
-
-void Settings::SetVolume(float volume)
-{
-    sf::Listener::setGlobalVolume(volume);
-    volume_ = volume;
-}
-
-float Settings::GetVolume()
-{
-    return volume_;
+    return sf::VideoMode::getFullscreenModes().at(resolutionIndex_);
 }
 
 void Settings::SetResolutionIndex(int resolutionIndex)
@@ -44,14 +49,14 @@ int Settings::GetResolutionIndex()
     return resolutionIndex_;
 }
 
-void Settings::SetLaps(int laps)
+void Settings::SetFullscreen(bool fullscreen)
 {
-    laps_ = laps;
+    fullscreen_ = fullscreen;
 }
 
-int Settings::GetLaps()
+bool Settings::GetFullscreen()
 {
-    return laps_;
+    return fullscreen_;
 }
 
 bool Settings::LoadSettings()
@@ -67,13 +72,17 @@ bool Settings::LoadSettings()
             {
                 playerName_ = j["PlayerName"].get<std::string>();
             }
+            if(j.contains("Volume"))
+            {
+                volume_ =j["Volume"].get<float>();
+            }
             if(j.contains("ResolutionIndex"))
             {
                 resolutionIndex_ = j["ResolutionIndex"].get<int>();
             }
-            if(j.contains("Volume"))
+            if(j.contains("Fullscreen"))
             {
-                volume_ =j["Volume"].get<float>();
+                fullscreen_ = j["Fullscreen"].get<bool>();
             }
         }
         sf::Listener::setGlobalVolume(volume_);
@@ -94,8 +103,9 @@ bool Settings::SaveSettings()
         json j;
         std::ofstream file("../config/settings.json");
         j["PlayerName"]  = playerName_;
-        j["ResolutionIndex"] = resolutionIndex_;
         j["Volume"]  = volume_;
+        j["ResolutionIndex"] = resolutionIndex_;
+        j["Fullscreen"] = fullscreen_;
         file << j << std::endl;
         file.close();
 
@@ -107,5 +117,3 @@ bool Settings::SaveSettings()
     }
     return true;
 }
-
-const std::vector<Resolution> Settings::resolutions = {{854, 480}, {1280, 720}, {1920, 1080}};

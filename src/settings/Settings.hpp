@@ -4,6 +4,7 @@
 #include <vector>
 #include <exception>
 #include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 
 struct Resolution
 {
@@ -16,22 +17,24 @@ class Settings
 public:
     Settings() = default;
     ~Settings() = default;
-    int GetHeight();
-    int GetWidth();
     void SetVolume(float volume);
     float GetVolume();
-    void SetResolutionIndex(int resolutionIndex);
-    int GetResolutionIndex();
     void SetLaps(int laps);
     int GetLaps();
     void SetName(const std::string& name);
     std::string GetName();
+    sf::VideoMode GetVideoMode();
+    void SetResolutionIndex(int resolutionIndex);
+    int GetResolutionIndex();
+    void SetFullscreen(bool fullscreen);
+    bool GetFullscreen();
     bool LoadSettings();
     bool SaveSettings();
-    static const std::vector<Resolution> resolutions;
 private:
+    sf::VideoMode videoMode_;
     std::string playerName_ = "player";
     float volume_ = 50.0f;
     int resolutionIndex_ = 0;
+    bool fullscreen_ = false;
     int laps_ = 1;
 };

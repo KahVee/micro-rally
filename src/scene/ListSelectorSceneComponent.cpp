@@ -1,6 +1,6 @@
 #include "ListSelectorSceneComponent.hpp"
 
-ListSelectorSceneComponent::ListSelectorSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, int currentIndex, int listSize, std::function<std::string(float)>  onChange) : SceneComponent(relativePosition, relativeSize, componentClass), onChange_(onChange), backgroundColor_(buttonColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff), currentIndex_(currentIndex), listSize_(listSize)
+ListSelectorSceneComponent::ListSelectorSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, int currentIndex, int listSize, int maxTextSize, std::function<std::string(float)>  onChange) : SceneComponent(relativePosition, relativeSize, componentClass), onChange_(onChange), backgroundColor_(buttonColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff), currentIndex_(currentIndex), listSize_(listSize), maxTextSize_(maxTextSize)
 {
     // Set text
     text_.setString(onChange_(currentIndex_));
@@ -114,7 +114,7 @@ void ListSelectorSceneComponent::SetPosition(const sf::Vector2f& position, const
         position.y
     );
     sf::Vector2f textPosition(
-        (position.x + 0.2f * size.x + 0.3f * size.x) - 9 * character_.getGlobalBounds().width * 0.5f,
+        (position.x + 0.2f * size.x + 0.3f * size.x) - maxTextSize_ * character_.getGlobalBounds().width * 0.5f,
         (position.y + 0.5f * size.y) - 0.5f * (character_.getGlobalBounds().height + character_.getGlobalBounds().top)
     );
     left_.setPosition(leftPosition);
@@ -144,9 +144,9 @@ void ListSelectorSceneComponent::SetSize(const sf::Vector2f& size)
     float desiredScale = 0.95f / ((character_.getLocalBounds().height + character_.getLocalBounds().top) / size.y);
     text_.setScale(desiredScale, desiredScale);
     character_.setScale(desiredScale, desiredScale);
-    if(9 * character_.getGlobalBounds().width > (size.x * 0.6) * 0.9)
+    if(maxTextSize_ * character_.getGlobalBounds().width > (size.x * 0.6) * 0.9)
     {
-        desiredScale = 0.95 / (9 * character_.getLocalBounds().width / (size.x * 0.6));
+        desiredScale = 0.95 / (maxTextSize_ * character_.getLocalBounds().width / (size.x * 0.6));
         text_.setScale(desiredScale, desiredScale);
         character_.setScale(desiredScale, desiredScale);
     }
