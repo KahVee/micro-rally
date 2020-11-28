@@ -91,15 +91,22 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     hostlobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 15, {10, 20}));
     hostlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.2f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, MAX_CLIENTS, {3, 10}));
     hostlobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
-        [&clientService, &settings](const std::string& text){
+        [&clientService, &settings, &window](const std::string& text){
             if(clientService.IsConnected())
             {
-                if(text == "/ping")
+                if(text.size() > 0 && text.at(0) == '/')
                 {
-                    // /ping command for debugging
-                    sf::Packet packet;
-                    packet << PING;
-                    clientService.Send(packet);
+                    if(text == "/ping")
+                    {
+                        // /ping command for debugging
+                        sf::Packet packet;
+                        packet << PING;
+                        clientService.Send(packet);
+                    }
+                    else if(text == "/quit")
+                    {
+                        window.close();
+                    }
                 }
                 else
                 {
@@ -175,15 +182,22 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     clientlobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 15, {10, 20}));
     clientlobby->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.2f, 0.6f}, "playerlist", window, sf::Color::Black, font, Gray, MAX_CLIENTS, {3, 10}));
     clientlobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
-        [&clientService, &settings](const std::string& text){
+        [&clientService, &settings, &window](const std::string& text){
             if(clientService.IsConnected())
             {
-                if(text == "/ping")
+                if(text.size() > 0 && text.at(0) == '/')
                 {
-                    // /ping command for debugging
-                    sf::Packet packet;
-                    packet << PING;
-                    clientService.Send(packet);
+                    if(text == "/ping")
+                    {
+                        // /ping command for debugging
+                        sf::Packet packet;
+                        packet << PING;
+                        clientService.Send(packet);
+                    }
+                    else if(text == "/quit")
+                    {
+                        window.close();
+                    }
                 }
                 else
                 {
