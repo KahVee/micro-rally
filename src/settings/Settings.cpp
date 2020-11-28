@@ -41,6 +41,16 @@ float Settings::GetVolume()
     return volume_;
 }
 
+void Settings::SetLaps(int laps)
+{
+    laps_ = laps;
+}
+
+int Settings::GetLaps()
+{
+    return laps_;
+}
+
 bool Settings::LoadSettings()
 {
     try

@@ -92,12 +92,20 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             }
             clientService.Disconnect();
         }));
-    hostlobby->AddSceneComponent(new ButtonSceneComponent({0.75f, 0.85f}, {0.2f, 0.1f}, "", window,"PLAY", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
+    hostlobby->AddSceneComponent(new ButtonSceneComponent({0.5f, 0.85f}, {0.2f, 0.1f}, "", window,"PLAY", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
         [&clientService](){
             // Send start message to the hostService
             sf::Packet packet;
             packet << GAME_START;
             clientService.Send(packet);
+        }));
+    hostlobby->AddSceneComponent(new SliderSceneComponent({0.75f, 0.2f}, {0.2f, 0.1f}, "", window,"Laps: ", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, sf::Color::Black, (settings.GetLaps()-1)/(MAX_LAPS-1),
+        [&settings](float relativeButtonPosition){
+            int laps = static_cast<int>(relativeButtonPosition * (MAX_LAPS-1) + 1);
+            settings.SetLaps(laps);
+            std::stringstream ss;
+            ss << std::setw(3) << std::setfill(' ') << static_cast<int>(laps);
+            return ss.str();
         }));
     AddScene("hostlobby", hostlobby);
     // Create join scene ------------------------------------------------------------------------------------------

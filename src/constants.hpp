@@ -9,3 +9,5 @@ static const int MAP_TEXTURE_MAP_SIZE = 512;
 static const int MAP_TEXTURE_TILES = 16;
 static const int MAP_TEXTURE_TILE_SIZE = 32;
 static const int RANDOM_SEED = 21;
+// MAX LAPS CANT BE smaller than 2
+static const int MAX_LAPS = 10;

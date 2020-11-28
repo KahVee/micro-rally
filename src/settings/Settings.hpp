@@ -14,6 +14,8 @@ public:
     int GetWidth();
     void SetVolume(float volume);
     float GetVolume();
+    void SetLaps(int laps);
+    int GetLaps();
     void SetName(const std::string& name);
     std::string GetName();
     bool LoadSettings();
@@ -23,4 +25,5 @@ private:
     float volume_;
     int width_;
     int height_;
+    int laps_ = 1;
 };
