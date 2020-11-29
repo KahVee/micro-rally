@@ -69,7 +69,7 @@ void TableSceneComponent::HandlePacket(sf::Packet packet)
             std::string clientName;
             sf::Int32 ranking = -1;
             packet >> id >> clientName >> ranking;
-            ReplaceIndex(ranking - 1, {std::to_string(ranking), clientName, std::to_string(id)});
+            ReplaceIndex(ranking, {std::to_string(ranking), clientName, std::to_string(id)});
         }
     }
 }
@@ -109,7 +109,13 @@ void TableSceneComponent::Draw(sf::RenderWindow& window)
     window.draw(text_);
 }
 
-void TableSceneComponent::Init(){}
+void TableSceneComponent::Init()
+{
+    if(componentClass_ == "scorelist")
+    {
+        ReplaceIndex(0, {"POS", "PLAYER","ID"});
+    }
+}
 
 void TableSceneComponent::Reset()
 {
