@@ -212,7 +212,7 @@ void GameScene::Update(const sf::Time& deltaTime)
 {
     game_->Update(deltaTime.asSeconds());
 
-    std::cout << "box2dcarpos: x " << game_->GetPlayerCar()->GetTransform().p.x << " y: " << game_->GetPlayerCar()->GetTransform().p.y << "sfmlpos x " << game_->GetPlayerCar()->GetSprite().getPosition().x << " y " << game_->GetPlayerCar()->GetSprite().getPosition().y << std::endl;
+    //std::cout << "box2dcarpos: x " << game_->GetPlayerCar()->GetTransform().p.x << " y: " << game_->GetPlayerCar()->GetTransform().p.y << "sfmlpos x " << game_->GetPlayerCar()->GetSprite().getPosition().x << " y " << game_->GetPlayerCar()->GetSprite().getPosition().y << std::endl;
     // This line prints the friction under the car
     // std::cout << game_->GetMap()->GetFriction(game_->GetPlayerCar()->GetTransform().p) << std::endl;
 }
@@ -221,7 +221,7 @@ void GameScene::Draw(sf::RenderWindow& window)
     if(playerFinished_)
     {
         // Draw whole map if player finished
-        sf::View spectateView(sf::FloatRect(0.f, 0.f, game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER, game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER));
+        sf::View spectateView(sf::FloatRect(0.0f, settings_->GetVideoMode().height - game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize()));
         window.setView(spectateView);
         // Draw map
         window.draw(game_->GetMap()->GetMapDrawable());
@@ -248,7 +248,7 @@ void GameScene::Draw(sf::RenderWindow& window)
     else
     {
         //Camera positioning
-        sf::View view(sf::FloatRect(0.f, 0.f, 640.f, 360.f));
+        sf::View view(sf::FloatRect(0.f, 0.f, 80.f, 45.f));
         view.setCenter(game_->GetPlayerCar()->GetSprite().getPosition());
         //view.setRotation(game_->GetPlayerCar()->GetTransform().q.GetAngle() * -RAD_TO_DEG);
         window.setView(view);
@@ -277,7 +277,7 @@ void GameScene::Draw(sf::RenderWindow& window)
         window.draw(rectangle);
 
         // Draw minimap
-        sf::View minimapView(sf::FloatRect(0.f, 0.f, game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER, game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize() * PIXELS_PER_METER));
+        sf::View minimapView(sf::FloatRect(0.0f, settings_->GetVideoMode().height - game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize()));
         minimapView.setViewport(sf::FloatRect(0.75f, 0.f, 0.25f, 0.25f)); // TODO Stop using magic numbers
         window.setView(minimapView);
 

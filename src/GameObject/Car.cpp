@@ -56,7 +56,7 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* 
     tires_.push_back(tire);
 
     // Set sprite scale
-    sprite_.setScale(PIXELS_PER_METER * carData_.bodyWidth / sprite_.getLocalBounds().width, PIXELS_PER_METER * carData_.bodyHeight / sprite_.getLocalBounds().height);
+    sprite_.setScale(carData_.bodyWidth / sprite_.getLocalBounds().width, carData_.bodyHeight / sprite_.getLocalBounds().height);
     steeringAngle_ = 0.f;
 }
 

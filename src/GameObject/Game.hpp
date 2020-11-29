@@ -9,7 +9,7 @@
 #include "CarData.hpp"
 #include "GameMap.hpp"
 #include "RaceLine.hpp"
-#include "box.hpp"
+#include "Box.hpp"
 
 class Game {
 public:

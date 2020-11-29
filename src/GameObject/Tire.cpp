@@ -6,8 +6,10 @@
 Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car, Settings* settings): DynamicObject(id, spritePath, world, settings) {
     car_ = car;
 
+    float width = 0.3f;
+    float height = 0.5f;
     b2PolygonShape pShape;
-    pShape.SetAsBox(0.15, 0.25);
+    pShape.SetAsBox(width * 0.5f, height * 0.5f);
     shape_ = pShape;
     b2FixtureDef fDef;
     fDef.shape = &shape_;
@@ -15,6 +17,7 @@ Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car, Setti
     fDef.friction = 1;
     fDef_ = fDef;
     body_->CreateFixture(&fDef_);
+    sprite_.setScale(width / sprite_.getLocalBounds().width, height / sprite_.getLocalBounds().height);
 }
 
 Tire::~Tire() {

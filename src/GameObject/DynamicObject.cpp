@@ -13,7 +13,7 @@ DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *worl
 void DynamicObject::Update(float dt) {
     b2Vec2 worldPos = body_->GetTransform().p;
     float worldRot = body_->GetTransform().q.GetAngle();
-    sprite_.setPosition(sf::Vector2f(PIXELS_PER_METER*worldPos.x, settings_->GetVideoMode().height-(PIXELS_PER_METER*worldPos.y)));
+    sprite_.setPosition(sf::Vector2f(worldPos.x, settings_->GetVideoMode().height-worldPos.y));
     sprite_.setRotation(-worldRot*RAD_TO_DEG);
     PrivateUpdate(dt);
 }
