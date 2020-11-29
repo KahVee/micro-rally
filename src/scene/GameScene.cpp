@@ -86,7 +86,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         // Do not update the players car
         if(clientService_->GetId() != id)
         {
-            game_->AddCar(id);
+            game_->AddCar(id, "FORMULA");
         }
     }
     else if(messageType == CLIENT_DISCONNECT)
@@ -327,7 +327,7 @@ void GameScene::Init()
     chat_.Init();
     playerList_.Init();
     textInput_.Init();
-    game_ = new Game(clientService_->GetId(), settings_);
+    game_ = new Game(clientService_->GetId(), settings_, 3, TRUCK, "../res/maps/test_map_file.json");
     theme2_.play();
 }
 
