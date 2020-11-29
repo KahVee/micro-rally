@@ -21,7 +21,7 @@ Game::Game(sf::Int32 id, Settings* settings, int laps, const std::string &player
     // Set world contact event listener
     world_->SetContactListener(&gameContactListener);
 
-    map_ = new GameMap(5.0, -2, settings);
+    map_ = new GameMap(1.6, -2, settings);
     map_->LoadMapFile(mapPath, world_);
 
     playerCar_ = CreatePlayerCar(playerCarType);
