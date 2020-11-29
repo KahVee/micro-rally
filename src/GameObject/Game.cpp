@@ -105,7 +105,7 @@ Car* Game::CreatePlayerCar()
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, TRUCK, settings_);
+    Car* car = new Car(ids, world_, settings_->GetCarData("FORMULA"), settings_);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -124,7 +124,7 @@ Car* Game::AddCar(sf::Int32 id)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, TRUCK, settings_);  
+    Car* car = new Car(ids, world_, settings_->GetCarData("TRUCK"), settings_);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     std::vector<Tire*> tires = car->GetTires();
