@@ -16,6 +16,10 @@ sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned
         connectPacket << CLIENT_CONNECT << playerName;
         socket_.send(connectPacket);
     }
+    else
+    {
+        socket_.disconnect();
+    }
     return status;
 }
 

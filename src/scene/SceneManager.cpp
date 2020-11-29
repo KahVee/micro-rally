@@ -218,8 +218,8 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     scorescreen->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     scorescreen->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"SCORE SCREEN", sf::Color::Red, font));
     scorescreen->AddSceneComponent(new TableSceneComponent({0.5f, 0.2f}, {0.4f, 0.6f}, "scorelist", window, sf::Color::Black, font, Gray, MAX_CLIENTS, {3, PLAYER_NAME_MAX_CHARACTERS, 3}));
-    clientlobby->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 15, {PLAYER_NAME_MAX_CHARACTERS, 20}));
-    clientlobby->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
+    scorescreen->AddSceneComponent(new TableSceneComponent({0.05f, 0.2f}, {0.4f, 0.6f}, "chat", window, sf::Color::Black, font, Gray, 15, {PLAYER_NAME_MAX_CHARACTERS, 20}));
+    scorescreen->AddSceneComponent(new TextInputSceneComponent({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, Gray, sf::Color::White, 20,
         [&clientService, &settings, &window](const std::string& text){
             if(clientService.IsConnected())
             {
