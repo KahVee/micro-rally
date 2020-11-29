@@ -54,6 +54,41 @@ const CarData& Settings::GetCarData(const std::string& carType)
     return cars_[carType];
 }
 
+const std::vector<std::string> Settings::GetCarNames()
+{
+    std::vector<std::string> carNames;
+    for(auto& car : cars_)
+    {
+        carNames.push_back(car.first);
+    }
+    return carNames;
+}
+
+const std::vector<std::string>& Settings::GetMapNames()
+{
+    return maps_;
+}
+
+void Settings::SetCarIndex(int carIndex)
+{
+    carIndex_ = carIndex;
+}
+
+int Settings::GetCarIndex()
+{
+    return carIndex_;
+}
+
+void Settings::SetMapIndex(int mapIndex)
+{
+    mapIndex_ = mapIndex;
+}
+
+int Settings::GetMapIndex()
+{
+    return mapIndex_;
+}
+
 void Settings::SetFullscreen(bool fullscreen)
 {
     fullscreen_ = fullscreen;
@@ -113,6 +148,9 @@ bool Settings::LoadSettings()
                 element.value()["bodyDensity"].get<float>(),
             };
         }
+        // Load maps
+        maps_.push_back("test_map_file");
+        maps_.push_back("test_map_file_2");
     }
     catch (const std::exception& e)
     {

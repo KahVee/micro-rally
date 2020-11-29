@@ -32,15 +32,24 @@ public:
     void SetResolutionIndex(int resolutionIndex);
     int GetResolutionIndex();
     const CarData& GetCarData(const std::string& carType);
+    const std::vector<std::string> GetCarNames();
+    const std::vector<std::string>& GetMapNames();
+    void SetCarIndex(int carIndex);
+    int GetCarIndex();
+    void SetMapIndex(int mapIndex);
+    int GetMapIndex();
     void SetFullscreen(bool fullscreen);
     bool GetFullscreen();
     bool LoadSettings();
     bool SaveSettings();
 private:
     std::map<std::string,CarData> cars_;
+    std::vector<std::string> maps_;
     std::string playerName_ = "player";
     float volume_ = 50.0f;
     int resolutionIndex_ = 0;
+    int carIndex_ = 0;
+    int mapIndex_ = 0;
     bool fullscreen_ = false;
     int laps_ = 1;
 };

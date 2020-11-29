@@ -142,21 +142,16 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             ss << std::setw(3) << std::setfill(' ') << static_cast<int>(laps);
             return ss.str();
         }));
-    // settingsmenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetResolutionIndex(), settings.resolutions.size(),
-    //     [&settings](int currentIndex){
-    //         settings.SetResolutionIndex(currentIndex);
-    //         int width = settings.resolutions[currentIndex].width;
-    //         int height = settings.resolutions[currentIndex].height;
-    //         std::stringstream ssLeft;
-    //         ssLeft << std::setw(4) << std::setfill(' ') << width;
-
-    //         std::stringstream ssRight;
-    //         ssRight << std::left << std::setw(4) << std::setfill(' ') << height;
-
-    //         std::stringstream ss;
-    //         ss << ssLeft.str() << "x" << ssRight.str();
-    //         return ss.str();
-    //     }));
+    hostlobby->AddSceneComponent(new ListSelectorSceneComponent({0.75f, 0.4f}, {0.2f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetMapIndex(), settings.GetMapNames().size(), 16,
+        [&settings](int currentIndex){
+            settings.SetMapIndex(currentIndex);
+            return settings.GetMapNames()[currentIndex];
+        }));
+    hostlobby->AddSceneComponent(new ListSelectorSceneComponent({0.75f, 0.6f}, {0.2f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetCarIndex(), settings.GetCarNames().size(), 10,
+        [&settings](int currentIndex){
+            settings.SetCarIndex(currentIndex);
+            return settings.GetCarNames()[currentIndex];
+        }));
     AddScene("hostlobby", hostlobby);
     // Create join scene ------------------------------------------------------------------------------------------
     MenuScene* join = new MenuScene();
@@ -207,6 +202,11 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
                 }
             }
             return "";
+        }));
+    clientlobby->AddSceneComponent(new ListSelectorSceneComponent({0.75f, 0.6f}, {0.2f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetCarIndex(), settings.GetCarNames().size(), 10,
+        [&settings](int currentIndex){
+            settings.SetCarIndex(currentIndex);
+            return settings.GetCarNames()[currentIndex];
         }));
     clientlobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
         [&clientService](){
