@@ -4,9 +4,12 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <exception>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+
+#include "../GameObject/CarData.hpp"
 
 struct Resolution
 {
@@ -28,12 +31,13 @@ public:
     const sf::VideoMode& GetVideoMode();
     void SetResolutionIndex(int resolutionIndex);
     int GetResolutionIndex();
+    const CarData& GetCarData(const std::string& carType);
     void SetFullscreen(bool fullscreen);
     bool GetFullscreen();
     bool LoadSettings();
     bool SaveSettings();
 private:
-    sf::VideoMode videoMode_;
+    std::map<std::string,CarData> cars_;
     std::string playerName_ = "player";
     float volume_ = 50.0f;
     int resolutionIndex_ = 0;

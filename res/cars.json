@@ -1,0 +1,30 @@
+{
+    "FORMULA":{
+        "spritePath":"../res/f1.png",
+        "tireStringPath":"../res/tire.png",
+        "bodyWidth":2,
+        "bodyHeight":4,
+        "tirePositions":[[-0.8, 1.1], [0.8, 1.1], [-0.8, -1.7], [0.8, -1.7]],
+        "enginePower":100,
+        "brakingPower":80,
+        "maxSpeed":40,
+        "reverseSpeed":15,
+        "tireLockAngle":0.610865238,
+        "tireTurnSpeed": 160,
+        "bodyDensity": 1.2
+    },
+    "TRUCK":{
+        "spritePath":"../res/truck.png",
+        "tireStringPath":"../res/tire.png",
+        "bodyWidth":2,
+        "bodyHeight":6,
+        "tirePositions":[[-0.9, 2.0], [0.9, 2.0], [-1.0, -2.0], [1.0, -2.0]],
+        "enginePower":150,
+        "brakingPower":60,
+        "maxSpeed":30,
+        "reverseSpeed":10,
+        "tireLockAngle":0.34906585,
+        "tireTurnSpeed": 120,
+        "bodyDensity": 2
+    }
+}

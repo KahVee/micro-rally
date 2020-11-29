@@ -13,7 +13,7 @@
 
 class Game {
 public:
-    Game(sf::Int32 id, Settings* settings, int laps, CarData playerCarData, std::string mapPath);
+    Game(sf::Int32 id, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath);
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();
@@ -28,8 +28,8 @@ public:
     void UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity);
     void UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
 
-    Car* CreatePlayerCar(CarData carData);
-    Car* AddCar(sf::Int32 id, std::string carType);
+    Car* CreatePlayerCar(const std::string &carType);
+    Car* AddCar(sf::Int32 id, const std::string &carType);
     void RemoveCar(sf::Int32 id);
     bool ContainsCar(sf::Int32 id);
 

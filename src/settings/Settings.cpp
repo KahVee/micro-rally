@@ -49,6 +49,11 @@ int Settings::GetResolutionIndex()
     return resolutionIndex_;
 }
 
+const CarData& Settings::GetCarData(const std::string& carType)
+{
+    return cars_[carType];
+}
+
 void Settings::SetFullscreen(bool fullscreen)
 {
     fullscreen_ = fullscreen;
@@ -63,6 +68,7 @@ bool Settings::LoadSettings()
 {
     try
     {
+        // Load settings
         std::ifstream file("../config/settings.json");
         json j;
         if (!(file.peek() == std::ifstream::traits_type::eof()))
@@ -86,6 +92,27 @@ bool Settings::LoadSettings()
             }
         }
         sf::Listener::setGlobalVolume(volume_);
+        // Load cars
+        std::ifstream carFile("../res/cars.json");
+        json jsonCars;
+        carFile >> jsonCars;
+        for(auto& element : jsonCars.items())
+        {
+            cars_[element.key()] = {
+                element.value()["spritePath"].get<std::string>(),
+                element.value()["tireStringPath"].get<std::string>(),
+                element.value()["bodyWidth"].get<int>(),
+                element.value()["bodyHeight"].get<int>(),
+                element.value()["tirePositions"].get<std::vector<std::pair<float,float>>>(),
+                element.value()["enginePower"].get<float>(),
+                element.value()["brakingPower"].get<float>(),
+                element.value()["maxSpeed"].get<float>(),
+                element.value()["reverseSpeed"].get<float>(),
+                element.value()["tireLockAngle"].get<float>(),
+                element.value()["tireTurnSpeed"].get<float>(),
+                element.value()["bodyDensity"].get<float>(),
+            };
+        }
     }
     catch (const std::exception& e)
     {

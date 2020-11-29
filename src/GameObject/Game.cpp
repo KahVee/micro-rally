@@ -13,7 +13,7 @@
 ContactListener gameContactListener;
 
 
-Game::Game(sf::Int32 id, Settings* settings, int laps, CarData playerCarData, std::string mapPath)
+Game::Game(sf::Int32 id, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
     : id_(id), settings_(settings) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
@@ -24,7 +24,7 @@ Game::Game(sf::Int32 id, Settings* settings, int laps, CarData playerCarData, st
     map_ = new GameMap(5.0, -2, settings);
     map_->LoadMapFile(mapPath, world_);
 
-    playerCar_ = CreatePlayerCar(playerCarData);
+    playerCar_ = CreatePlayerCar(playerCarType);
     playerCar_->Accelerate(false);
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
@@ -100,7 +100,7 @@ void Game::UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float
     car->SetState(transform, velocity, angularVelocity, steeringAngle);
 }
 
-Car* Game::CreatePlayerCar(CarData carData)
+Car* Game::CreatePlayerCar(const std::string &carType)
 {
     std::vector<sf::Int32> ids;
     ids.push_back(id_);
@@ -109,7 +109,7 @@ Car* Game::CreatePlayerCar(CarData carData)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, carData, settings_);
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -120,7 +120,7 @@ Car* Game::CreatePlayerCar(CarData carData)
     return car;
 }
 
-Car* Game::AddCar(sf::Int32 id, std::string carType)
+Car* Game::AddCar(sf::Int32 id, const std::string &carType)
 {
     std::vector<sf::Int32> ids;
     ids.push_back(id);
@@ -128,7 +128,7 @@ Car* Game::AddCar(sf::Int32 id, std::string carType)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, TRUCK, settings_);  
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     std::vector<Tire*> tires = car->GetTires();
