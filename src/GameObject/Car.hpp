@@ -7,12 +7,13 @@
 #include "DynamicObject.hpp"
 #include "../constants.hpp"
 #include "CarData.hpp"
+#include "../settings/Settings.hpp"
 class Tire;
 #include "Tire.hpp"
 
 class Car : public DynamicObject {
 public:
-    Car(std::vector<sf::Int32> ids, b2World *world, CarData carData);
+    Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* settings);
     ~Car();
 
     void UpdateFriction(float friction);

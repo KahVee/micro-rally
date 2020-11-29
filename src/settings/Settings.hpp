@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -23,7 +25,7 @@ public:
     int GetLaps();
     void SetName(const std::string& name);
     std::string GetName();
-    sf::VideoMode GetVideoMode();
+    const sf::VideoMode& GetVideoMode();
     void SetResolutionIndex(int resolutionIndex);
     int GetResolutionIndex();
     void SetFullscreen(bool fullscreen);

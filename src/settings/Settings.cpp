@@ -34,7 +34,7 @@ std::string Settings::GetName()
     return playerName_;
 }
 
-sf::VideoMode Settings::GetVideoMode()
+const sf::VideoMode& Settings::GetVideoMode()
 {
     return sf::VideoMode::getFullscreenModes().at(resolutionIndex_);
 }

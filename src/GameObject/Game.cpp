@@ -13,14 +13,14 @@
 ContactListener gameContactListener;
 
 
-Game::Game(sf::Int32 id): id_(id) {
+Game::Game(sf::Int32 id, Settings* settings): id_(id), settings_(settings) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
 
     // Set world contact event listener
     world_->SetContactListener(&gameContactListener);
 
-    map_ = new GameMap(5.0, -2);
+    map_ = new GameMap(5.0, -2, settings);
     map_->LoadMapFile("../res/maps/test_map_file.json", world_);
 
     playerCar_ = CreatePlayerCar();
@@ -30,7 +30,7 @@ Game::Game(sf::Int32 id): id_(id) {
     playerCar_->TurnRight(false);
     playerCar_->SetTransform(b2Vec2(50, 50), 0);
 
-    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_);
+    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, settings_);
     box->SetTransform(b2Vec2(20,30), 0.0);
     objects_.push_back(box);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
@@ -105,7 +105,7 @@ Car* Game::CreatePlayerCar()
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, TRUCK);
+    Car* car = new Car(ids, world_, TRUCK, settings_);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -124,7 +124,7 @@ Car* Game::AddCar(sf::Int32 id)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, TRUCK);  
+    Car* car = new Car(ids, world_, TRUCK, settings_);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     std::vector<Tire*> tires = car->GetTires();

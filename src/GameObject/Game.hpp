@@ -13,7 +13,7 @@
 
 class Game {
 public:
-    Game(sf::Int32 id);
+    Game(sf::Int32 id, Settings* settings);
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();
@@ -40,6 +40,7 @@ private:
     Car *playerCar_;
     b2World *world_;
     GameMap *map_;
+    Settings* settings_;
     //All objects in the world except player-car and its tires
     std::vector<DynamicObject*> objects_;
     std::map<sf::Int32, GameObject*> objectMap_;

@@ -104,6 +104,10 @@ void ClientService::Receive()
                 {
                     sceneManager_->HandlePacket(packetCopy);
                 }
+                else if (messageType == CLIENT_WIN)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
             }        
         }
         else if(status == sf::Socket::Disconnected)

@@ -1,7 +1,7 @@
 #include "box.hpp"
 #include <iostream>
 
-Box::Box(sf::Int32 id, std::string spritePath, b2World *world): DynamicObject(id, spritePath, world) 
+Box::Box(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings): DynamicObject(id, spritePath, world, settings)
 {
     b2PolygonShape pShape;
     pShape.SetAsBox(0.5,0.5);

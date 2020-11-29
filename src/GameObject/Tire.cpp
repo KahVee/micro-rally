@@ -3,7 +3,7 @@
 
 #include "Tire.hpp"
 
-Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car): DynamicObject(id, spritePath, world) {
+Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car, Settings* settings): DynamicObject(id, spritePath, world, settings) {
     car_ = car;
 
     b2PolygonShape pShape;

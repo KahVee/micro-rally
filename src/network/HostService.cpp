@@ -172,6 +172,12 @@ void HostService::Receive()
                                         SendToAll(sendPacket2);
                                     }
                                 }
+                                else if (messageType == CLIENT_WIN)
+                                {
+                                    packetCopy << client.id;
+                                    SendToAll(packetCopy);
+                                    client.finished = true;
+                                }
                             }
                         }
                         else if (status == sf::Socket::Disconnected)
@@ -198,9 +204,12 @@ void HostService::RunGame()
         // Send info of other clients to clients
         for(auto& client : clients_)
         {
-            sf::Packet sendPacket;
-            sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity << client.steeringAngle;
-            SendToAll(sendPacket);
+            if(!client.finished)
+            {
+                sf::Packet sendPacket;
+                sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity << client.steeringAngle;
+                SendToAll(sendPacket);
+            }
         }
     }
 }

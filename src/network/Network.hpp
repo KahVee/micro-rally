@@ -13,6 +13,7 @@ struct Client
     b2Vec2 velocity;
     float angularVelocity;
     float steeringAngle;
+    bool finished;
 };
 
 enum NetworkMessageType : sf::Uint8
@@ -23,6 +24,7 @@ enum NetworkMessageType : sf::Uint8
     CLIENT_DISCONNECT,
     CLIENT_DATA,
     CLIENT_ID,
+    CLIENT_WIN,
     GAME_START
 };
 

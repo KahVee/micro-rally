@@ -40,4 +40,6 @@ private:
     bool drawChat_ = false;
     TableSceneComponent playerList_;
     bool drawPlayerList_ = false;
+    bool playerFinished_ = false;
+    Settings* settings_;
 };
