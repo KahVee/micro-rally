@@ -30,6 +30,7 @@ public:
     Car* CreatePlayerCar();
     Car* AddCar(sf::Int32 id);
     void RemoveCar(sf::Int32 id);
+    bool ContainsCar(sf::Int32 id);
 
     sf::Int32 GenerateID();
 

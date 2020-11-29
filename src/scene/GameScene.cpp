@@ -99,7 +99,10 @@ void GameScene::HandlePacket(sf::Packet& packet)
         // Do not update the players car
         if(clientService_->GetId() != id)
         {
-            game_->RemoveCar(id);
+            if(game_->ContainsCar(id))
+            {
+                game_->RemoveCar(id);
+            }
         }
     }
     else if (messageType == CLIENT_DATA)
@@ -134,7 +137,13 @@ void GameScene::HandlePacket(sf::Packet& packet)
         {
             playerFinished_ = true;
         }
-        // TODO REMOVE OTHER PLAYERS ON FINISH
+        else
+        {
+            if(game_->ContainsCar(id))
+            {
+                game_->RemoveCar(id);
+            }
+        }
     }
 }
 

@@ -158,6 +158,11 @@ void Game::RemoveCar(sf::Int32 id)
     delete carToRemove;
 }
 
+bool Game::ContainsCar(sf::Int32 id)
+{
+    return objectMap_.find(id) != objectMap_.end();
+}
+
 float Game::GetFriction(b2Vec2 coords) const
 {
     return map_->GetFriction(coords);

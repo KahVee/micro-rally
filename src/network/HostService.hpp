@@ -32,4 +32,5 @@ private:
     std::list<Client> clients_;
     bool running_ = false;
     bool gameRunning_ = false;
+    int lastFinishRanking_ = 0;
 };

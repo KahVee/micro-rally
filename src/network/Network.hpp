@@ -14,6 +14,7 @@ struct Client
     float angularVelocity;
     float steeringAngle;
     bool finished;
+    sf::Int32 ranking;
 };
 
 enum NetworkMessageType : sf::Uint8
@@ -25,7 +26,9 @@ enum NetworkMessageType : sf::Uint8
     CLIENT_DATA,
     CLIENT_ID,
     CLIENT_WIN,
-    GAME_START
+    CLIENT_RANK,
+    GAME_START,
+    GAME_FINISH
 };
 
 inline sf::Packet& operator <<(sf::Packet& packet, const NetworkMessageType& networkMessageType)

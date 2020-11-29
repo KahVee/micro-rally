@@ -49,16 +49,27 @@ void TableSceneComponent::HandlePacket(sf::Packet packet)
         if(messageType == CLIENT_CONNECT)
         {
             std::string clientName;
-            sf::Int32 id;
+            sf::Int32 id = -1;
             packet >> clientName >> id;
             ReplaceIndex(id, {std::to_string(id), clientName});
         }
         else if(messageType == CLIENT_DISCONNECT)
         {
             std::string clientName;
-            sf::Int32 id;
+            sf::Int32 id = -1;
             packet >> clientName >> id;
             ReplaceIndex(id, {"",""});
+        }
+    }
+    else if (componentClass_ == "scorelist")
+    {
+        if(messageType == CLIENT_RANK)
+        {
+            sf::Int32 id = -1;
+            std::string clientName;
+            sf::Int32 ranking = -1;
+            packet >> id >> clientName >> ranking;
+            ReplaceIndex(ranking - 1, {std::to_string(ranking), clientName, std::to_string(id)});
         }
     }
 }

@@ -177,6 +177,32 @@ void HostService::Receive()
                                     packetCopy << client.id;
                                     SendToAll(packetCopy);
                                     client.finished = true;
+                                    lastFinishRanking_ += 1;
+                                    client.ranking = lastFinishRanking_;
+                                    // Check if everyone has finished to finish game
+                                    bool allFinished = true;
+                                    for(auto& client2 : clients_)
+                                    {
+                                        if(!client2.finished)
+                                        {
+                                            allFinished = false;
+                                            break;
+                                        }
+                                    }
+                                    // If all finished finish game and send finish game message to all
+                                    if (allFinished)
+                                    {
+                                        gameRunning_ = false;
+                                        sf::Packet sendPacket;
+                                        sendPacket << GAME_FINISH;
+                                        SendToAll(sendPacket);
+                                        for(auto& client2: clients_)
+                                        {
+                                            sf::Packet sendPacket2;
+                                            sendPacket2 << CLIENT_RANK << client2.id << client2.name << client2.ranking;
+                                            SendToAll(sendPacket2);
+                                        }
+                                    }
                                 }
                             }
                         }
