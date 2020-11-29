@@ -14,10 +14,11 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* 
     b2PolygonShape pShape;
     pShape.SetAsBox(carData_.bodyWidth/2.0, carData_.bodyHeight/2.0);
     b2FixtureDef fDef;
+    fDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
     fDef.shape = &pShape;    
     fDef.density = carData_.bodyDensity;
     b2Fixture *fixture = body_->CreateFixture(&fDef);
-    fixture->SetUserData(this);
+    //fixture->SetUserData(this);
 
     //Constructing the tires
     b2RevoluteJointDef jointDef;
