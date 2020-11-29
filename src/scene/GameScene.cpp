@@ -338,6 +338,7 @@ void GameScene::Reset()
     playerList_.Reset();
     textInput_.Reset();
     theme2_.stop();
+    playerFinished_ = false;
     if(game_ != nullptr)
     {
         delete game_;

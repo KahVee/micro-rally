@@ -192,6 +192,7 @@ void HostService::Receive()
                                     // If all finished finish game and send finish game message to all
                                     if (allFinished)
                                     {
+                                        lastFinishRanking_ = 0;
                                         gameRunning_ = false;
                                         sf::Packet sendPacket;
                                         sendPacket << GAME_FINISH;
