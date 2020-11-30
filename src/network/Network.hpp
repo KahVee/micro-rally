@@ -15,18 +15,21 @@ struct Client
     float steeringAngle;
     bool finished;
     sf::Int32 ranking;
+    sf::Int32 car;
 };
 
 enum NetworkMessageType : sf::Uint8
 {
     PING,
     CHAT_MESSAGE,
+    CLIENT_START,
     CLIENT_CONNECT,
     CLIENT_DISCONNECT,
     CLIENT_DATA,
     CLIENT_ID,
     CLIENT_WIN,
     CLIENT_RANK,
+    CLIENT_CAR,
     GAME_START,
     GAME_FINISH
 };

@@ -76,17 +76,18 @@ void GameScene::HandlePacket(sf::Packet& packet)
         packet >> ping;
         chat_.AddRow({"PING", ping});
     }
-    else if(messageType == CLIENT_CONNECT)
+    else if(messageType == CLIENT_START)
     {   
         std::string clientName;
         sf::Int32 id = -1;
-        packet >> clientName >> id;
+        sf::Int32 car = -1;
+        packet >> clientName >> id >> car;
         // Add to the list of players
         playerList_.ReplaceIndex(id, {std::to_string(id), clientName});
         // Do not update the players car
         if(clientService_->GetId() != id)
         {
-            game_->AddCar(id, "FORMULA");
+            game_->AddCar(id, settings_->GetCarNames()[car]);
         }
     }
     else if(messageType == CLIENT_DISCONNECT)
@@ -144,6 +145,15 @@ void GameScene::HandlePacket(sf::Packet& packet)
                 game_->RemoveCar(id);
             }
         }
+    }
+    else if (messageType == GAME_START)
+    {
+        sf::Int32 map = -1;
+        sf::Int32 laps = -1;
+        packet >> map >> laps;
+        settings_->SetLaps(laps);
+        settings_->SetMapIndex(map);
+        game_ = new Game(clientService_->GetId(), settings_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
     }
 }
 
@@ -327,7 +337,11 @@ void GameScene::Init()
     chat_.Init();
     playerList_.Init();
     textInput_.Init();
-    game_ = new Game(clientService_->GetId(), settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
+    // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
+    if(!clientService_->IsConnected())
+    {
+        game_ = new Game(clientService_->GetId(), settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
+    }
     theme2_.play();
 }
 

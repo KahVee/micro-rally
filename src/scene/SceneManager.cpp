@@ -128,10 +128,12 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             clientService.Disconnect();
         }));
     hostlobby->AddSceneComponent(new ButtonSceneComponent({0.5f, 0.85f}, {0.2f, 0.1f}, "", window,"PLAY", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,
-        [&clientService](){
+        [&clientService, &settings](){
             // Send start message to the hostService
             sf::Packet packet;
-            packet << GAME_START;
+            sf::Int32 map = settings.GetMapIndex();
+            sf::Int32 laps = settings.GetLaps();
+            packet << GAME_START << map << laps;
             clientService.Send(packet);
         }));
     hostlobby->AddSceneComponent(new SliderSceneComponent({0.75f, 0.2f}, {0.2f, 0.1f}, "", window,"Laps: ", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, sf::Color::Black, (settings.GetLaps()-1)/(MAX_LAPS-1),
@@ -148,8 +150,15 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             return settings.GetMapNames()[currentIndex];
         }));
     hostlobby->AddSceneComponent(new ListSelectorSceneComponent({0.75f, 0.6f}, {0.2f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetCarIndex(), settings.GetCarNames().size(), 10,
-        [&settings](int currentIndex){
+        [&settings, &clientService](int currentIndex){
             settings.SetCarIndex(currentIndex);
+            if(clientService.IsConnected())
+            {
+                sf::Packet packet;
+                sf::Int32 carIndex = currentIndex;
+                packet << CLIENT_CAR << carIndex;
+                clientService.Send(packet);
+            }
             return settings.GetCarNames()[currentIndex];
         }));
     AddScene("hostlobby", hostlobby);
@@ -204,8 +213,15 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             return "";
         }));
     clientlobby->AddSceneComponent(new ListSelectorSceneComponent({0.75f, 0.6f}, {0.2f, 0.1f}, "", window, sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer, settings.GetCarIndex(), settings.GetCarNames().size(), 10,
-        [&settings](int currentIndex){
+        [&settings, &clientService](int currentIndex){
             settings.SetCarIndex(currentIndex);
+            if(clientService.IsConnected())
+            {
+                sf::Packet packet;
+                sf::Int32 carIndex = currentIndex;
+                packet << CLIENT_CAR << carIndex;
+                clientService.Send(packet);
+            }
             return settings.GetCarNames()[currentIndex];
         }));
     clientlobby->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, Gray, sf::Color::White, buttonSoundBuffer,

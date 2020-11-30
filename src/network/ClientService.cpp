@@ -91,6 +91,7 @@ void ClientService::Receive()
                 else if (messageType == GAME_START)
                 {
                     sceneManager_->ChangeScene("game");
+                    sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == GAME_FINISH)
                 {
@@ -117,6 +118,10 @@ void ClientService::Receive()
                     sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == CLIENT_RANK)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_START)
                 {
                     sceneManager_->HandlePacket(packetCopy);
                 }

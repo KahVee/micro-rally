@@ -132,9 +132,7 @@ void HostService::Receive()
                                 else if (messageType == CLIENT_CONNECT)
                                 {
                                     // Handle client connection message
-                                    std::string clientName;
-                                    packet >> clientName;
-                                    client.name = clientName;
+                                    packet >> client.name;
                                     // Send client id to client
                                     sf::Packet idPacket;
                                     idPacket << CLIENT_ID << client.id;
@@ -160,15 +158,12 @@ void HostService::Receive()
                                     // Send game init packets here
                                     gameRunning_ = true;
                                     // Send info of game starting to clients
-                                    sf::Packet sendPacket;
-                                    sendPacket << GAME_START;
-                                    SendToAll( sendPacket);
-
+                                    SendToAll(packetCopy);
                                     // Inform all clients of other players
                                     for(auto& client2 : clients_)
                                     {
                                         sf::Packet sendPacket2;
-                                        sendPacket2 << CLIENT_CONNECT << client2.name << client2.id;
+                                        sendPacket2 << CLIENT_START << client2.name << client2.id << client2.car;
                                         SendToAll(sendPacket2);
                                     }
                                 }
@@ -204,6 +199,11 @@ void HostService::Receive()
                                             SendToAll(sendPacket2);
                                         }
                                     }
+                                }
+                                else if (messageType == CLIENT_CAR)
+                                {
+                                    // Read client car type into memory
+                                    packet >> client.car;
                                 }
                             }
                         }
