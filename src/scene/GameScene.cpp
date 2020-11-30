@@ -127,7 +127,31 @@ void GameScene::HandlePacket(sf::Packet& packet)
             sf::Packet sendPacket;
             sendPacket << CLIENT_DATA << clientService_->GetId() << game_->GetPlayerCar()->GetTransform() << game_->GetPlayerCar()->GetVelocity() << game_->GetPlayerCar()->GetAngularVelocity() << game_->GetPlayerCar()->GetSteeringAngle();
             clientService_->Send(sendPacket);
-            
+            // If client is host send gameobject data to hostservice
+            if(clientService_->GetId() == 0)
+            {
+                for(auto& object : game_->GetNetworkedObjects())
+                {
+                    sf::Packet sendPacket;
+                    sendPacket << OBJECT_DATA << object->GetID() << object->GetTransform() << object->GetVelocity() << object->GetAngularVelocity();
+                    clientService_->Send(sendPacket);
+                }
+            }
+        }
+    }
+    else if (messageType == OBJECT_DATA)
+    {
+        // If client is host don't update
+        if(clientService_->GetId() != 0)
+        {
+            sf::Int32 id = -1;
+            b2Transform transform;
+            transform.SetIdentity();
+            b2Vec2 velocity;
+            velocity.SetZero();
+            float angularVelocity = 0.0f;
+            packet >> id >> transform >> velocity >> angularVelocity;
+            game_->UpdateObject(id, transform, velocity, angularVelocity);
         }
     }
     else if (messageType == CLIENT_WIN)
@@ -154,6 +178,16 @@ void GameScene::HandlePacket(sf::Packet& packet)
         settings_->SetLaps(laps);
         settings_->SetMapIndex(map);
         game_ = new Game(clientService_->GetId(), settings_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
+        // Send data to initialize networked dynamic objects on host if client is host
+        if(clientService_->GetId() == 0)
+        {
+            for(auto& object : game_->GetNetworkedObjects())
+            {
+                sf::Packet sendPacket;
+                sendPacket << OBJECT_CREATE << object->GetID() << object->GetTransform() << object->GetVelocity() << object->GetAngularVelocity();
+                clientService_->Send(sendPacket);
+            }
+        }
     }
 }
 

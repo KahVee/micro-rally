@@ -187,8 +187,10 @@ void HostService::Receive()
                                     // If all finished finish game and send finish game message to all
                                     if (allFinished)
                                     {
+                                        // Reset game data 
                                         lastFinishRanking_ = 0;
                                         gameRunning_ = false;
+                                        networkObjects_.clear();
                                         sf::Packet sendPacket;
                                         sendPacket << GAME_FINISH;
                                         SendToAll(sendPacket);
@@ -204,6 +206,19 @@ void HostService::Receive()
                                 {
                                     // Read client car type into memory
                                     packet >> client.car;
+                                }
+                                else if (messageType == OBJECT_CREATE)
+                                {
+                                    sf::Int32 id = -1;
+                                    NetworkDynamicObject object;
+                                    packet >> id >> object.transform >> object.velocity >> object.angularVelocity;
+                                    networkObjects_[id] = object;
+                                }
+                                else if (messageType == OBJECT_DATA)
+                                {
+                                    sf::Int32 id = -1;
+                                    packet >> id;
+                                    packet >> networkObjects_[id].transform >> networkObjects_[id].velocity >> networkObjects_[id].angularVelocity;
                                 }
                             }
                         }
@@ -233,10 +248,18 @@ void HostService::RunGame()
         {
             if(!client.finished)
             {
+                // Send client data
                 sf::Packet sendPacket;
                 sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity << client.steeringAngle;
                 SendToAll(sendPacket);
             }
+        }
+        // Send object data
+        for(auto& object : networkObjects_)
+        {
+            sf::Packet sendPacket;
+            sendPacket << OBJECT_DATA << object.first << object.second.transform << object.second.velocity << object.second.angularVelocity;
+            SendToAll(sendPacket);
         }
     }
 }

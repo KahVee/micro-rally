@@ -18,6 +18,13 @@ struct Client
     sf::Int32 car;
 };
 
+struct NetworkDynamicObject
+{
+    b2Transform transform;
+    b2Vec2 velocity;
+    float angularVelocity;
+};
+
 enum NetworkMessageType : sf::Uint8
 {
     PING,
@@ -30,6 +37,8 @@ enum NetworkMessageType : sf::Uint8
     CLIENT_WIN,
     CLIENT_RANK,
     CLIENT_CAR,
+    OBJECT_CREATE,
+    OBJECT_DATA,
     GAME_START,
     GAME_FINISH
 };

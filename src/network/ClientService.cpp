@@ -101,6 +101,10 @@ void ClientService::Receive()
                 {
                     sceneManager_->HandlePacket(packetCopy);
                 }
+                else if (messageType == OBJECT_DATA)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
                 else if (messageType == CLIENT_CONNECT)
                 {
                     sceneManager_->HandlePacket(packetCopy);
