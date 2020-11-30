@@ -13,32 +13,33 @@
 ContactListener gameContactListener;
 
 
-Game::Game(sf::Int32 id): id_(id) {
+Game::Game(sf::Int32 id, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
+    : id_(id), settings_(settings) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
 
     // Set world contact event listener
     world_->SetContactListener(&gameContactListener);
 
-    map_ = new GameMap(5.0, -2);
-    map_->LoadMapFile("../res/maps/test_map_file.json", world_);
+    map_ = new GameMap(1.6, -2, settings);
+    map_->LoadMapFile(mapPath, world_);
 
-    playerCar_ = CreatePlayerCar();
+    playerCar_ = CreatePlayerCar(playerCarType);
     playerCar_->Accelerate(false);
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
     playerCar_->SetTransform(b2Vec2(50, 50), 0);
 
-    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_);
+    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, settings_);
     box->SetTransform(b2Vec2(20,30), 0.0);
     objects_.push_back(box);
+    networkedObjects_.push_back(box);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
 
 }
 
 
-// TODO: Maybe change destruction from objects_ to objectMap_?
 Game::~Game() {
     for(auto o: objects_) {
         delete o;
@@ -56,6 +57,9 @@ std::vector<DynamicObject*> Game::GetObjects(){
 }
 std::map<sf::Int32, GameObject*> Game::GetObjectMap() {
     return objectMap_;
+}
+std::vector<DynamicObject*> Game::GetNetworkedObjects() {
+    return networkedObjects_;
 }
 
 Car *Game::GetPlayerCar() {
@@ -96,7 +100,7 @@ void Game::UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float
     car->SetState(transform, velocity, angularVelocity, steeringAngle);
 }
 
-Car* Game::CreatePlayerCar()
+Car* Game::CreatePlayerCar(const std::string &carType)
 {
     std::vector<sf::Int32> ids;
     ids.push_back(id_);
@@ -105,7 +109,7 @@ Car* Game::CreatePlayerCar()
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, TRUCK);
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -116,7 +120,7 @@ Car* Game::CreatePlayerCar()
     return car;
 }
 
-Car* Game::AddCar(sf::Int32 id)
+Car* Game::AddCar(sf::Int32 id, const std::string &carType)
 {
     std::vector<sf::Int32> ids;
     ids.push_back(id);
@@ -124,7 +128,7 @@ Car* Game::AddCar(sf::Int32 id)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, TRUCK);  
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     std::vector<Tire*> tires = car->GetTires();
@@ -156,6 +160,11 @@ void Game::RemoveCar(sf::Int32 id)
         delete t;
     }
     delete carToRemove;
+}
+
+bool Game::ContainsCar(sf::Int32 id)
+{
+    return objectMap_.find(id) != objectMap_.end();
 }
 
 float Game::GetFriction(b2Vec2 coords) const

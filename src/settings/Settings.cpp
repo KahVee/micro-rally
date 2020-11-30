@@ -3,33 +3,6 @@
 
 using json = nlohmann::json;
 
-void Settings::SetName(const std::string& name)
-{
-    playerName_ = name;
-}
-
-std::string Settings::GetName()
-{
-    return playerName_;
-}
-
-
-void Settings::SetResolution(int width, int height)
-{
-    width_ = width;
-    height_ = height;
-}
-
-int Settings::GetWidth()
-{
-    return width_;
-}
-
-int Settings::GetHeight()
-{
-    return height_;
-}
-
 void Settings::SetVolume(float volume)
 {
     sf::Listener::setGlobalVolume(volume);
@@ -41,30 +14,143 @@ float Settings::GetVolume()
     return volume_;
 }
 
+void Settings::SetLaps(int laps)
+{
+    laps_ = laps;
+}
+
+int Settings::GetLaps()
+{
+    return laps_;
+}
+
+void Settings::SetName(const std::string& name)
+{
+    playerName_ = name;
+}
+
+std::string Settings::GetName()
+{
+    return playerName_;
+}
+
+const sf::VideoMode& Settings::GetVideoMode()
+{
+    return sf::VideoMode::getFullscreenModes().at(resolutionIndex_);
+}
+
+void Settings::SetResolutionIndex(int resolutionIndex)
+{
+    resolutionIndex_ = resolutionIndex;
+}
+
+int Settings::GetResolutionIndex()
+{
+    return resolutionIndex_;
+}
+
+const CarData& Settings::GetCarData(const std::string& carType)
+{
+    return cars_[carType];
+}
+
+const std::vector<std::string> Settings::GetCarNames()
+{
+    std::vector<std::string> carNames;
+    for(auto& car : cars_)
+    {
+        carNames.push_back(car.first);
+    }
+    return carNames;
+}
+
+const std::vector<std::string>& Settings::GetMapNames()
+{
+    return maps_;
+}
+
+void Settings::SetCarIndex(int carIndex)
+{
+    carIndex_ = carIndex;
+}
+
+int Settings::GetCarIndex()
+{
+    return carIndex_;
+}
+
+void Settings::SetMapIndex(int mapIndex)
+{
+    mapIndex_ = mapIndex;
+}
+
+int Settings::GetMapIndex()
+{
+    return mapIndex_;
+}
+
+void Settings::SetFullscreen(bool fullscreen)
+{
+    fullscreen_ = fullscreen;
+}
+
+bool Settings::GetFullscreen()
+{
+    return fullscreen_;
+}
+
 bool Settings::LoadSettings()
 {
     try
     {
+        // Load settings
         std::ifstream file("../config/settings.json");
         json j;
-        if (file.peek() == std::ifstream::traits_type::eof())
-        {
-            playerName_ = "player";
-            width_ = 1280;
-            height_ = 720;
-            volume_ = 50;
-
-        }
-        else
+        if (!(file.peek() == std::ifstream::traits_type::eof()))
         {
             file >> j;
-            playerName_ = j["PlayerName"].get<std::string>();  
-            width_ =j["Width"].get<int>();
-            height_ =j["Height"].get<int>();
-            volume_ =j["Volume"].get<float>();
-            sf::Listener::setGlobalVolume(volume_);
-            file.close();
+            if(j.contains("PlayerName"))
+            {
+                playerName_ = j["PlayerName"].get<std::string>();
+            }
+            if(j.contains("Volume"))
+            {
+                volume_ =j["Volume"].get<float>();
+            }
+            if(j.contains("ResolutionIndex"))
+            {
+                resolutionIndex_ = j["ResolutionIndex"].get<int>();
+            }
+            if(j.contains("Fullscreen"))
+            {
+                fullscreen_ = j["Fullscreen"].get<bool>();
+            }
         }
+        sf::Listener::setGlobalVolume(volume_);
+        // Load cars
+        std::ifstream carFile("../res/cars.json");
+        json jsonCars;
+        carFile >> jsonCars;
+        for(auto& element : jsonCars.items())
+        {
+            cars_[element.key()] = {
+                element.value()["spritePath"].get<std::string>(),
+                element.value()["tireStringPath"].get<std::string>(),
+                element.value()["bodyWidth"].get<int>(),
+                element.value()["bodyHeight"].get<int>(),
+                element.value()["tirePositions"].get<std::vector<std::pair<float,float>>>(),
+                element.value()["enginePower"].get<float>(),
+                element.value()["brakingPower"].get<float>(),
+                element.value()["maxSpeed"].get<float>(),
+                element.value()["reverseSpeed"].get<float>(),
+                element.value()["tireLockAngle"].get<float>(),
+                element.value()["tireTurnSpeed"].get<float>(),
+                element.value()["bodyDensity"].get<float>(),
+            };
+        }
+        // Load maps
+        maps_.push_back("test_map_file");
+        maps_.push_back("test_map_file_2");
     }
     catch (const std::exception& e)
     {
@@ -82,9 +168,9 @@ bool Settings::SaveSettings()
         json j;
         std::ofstream file("../config/settings.json");
         j["PlayerName"]  = playerName_;
-        j["Width"]  = width_;
-        j["Height"] = height_;
         j["Volume"]  = volume_;
+        j["ResolutionIndex"] = resolutionIndex_;
+        j["Fullscreen"] = fullscreen_;
         file << j << std::endl;
         file.close();
 

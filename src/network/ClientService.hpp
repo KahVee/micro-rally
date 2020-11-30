@@ -5,6 +5,7 @@
 #include <string>
 #include <iomanip>
 #include <sstream>
+#include <iostream>
 
 #include "../scene/SceneManager.hpp"
 #include "Network.hpp"

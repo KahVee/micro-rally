@@ -49,16 +49,27 @@ void TableSceneComponent::HandlePacket(sf::Packet packet)
         if(messageType == CLIENT_CONNECT)
         {
             std::string clientName;
-            sf::Int32 id;
+            sf::Int32 id = -1;
             packet >> clientName >> id;
             ReplaceIndex(id, {std::to_string(id), clientName});
         }
         else if(messageType == CLIENT_DISCONNECT)
         {
             std::string clientName;
-            sf::Int32 id;
+            sf::Int32 id = -1;
             packet >> clientName >> id;
             ReplaceIndex(id, {"",""});
+        }
+    }
+    else if (componentClass_ == "scorelist")
+    {
+        if(messageType == CLIENT_RANK)
+        {
+            sf::Int32 id = -1;
+            std::string clientName;
+            sf::Int32 ranking = -1;
+            packet >> id >> clientName >> ranking;
+            ReplaceIndex(ranking, {std::to_string(ranking), clientName, std::to_string(id)});
         }
     }
 }
@@ -98,7 +109,13 @@ void TableSceneComponent::Draw(sf::RenderWindow& window)
     window.draw(text_);
 }
 
-void TableSceneComponent::Init(){}
+void TableSceneComponent::Init()
+{
+    if(componentClass_ == "scorelist")
+    {
+        ReplaceIndex(0, {"POS", "PLAYER","ID"});
+    }
+}
 
 void TableSceneComponent::Reset()
 {

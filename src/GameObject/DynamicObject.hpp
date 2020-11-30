@@ -2,6 +2,7 @@
 
 #include <Box2D/Box2D.h>
 
+#include "../settings/Settings.hpp"
 #include "GameObject.hpp"
 
 /* 
@@ -10,7 +11,7 @@
  */
 class DynamicObject : public GameObject {
 public:
-    DynamicObject(sf::Int32 id, std::string spritePath, b2World *world);
+    DynamicObject(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings);
     virtual ~DynamicObject() = default;
 
     //Common update for all DynamicObjects
@@ -35,4 +36,5 @@ protected:
     b2World *world_;
     virtual void PrivateUpdate(float dt);
     float frictionMultiplier_ = 1;
+    Settings* settings_;
 };

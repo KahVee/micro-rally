@@ -16,6 +16,10 @@ sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned
         connectPacket << CLIENT_CONNECT << playerName;
         socket_.send(connectPacket);
     }
+    else
+    {
+        socket_.disconnect();
+    }
     return status;
 }
 
@@ -87,8 +91,17 @@ void ClientService::Receive()
                 else if (messageType == GAME_START)
                 {
                     sceneManager_->ChangeScene("game");
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == GAME_FINISH)
+                {
+                    sceneManager_->ChangeScene("scorescreen");
                 }
                 else if (messageType == CHAT_MESSAGE)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == OBJECT_DATA)
                 {
                     sceneManager_->HandlePacket(packetCopy);
                 }
@@ -101,6 +114,18 @@ void ClientService::Receive()
                     sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == CLIENT_DATA)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_WIN)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_RANK)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_START)
                 {
                     sceneManager_->HandlePacket(packetCopy);
                 }

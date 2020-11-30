@@ -132,9 +132,7 @@ void HostService::Receive()
                                 else if (messageType == CLIENT_CONNECT)
                                 {
                                     // Handle client connection message
-                                    std::string clientName;
-                                    packet >> clientName;
-                                    client.name = clientName;
+                                    packet >> client.name;
                                     // Send client id to client
                                     sf::Packet idPacket;
                                     idPacket << CLIENT_ID << client.id;
@@ -160,17 +158,67 @@ void HostService::Receive()
                                     // Send game init packets here
                                     gameRunning_ = true;
                                     // Send info of game starting to clients
-                                    sf::Packet sendPacket;
-                                    sendPacket << GAME_START;
-                                    SendToAll( sendPacket);
-
+                                    SendToAll(packetCopy);
                                     // Inform all clients of other players
                                     for(auto& client2 : clients_)
                                     {
                                         sf::Packet sendPacket2;
-                                        sendPacket2 << CLIENT_CONNECT << client2.name << client2.id;
+                                        sendPacket2 << CLIENT_START << client2.name << client2.id << client2.car;
                                         SendToAll(sendPacket2);
                                     }
+                                }
+                                else if (messageType == CLIENT_WIN)
+                                {
+                                    packetCopy << client.id;
+                                    SendToAll(packetCopy);
+                                    client.finished = true;
+                                    lastFinishRanking_ += 1;
+                                    client.ranking = lastFinishRanking_;
+                                    // Check if everyone has finished to finish game
+                                    bool allFinished = true;
+                                    for(auto& client2 : clients_)
+                                    {
+                                        if(!client2.finished)
+                                        {
+                                            allFinished = false;
+                                            break;
+                                        }
+                                    }
+                                    // If all finished finish game and send finish game message to all
+                                    if (allFinished)
+                                    {
+                                        // Reset game data 
+                                        lastFinishRanking_ = 0;
+                                        gameRunning_ = false;
+                                        networkObjects_.clear();
+                                        sf::Packet sendPacket;
+                                        sendPacket << GAME_FINISH;
+                                        SendToAll(sendPacket);
+                                        for(auto& client2: clients_)
+                                        {
+                                            sf::Packet sendPacket2;
+                                            sendPacket2 << CLIENT_RANK << client2.id << client2.name << client2.ranking;
+                                            SendToAll(sendPacket2);
+                                        }
+                                    }
+                                }
+                                else if (messageType == CLIENT_CAR)
+                                {
+                                    // Read client car type into memory
+                                    packet >> client.car;
+                                }
+                                else if (messageType == OBJECT_CREATE)
+                                {
+                                    sf::Int32 id = -1;
+                                    NetworkDynamicObject object;
+                                    packet >> id >> object.transform >> object.velocity >> object.angularVelocity;
+                                    networkObjects_[id] = object;
+                                }
+                                else if (messageType == OBJECT_DATA)
+                                {
+                                    sf::Int32 id = -1;
+                                    packet >> id;
+                                    packet >> networkObjects_[id].transform >> networkObjects_[id].velocity >> networkObjects_[id].angularVelocity;
                                 }
                             }
                         }
@@ -198,8 +246,19 @@ void HostService::RunGame()
         // Send info of other clients to clients
         for(auto& client : clients_)
         {
+            if(!client.finished)
+            {
+                // Send client data
+                sf::Packet sendPacket;
+                sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity << client.steeringAngle;
+                SendToAll(sendPacket);
+            }
+        }
+        // Send object data
+        for(auto& object : networkObjects_)
+        {
             sf::Packet sendPacket;
-            sendPacket << CLIENT_DATA << client.id << client.transform << client.velocity << client.angularVelocity << client.steeringAngle;
+            sendPacket << OBJECT_DATA << object.first << object.second.transform << object.second.velocity << object.second.angularVelocity;
             SendToAll(sendPacket);
         }
     }

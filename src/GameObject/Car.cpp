@@ -6,8 +6,8 @@
 #include <cmath>
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
-    :DynamicObject(ids[0], carData.spritePath, world), carData_(carData) {
+Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* settings)
+    :DynamicObject(ids[0], carData.spritePath, world, settings), carData_(carData) {
 
     isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
 
@@ -31,32 +31,32 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
     jointDef.localAnchorB.SetZero();
 
     //front tires are created first
-    Tire *tire = new Tire(ids[1], "../res/tire.png", world, this);
+    Tire *tire = new Tire(ids[1], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[0].first, carData_.tirePositions[0].second );
     f1Joint_ =(b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[2], "../res/tire.png", world, this);
+    tire = new Tire(ids[2], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[1].first, carData_.tirePositions[1].second );
     f2Joint_ = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[3], "../res/tire.png", world, this);
+    tire = new Tire(ids[3], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[2].first, carData_.tirePositions[2].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[4], "../res/tire.png", world, this);
+    tire = new Tire(ids[4], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[3].first, carData_.tirePositions[3].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     // Set sprite scale
-    sprite_.setScale(PIXELS_PER_METER * carData_.bodyWidth / sprite_.getLocalBounds().width, PIXELS_PER_METER * carData_.bodyHeight / sprite_.getLocalBounds().height);
+    sprite_.setScale(carData_.bodyWidth / sprite_.getLocalBounds().width, carData_.bodyHeight / sprite_.getLocalBounds().height);
     steeringAngle_ = 0.f;
 }
 
