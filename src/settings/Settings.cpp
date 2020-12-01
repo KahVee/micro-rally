@@ -3,6 +3,14 @@
 
 using json = nlohmann::json;
 
+Settings::~Settings()
+{
+    for(auto theme : themes_)
+    {
+        delete theme.second;
+    }
+}
+
 void Settings::SetVolume(float volume)
 {
     sf::Listener::setGlobalVolume(volume);
@@ -99,6 +107,24 @@ bool Settings::GetFullscreen()
     return fullscreen_;
 }
 
+void Settings::PlayTheme(const std::string& theme)
+{
+    StopTheme();
+    themes_[theme]->play();
+}
+void Settings::StopTheme()
+{
+    for(auto theme : themes_)
+    {
+        theme.second->stop();
+    }
+}
+
+void Settings::PlaySound(const std::string& sound)
+{
+    sounds_[sound].play();
+}
+
 bool Settings::LoadSettings()
 {
     try
@@ -151,6 +177,41 @@ bool Settings::LoadSettings()
         // Load maps
         maps_.push_back("test_map_file");
         maps_.push_back("test_map_file_2");
+        // Load themes
+        themes_["menutheme"] = new sf::Music;
+        themes_["lastlaptheme"] = new sf::Music;
+        themes_["scoreboardtheme"] = new sf::Music;
+        themes_["gametheme"] = new sf::Music;
+        themes_["gamestarttheme"] = new sf::Music;
+        if(!themes_["menutheme"]->openFromFile("../res/audio/menutheme.wav")
+        || !themes_["lastlaptheme"]->openFromFile("../res/audio/lastlaptheme.wav")
+        || !themes_["scoreboardtheme"]->openFromFile("../res/audio/scoreboardtheme.wav")
+        || !themes_["gametheme"]->openFromFile("../res/audio/gametheme.wav")
+        || !themes_["gamestarttheme"]->openFromFile("../res/audio/gamestarttheme.wav"))
+        {
+            return false;
+        }
+        themes_["menutheme"]->setLoop(true);
+        themes_["lastlaptheme"]->setLoop(true);
+        themes_["scoreboardtheme"]->setLoop(true);
+        themes_["gametheme"]->setLoop(true);
+        themes_["gamestarttheme"]->setLoop(false);
+
+        themes_["menutheme"]->setVolume(50.f);
+        themes_["lastlaptheme"]->setVolume(50.f);
+        themes_["scoreboardtheme"]->setVolume(50.f);
+        themes_["gametheme"]->setVolume(50.f);
+        themes_["gamestarttheme"]->setVolume(50.f);
+        // Load sounds
+        sf::SoundBuffer collisionsoundSoundBuffer;
+        if(!collisionsoundSoundBuffer.loadFromFile("../res/audio/collisionsound.wav"))
+        {
+            return false;
+        }
+        soundBuffers_.push_back(collisionsoundSoundBuffer);
+        sf::Sound collisionsound;
+        collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-1]);
+        sounds_["collisionsound"] = collisionsound;
     }
     catch (const std::exception& e)
     {
