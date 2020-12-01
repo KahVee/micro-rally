@@ -191,6 +191,12 @@ bool Settings::LoadSettings()
         themes_["scoreboardtheme"]->setLoop(true);
         themes_["gametheme"]->setLoop(true);
         themes_["gamestarttheme"]->setLoop(false);
+        
+        themes_["menutheme"]->setVolume(50.f);
+        themes_["lastlaptheme"]->setVolume(50.f);
+        themes_["scoreboardtheme"]->setVolume(50.f);
+        themes_["gametheme"]->setVolume(50.f);
+        themes_["gamestarttheme"]->setVolume(50.f);
     }
     catch (const std::exception& e)
     {

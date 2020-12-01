@@ -58,6 +58,16 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* 
     // Set sprite scale
     sprite_.setScale(carData_.bodyWidth / sprite_.getLocalBounds().width, carData_.bodyHeight / sprite_.getLocalBounds().height);
     steeringAngle_ = 0.f;
+
+    // Sounds
+    if(!soundBuffer_.loadFromFile("../res/audio/enginesound.wav"))
+    {
+        // TODO WHEN SOUND DOESN'T LOAD
+    }
+    enginesound_.setBuffer(soundBuffer_);
+    enginesound_.setLoop(true);
+    enginesound_.setVolume(50.f);
+    enginesound_.play();
 }
 
 Car::~Car() {
@@ -108,6 +118,19 @@ void Car::PrivateUpdate(float dt) {
 
     f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
     f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+
+    // Sounds
+    float speed = sqrt(GetVelocity().x * GetVelocity().x + GetVelocity().y * GetVelocity().y);
+    if(speed > 0.5f || speed < -0.5f)
+    {
+        enginesound_.setVolume(50.f);
+    }else
+    {
+        enginesound_.setVolume(0.f);
+    }
+    
+    float pitch = speed / GetMaxSpeed();
+    enginesound_.setPitch(0.5f + pitch);
 }
 
 void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {
