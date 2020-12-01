@@ -73,7 +73,7 @@ int main()
     // Initialize SceneManager
     sceneManager.Init(hostService, clientService, hostThread, settings, window, font, menuBackgroundTexture, buttonSoundBuffer);
     // Initialize ClientService
-    clientService.Init(&sceneManager);
+    clientService.Init(&sceneManager, &settings);
     // Limit framerate to 60
     window.setFramerateLimit(60);
     // Main loop

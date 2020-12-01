@@ -42,13 +42,6 @@ GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, con
             return "";
         })
 {
-    // Load Theme2
-    if(!theme2_.openFromFile("../res/dejavu.wav"))
-    {
-        std::cout << "audio load error" << std::endl;
-    }
-    theme2_.setVolume(15.f);
-    theme2_.setLoop(false);
 }
 
 GameScene::~GameScene() {
@@ -264,7 +257,11 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
 void GameScene::Update(const sf::Time& deltaTime)
 {
     game_->Update(deltaTime.asSeconds());
-
+    if(currentLap_ == settings_->GetLaps() && !lastLapThemePlaying_)
+    {
+        settings_->PlayTheme("lastlaptheme");
+        lastLapThemePlaying_ = true;
+    } 
     //std::cout << "box2dcarpos: x " << game_->GetPlayerCar()->GetTransform().p.x << " y: " << game_->GetPlayerCar()->GetTransform().p.y << "sfmlpos x " << game_->GetPlayerCar()->GetSprite().getPosition().x << " y " << game_->GetPlayerCar()->GetSprite().getPosition().y << std::endl;
     // This line prints the friction under the car
     // std::cout << game_->GetMap()->GetFriction(game_->GetPlayerCar()->GetTransform().p) << std::endl;

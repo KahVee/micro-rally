@@ -3,6 +3,14 @@
 
 using json = nlohmann::json;
 
+Settings::~Settings()
+{
+    for(auto theme : themes_)
+    {
+        delete theme.second;
+    }
+}
+
 void Settings::SetVolume(float volume)
 {
     sf::Listener::setGlobalVolume(volume);
@@ -99,6 +107,19 @@ bool Settings::GetFullscreen()
     return fullscreen_;
 }
 
+void Settings::PlayTheme(const std::string& theme)
+{
+    StopTheme();
+    themes_[theme]->play();
+}
+void Settings::StopTheme()
+{
+    for(auto theme : themes_)
+    {
+        theme.second->stop();
+    }
+}
+
 bool Settings::LoadSettings()
 {
     try
@@ -151,6 +172,30 @@ bool Settings::LoadSettings()
         // Load maps
         maps_.push_back("test_map_file");
         maps_.push_back("test_map_file_2");
+        // Load themes
+        themes_["menutheme"] = new sf::Music;
+        themes_["lastlaptheme"] = new sf::Music;
+        themes_["scoreboardtheme"] = new sf::Music;
+        themes_["gametheme"] = new sf::Music;
+        if(!themes_["menutheme"]->openFromFile("../res/audio/menutheme.wav")
+        || !themes_["lastlaptheme"]->openFromFile("../res/audio/lastlaptheme.wav")
+        || !themes_["scoreboardtheme"]->openFromFile("../res/audio/scoreboardtheme.wav")
+        || !themes_["gametheme"]->openFromFile("../res/audio/gametheme.wav"))
+        {
+            return false;
+        }
+        themes_["menutheme"]->setLoop(true);
+        themes_["lastlaptheme"]->setLoop(true);
+        themes_["scoreboardtheme"]->setLoop(true);
+        themes_["gametheme"]->setLoop(true);
+
+         // Load Theme2
+        // if(!theme2_.openFromFile("../res/dejavu.wav"))
+        // {
+        //     std::cout << "audio load error" << std::endl;
+        // }
+        // theme2_.setVolume(15.f);
+        // theme2_.setLoop(false);
     }
     catch (const std::exception& e)
     {

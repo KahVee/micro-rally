@@ -10,6 +10,8 @@ SceneManager::~SceneManager()
 
 void SceneManager::Init(HostService& hostService, ClientService& clientService, std::thread& hostThread, Settings& settings, sf::RenderWindow& window, sf::Font& font, sf::Texture& menuBackgroundTexture, sf::SoundBuffer& buttonSoundBuffer)
 {
+    // Start playing menutheme
+    settings.PlayTheme("menutheme");
     // backgroundColor color
     sf::Color backgroundColor(200,200,200,200);
     sf::Color titleColor(sf::Color::Black);
@@ -264,7 +266,9 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             return "";
         }));
     scorescreen->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, backgroundColor, sf::Color::White, buttonSoundBuffer,
-        [&clientService, &hostService, &hostThread](){
+        [&clientService, &hostService, &hostThread, &settings](){
+            // Start playing menutheme
+            settings.PlayTheme("menutheme");
             hostService.Stop();
             // Terminate thread if needed
             if(hostThread.joinable())
