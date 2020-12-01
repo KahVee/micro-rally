@@ -123,7 +123,7 @@ void Car::PrivateUpdate(float dt) {
     float speed = sqrt(GetVelocity().x * GetVelocity().x + GetVelocity().y * GetVelocity().y);
     if(speed > 0.5f || speed < -0.5f)
     {
-        enginesound_.setVolume(50.f);
+        enginesound_.setVolume(0.f);
     }else
     {
         enginesound_.setVolume(0.f);

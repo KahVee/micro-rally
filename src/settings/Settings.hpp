@@ -43,9 +43,12 @@ public:
     bool GetFullscreen();
     void PlayTheme(const std::string& theme);
     void StopTheme();
+    void PlaySound(const std::string& sound);
     bool LoadSettings();
     bool SaveSettings();
 private:
+    std::vector<sf::SoundBuffer> soundBuffers_;
+    std::map<std::string,sf::Sound> sounds_;
     std::map<std::string,sf::Music*> themes_;
     std::map<std::string,CarData> cars_;
     std::vector<std::string> maps_;

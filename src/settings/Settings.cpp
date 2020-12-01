@@ -120,6 +120,11 @@ void Settings::StopTheme()
     }
 }
 
+void Settings::PlaySound(const std::string& sound)
+{
+    sounds_[sound].play();
+}
+
 bool Settings::LoadSettings()
 {
     try
@@ -191,12 +196,22 @@ bool Settings::LoadSettings()
         themes_["scoreboardtheme"]->setLoop(true);
         themes_["gametheme"]->setLoop(true);
         themes_["gamestarttheme"]->setLoop(false);
-        
+
         themes_["menutheme"]->setVolume(50.f);
         themes_["lastlaptheme"]->setVolume(50.f);
         themes_["scoreboardtheme"]->setVolume(50.f);
         themes_["gametheme"]->setVolume(50.f);
         themes_["gamestarttheme"]->setVolume(50.f);
+        // Load sounds
+        sf::SoundBuffer collisionsoundSoundBuffer;
+        if(!collisionsoundSoundBuffer.loadFromFile("../res/audio/collisionsound.wav"))
+        {
+            return false;
+        }
+        soundBuffers_.push_back(collisionsoundSoundBuffer);
+        sf::Sound collisionsound;
+        collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-1]);
+        sounds_["collisionsound"] = collisionsound;
     }
     catch (const std::exception& e)
     {

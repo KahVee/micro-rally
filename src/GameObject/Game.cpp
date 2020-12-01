@@ -19,6 +19,7 @@ Game::Game(sf::Int32 id, Settings* settings, int laps, const std::string &player
     world_ = new b2World(g);
 
     // Set world contact event listener
+    gameContactListener.SetSettings(settings);
     world_->SetContactListener(&gameContactListener);
 
     map_ = new GameMap(1.6, -2, settings);
