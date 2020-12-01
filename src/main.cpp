@@ -28,7 +28,7 @@ int main()
         style = sf::Style::Fullscreen;
     }
     // The window of the program
-    sf::RenderWindow window(settings.GetVideoMode(), "PhysicsTest", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
+    sf::RenderWindow window(settings.GetVideoMode(), "Micro Rally", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))
