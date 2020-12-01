@@ -45,7 +45,7 @@ int main()
     }
     // Load ButtonSound
     sf::SoundBuffer buttonSoundBuffer;
-    if (!buttonSoundBuffer.loadFromFile("../res/ButtonSound.wav"))
+    if (!buttonSoundBuffer.loadFromFile("../res/audio/buttonsound.wav"))
     {
         std::cout << "audio load error" << std::endl;
         window.close();
