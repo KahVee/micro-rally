@@ -92,7 +92,7 @@ void ClientService::Receive()
                 else if (messageType == GAME_START)
                 {
                     // Start playing gametheme
-                    settings_->PlayTheme("gametheme");
+                    settings_->PlayTheme("gamestarttheme");
                     sceneManager_->ChangeScene("game");
                     sceneManager_->HandlePacket(packetCopy);
                 }

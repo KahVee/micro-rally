@@ -177,10 +177,12 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"] = new sf::Music;
         themes_["scoreboardtheme"] = new sf::Music;
         themes_["gametheme"] = new sf::Music;
+        themes_["gamestarttheme"] = new sf::Music;
         if(!themes_["menutheme"]->openFromFile("../res/audio/menutheme.wav")
         || !themes_["lastlaptheme"]->openFromFile("../res/audio/lastlaptheme.wav")
         || !themes_["scoreboardtheme"]->openFromFile("../res/audio/scoreboardtheme.wav")
-        || !themes_["gametheme"]->openFromFile("../res/audio/gametheme.wav"))
+        || !themes_["gametheme"]->openFromFile("../res/audio/gametheme.wav")
+        || !themes_["gamestarttheme"]->openFromFile("../res/audio/gamestarttheme.wav"))
         {
             return false;
         }
@@ -188,14 +190,7 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"]->setLoop(true);
         themes_["scoreboardtheme"]->setLoop(true);
         themes_["gametheme"]->setLoop(true);
-
-         // Load Theme2
-        // if(!theme2_.openFromFile("../res/dejavu.wav"))
-        // {
-        //     std::cout << "audio load error" << std::endl;
-        // }
-        // theme2_.setVolume(15.f);
-        // theme2_.setLoop(false);
+        themes_["gamestarttheme"]->setLoop(false);
     }
     catch (const std::exception& e)
     {

@@ -44,4 +44,6 @@ private:
     Settings* settings_;
     int currentLap_ = 1;
     bool lastLapThemePlaying_ = false;
+    bool gameStarted_ = false;
+    sf::Clock gameStartClock_;
 };

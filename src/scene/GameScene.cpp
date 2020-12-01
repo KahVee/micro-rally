@@ -165,6 +165,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
     }
     else if (messageType == GAME_START)
     {
+        gameStartClock_.restart();
         sf::Int32 map = -1;
         sf::Int32 laps = -1;
         packet >> map >> laps;
@@ -194,61 +195,64 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
         {
             window.close();
         }
-        else if(drawChat_)
+        if(gameStarted_)
         {
-            textInput_.HandleEvent(event, window);
-        }
-        else if(event.type == sf::Event::KeyPressed)
-        {
-            switch(event.key.code) {
-                case sf::Keyboard::W:
-                    game_->GetPlayerCar()->Accelerate(true);
-                    break;
-                case sf::Keyboard::S:
-                    game_->GetPlayerCar()->Brake(true);
-                    break;
-                case sf::Keyboard::A:
-                    game_->GetPlayerCar()->TurnLeft(true);
-                    break;
-                case sf::Keyboard::D:
-                    game_->GetPlayerCar()->TurnRight(true);
-                    break;
-                case sf::Keyboard::Tab:
-                    drawPlayerList_ = true;
-                    break;
-                case sf::Keyboard::Enter:
-                    drawChat_ = true;
-                    textInput_.SetSelected(true);
-                    break;
-                default:
-                    break;
+            if(drawChat_)
+            {
+                textInput_.HandleEvent(event, window);
             }
-        }
-        // No else if here because important for exiting chat for example
-        if(event.type == sf::Event::KeyReleased)
-        {
-            switch(event.key.code) {
-                case sf::Keyboard::W:
-                    game_->GetPlayerCar()->Accelerate(false);
-                    break;
-                case sf::Keyboard::S:
-                    game_->GetPlayerCar()->Brake(false);
-                    break;
-                case sf::Keyboard::A:
-                    game_->GetPlayerCar()->TurnLeft(false);
-                    break;
-                case sf::Keyboard::D:
-                    game_->GetPlayerCar()->TurnRight(false);
-                    break;
-                case sf::Keyboard::Tab:
-                    drawPlayerList_ = false;
-                    break;
-                case sf::Keyboard::Escape:
-                    drawChat_ = false;
-                    textInput_.SetSelected(false);
-                    break;
-                default:
-                    break;
+            else if(event.type == sf::Event::KeyPressed)
+            {
+                switch(event.key.code) {
+                    case sf::Keyboard::W:
+                        game_->GetPlayerCar()->Accelerate(true);
+                        break;
+                    case sf::Keyboard::S:
+                        game_->GetPlayerCar()->Brake(true);
+                        break;
+                    case sf::Keyboard::A:
+                        game_->GetPlayerCar()->TurnLeft(true);
+                        break;
+                    case sf::Keyboard::D:
+                        game_->GetPlayerCar()->TurnRight(true);
+                        break;
+                    case sf::Keyboard::Tab:
+                        drawPlayerList_ = true;
+                        break;
+                    case sf::Keyboard::Enter:
+                        drawChat_ = true;
+                        textInput_.SetSelected(true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            // No else if here because important for exiting chat for example
+            if(event.type == sf::Event::KeyReleased)
+            {
+                switch(event.key.code) {
+                    case sf::Keyboard::W:
+                        game_->GetPlayerCar()->Accelerate(false);
+                        break;
+                    case sf::Keyboard::S:
+                        game_->GetPlayerCar()->Brake(false);
+                        break;
+                    case sf::Keyboard::A:
+                        game_->GetPlayerCar()->TurnLeft(false);
+                        break;
+                    case sf::Keyboard::D:
+                        game_->GetPlayerCar()->TurnRight(false);
+                        break;
+                    case sf::Keyboard::Tab:
+                        drawPlayerList_ = false;
+                        break;
+                    case sf::Keyboard::Escape:
+                        drawChat_ = false;
+                        textInput_.SetSelected(false);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -257,7 +261,12 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
 void GameScene::Update(const sf::Time& deltaTime)
 {
     game_->Update(deltaTime.asSeconds());
-    if(currentLap_ == settings_->GetLaps() && !lastLapThemePlaying_)
+    if(gameStartClock_.getElapsedTime() > sf::seconds(10.0f) && !gameStarted_)
+    {
+        gameStarted_ = true;
+        settings_->PlayTheme("gametheme");
+    }
+    if(currentLap_ == settings_->GetLaps() && !lastLapThemePlaying_ && gameStarted_)
     {
         settings_->PlayTheme("lastlaptheme");
         lastLapThemePlaying_ = true;
