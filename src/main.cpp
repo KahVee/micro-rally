@@ -38,7 +38,7 @@ int main()
     }
     // Load texture for menu background
     sf::Texture menuBackgroundTexture;
-    if (!menuBackgroundTexture.loadFromFile("../res/Lemon.jpg"))
+    if (!menuBackgroundTexture.loadFromFile("../res/car_background.png"))
     {
         std::cout << "texture load error" << std::endl;
         window.close();
@@ -86,7 +86,7 @@ int main()
         // Update scene
         sceneManager.Update(deltaTime);
         // Clear the window
-        window.clear(sf::Color(200, 200, 200, 255));
+        window.clear();//sf::Color(200, 200, 200, 255));
         // Draw current scene
         sceneManager.Draw(window);
         // Display everything in the window
