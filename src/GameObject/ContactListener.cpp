@@ -10,6 +10,7 @@ void ContactListener::BeginContact(b2Contact *contact)
         idA = fixtureAObj->GetID();
         idB = fixtureBObj->GetID();   
         std::cout << "Collision detected: ID: " << idA << ", ID2: " <<  idB << std::endl;
+        settings_->PlaySound("collisionsound");   
     }
 
     //Fixture A is a car

@@ -1,8 +1,9 @@
 #include "ClientService.hpp"
 
-void ClientService::Init(SceneManager* sceneManager)
+void ClientService::Init(SceneManager* sceneManager, Settings* settings)
 {
     sceneManager_ = sceneManager;
+    settings_ = settings;
 }
 
 sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout, const std::string& playerName)
@@ -30,6 +31,7 @@ void ClientService::Disconnect()
     socket_.disconnect();
     id_ = -1;
     sceneManager_->ChangeScene("mainMenu");
+    settings_->PlayTheme("menutheme");
 }
 
 bool ClientService::IsConnected()
@@ -90,11 +92,15 @@ void ClientService::Receive()
                 }
                 else if (messageType == GAME_START)
                 {
+                    // Start playing gametheme
+                    settings_->PlayTheme("gamestarttheme");
                     sceneManager_->ChangeScene("game");
                     sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == GAME_FINISH)
                 {
+                    // Start playing gametheme
+                    settings_->PlayTheme("scoreboardtheme");
                     sceneManager_->ChangeScene("scorescreen");
                 }
                 else if (messageType == CHAT_MESSAGE)

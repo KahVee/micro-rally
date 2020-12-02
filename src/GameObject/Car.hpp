@@ -49,4 +49,8 @@ private:
     bool isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_;
 
     float steeringAngle_;
+
+    // Sounds
+    sf::SoundBuffer soundBuffer_;
+    sf::Sound enginesound_;
 };

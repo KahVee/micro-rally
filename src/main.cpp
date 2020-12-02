@@ -28,7 +28,7 @@ int main()
         style = sf::Style::Fullscreen;
     }
     // The window of the program
-    sf::RenderWindow window(settings.GetVideoMode(), "PhysicsTest", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
+    sf::RenderWindow window(settings.GetVideoMode(), "Micro Rally", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))
@@ -38,14 +38,14 @@ int main()
     }
     // Load texture for menu background
     sf::Texture menuBackgroundTexture;
-    if (!menuBackgroundTexture.loadFromFile("../res/Lemon.jpg"))
+    if (!menuBackgroundTexture.loadFromFile("../res/car_background.png"))
     {
         std::cout << "texture load error" << std::endl;
         window.close();
     }
     // Load ButtonSound
     sf::SoundBuffer buttonSoundBuffer;
-    if (!buttonSoundBuffer.loadFromFile("../res/ButtonSound.wav"))
+    if (!buttonSoundBuffer.loadFromFile("../res/audio/buttonsound.wav"))
     {
         std::cout << "audio load error" << std::endl;
         window.close();
@@ -73,7 +73,7 @@ int main()
     // Initialize SceneManager
     sceneManager.Init(hostService, clientService, hostThread, settings, window, font, menuBackgroundTexture, buttonSoundBuffer);
     // Initialize ClientService
-    clientService.Init(&sceneManager);
+    clientService.Init(&sceneManager, &settings);
     // Limit framerate to 60
     window.setFramerateLimit(60);
     // Main loop
@@ -86,7 +86,7 @@ int main()
         // Update scene
         sceneManager.Update(deltaTime);
         // Clear the window
-        window.clear(sf::Color(200, 200, 200, 255));
+        window.clear();//sf::Color(200, 200, 200, 255));
         // Draw current scene
         sceneManager.Draw(window);
         // Display everything in the window
