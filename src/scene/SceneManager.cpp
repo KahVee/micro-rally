@@ -267,8 +267,6 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
         }));
     scorescreen->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, backgroundColor, sf::Color::White, buttonSoundBuffer,
         [&clientService, &hostService, &hostThread, &settings](){
-            // Start playing menutheme
-            settings.PlayTheme("menutheme");
             hostService.Stop();
             // Terminate thread if needed
             if(hostThread.joinable())
