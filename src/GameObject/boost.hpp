@@ -3,7 +3,7 @@
 class Boost : public DynamicObject
 {
 public:
-    Boost(sf::Int32 id, std::string spritePath, b2World *world);
+    Boost(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings);
     ~Boost();
 
 private:

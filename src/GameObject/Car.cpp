@@ -3,10 +3,11 @@
 #include <iostream>
 
 #include "../constants.hpp"
+#include <cmath>
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
-    :DynamicObject(ids[0], carData.spritePath, world), carData_(carData) {
+Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* settings)
+    :DynamicObject(ids[0], carData.spritePath, world, settings), carData_(carData) {
 
     isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
 
@@ -30,37 +31,57 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData)
     jointDef.localAnchorB.SetZero();
 
     //front tires are created first
-    Tire *tire = new Tire(ids[1], "../res/tire.png", world, this);
+    Tire *tire = new Tire(ids[1], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[0].first, carData_.tirePositions[0].second );
     f1Joint_ =(b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[2], "../res/tire.png", world, this);
+    tire = new Tire(ids[2], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[1].first, carData_.tirePositions[1].second );
     f2Joint_ = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[3], "../res/tire.png", world, this);
+    tire = new Tire(ids[3], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[2].first, carData_.tirePositions[2].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[4], "../res/tire.png", world, this);
+    tire = new Tire(ids[4], "../res/tire.png", world, this, settings);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[3].first, carData_.tirePositions[3].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
     // Set sprite scale
-    sprite_.setScale(PIXELS_PER_METER * carData_.bodyWidth / sprite_.getLocalBounds().width, PIXELS_PER_METER * carData_.bodyHeight / sprite_.getLocalBounds().height);
-    steeringAngle_ = 0;
+    sprite_.setScale(carData_.bodyWidth / sprite_.getLocalBounds().width, carData_.bodyHeight / sprite_.getLocalBounds().height);
+    steeringAngle_ = 0.f;
+
+    // Sounds
+    if(!soundBuffer_.loadFromFile("../res/audio/enginesound.wav"))
+    {
+        // TODO WHEN SOUND DOESN'T LOAD
+    }
+    enginesound_.setBuffer(soundBuffer_);
+    enginesound_.setLoop(true);
+    enginesound_.setVolume(50.f);
+    enginesound_.play();
 }
 
 Car::~Car() {
     world_->DestroyBody(body_);
+}
+
+void Car::SetTransform(b2Vec2 pos, float angle) {
+    body_->SetTransform(pos, angle);
+    for(int i = 0; i < 4; i++) {
+        b2Vec2 originalPos = b2Vec2(carData_.tirePositions[i].first, carData_.tirePositions[i].second);
+        float tireDistance = originalPos.Length();
+        b2Vec2 newPos = originalPos + body_->GetWorldVector(b2Vec2(sin(angle)*tireDistance, cos(angle)*tireDistance));
+        tires_[i]->SetTransform(newPos, angle);
+    }
 }
 
 void Car::PrivateUpdate(float dt) {
@@ -89,13 +110,27 @@ void Car::PrivateUpdate(float dt) {
         } else if(isTurningRight_) {
             desiredAngle = -carData_.tireLockAngle;
         }
-        float currentAngle = f1Joint_->GetJointAngle();
+        float currentAngle = steeringAngle_;
         float turnSpeed = carData_.tireTurnSpeed * dt * DEG_TO_RAD;
         float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
         steeringAngle_ = currentAngle + deltaAngle;
     }
-    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
-    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ + 0.0005 );
+
+    f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+    f2Joint_->SetLimits( steeringAngle_, steeringAngle_ );
+
+    // Sounds
+    float speed = sqrt(GetVelocity().x * GetVelocity().x + GetVelocity().y * GetVelocity().y);
+    if(speed > 0.5f || speed < -0.5f)
+    {
+        enginesound_.setVolume(0.f);
+    }else
+    {
+        enginesound_.setVolume(0.f);
+    }
+    
+    float pitch = speed / GetMaxSpeed();
+    enginesound_.setPitch(0.5f + pitch);
 }
 
 void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {

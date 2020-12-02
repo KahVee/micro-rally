@@ -40,4 +40,10 @@ private:
     bool drawChat_ = false;
     TableSceneComponent playerList_;
     bool drawPlayerList_ = false;
+    bool playerFinished_ = false;
+    Settings* settings_;
+    int currentLap_ = 1;
+    bool lastLapThemePlaying_ = false;
+    bool gameStarted_ = false;
+    sf::Clock gameStartClock_;
 };

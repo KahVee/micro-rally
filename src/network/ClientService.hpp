@@ -5,9 +5,11 @@
 #include <string>
 #include <iomanip>
 #include <sstream>
+#include <iostream>
 
 #include "../scene/SceneManager.hpp"
 #include "Network.hpp"
+#include "../settings/Settings.hpp"
 
 class SceneManager;
 
@@ -17,7 +19,7 @@ class ClientService
 public:
     ClientService() = default;
     ~ClientService() = default;
-    void Init(SceneManager* sceneManager);
+    void Init(SceneManager* sceneManager, Settings* settings);
     sf::Socket::Status Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout, const std::string& playerName);
     void Disconnect();
     bool IsConnected();
@@ -30,5 +32,6 @@ private:
     sf::SocketSelector selector_;
     sf::Clock pingClock_;
     SceneManager* sceneManager_ = nullptr;
+    Settings* settings_ = nullptr;
     sf::Int32 id_ = -1;
 };

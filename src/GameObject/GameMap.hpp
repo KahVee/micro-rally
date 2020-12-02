@@ -8,10 +8,11 @@
 #include <map>
 #include <string>
 #include "RaceLine.hpp"
+#include "../settings/Settings.hpp"
 
 class GameMap : public GameObject {
 public:
-    GameMap(float tileSize, sf::Int32 id);
+    GameMap(float tileSize, sf::Int32 id, Settings* settings);
     virtual ~GameMap();
 
     b2Transform GetTransform() const;
@@ -33,4 +34,5 @@ private:
     std::map<char, MapTile*> tileTypes_;
     std::vector<MapTile*> map_;
     std::vector<RaceLine*> raceLines_;
+    Settings* settings_;
 };

@@ -7,11 +7,11 @@ set(EXECUTABLE_NAME MyGame)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 # These might also be needed
-# set(CMAKE_THREAD_LIBS_INIT "-lpthread")
-# set(CMAKE_HAVE_THREADS_LIBRARY 1)
-# set(CMAKE_USE_WIN32_THREADS_INIT 0)
-# set(CMAKE_USE_PTHREADS_INIT 1)
-# set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_WIN32_THREADS_INIT 0)
+set(CMAKE_USE_PTHREADS_INIT 1)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 # Set project name
 project (EXECUTABLE_NAME)
@@ -40,8 +40,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "GameObject/Car.hpp"
     "GameObject/Car.cpp"
     "GameObject/CarData.hpp"
-    "GameObject/box.hpp"
-    "GameObject/box.cpp"
+    "GameObject/Box.hpp"
+    "GameObject/Box.cpp"
     "GameObject/tirestack.hpp"
     "GameObject/tirestack.cpp"
     "GameObject/oilspill.hpp"
@@ -68,6 +68,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "scene/TableSceneComponent.cpp"
     "scene/SliderSceneComponent.hpp"
     "scene/SliderSceneComponent.cpp"
+    "scene/ListSelectorSceneComponent.hpp"
+    "scene/ListSelectorSceneComponent.cpp"
     "network/HostService.hpp"
     "network/HostService.cpp"
     "network/ClientService.hpp"

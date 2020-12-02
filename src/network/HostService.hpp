@@ -3,6 +3,7 @@
 #include <SFML/Network.hpp>
 #include <string>
 #include <list>
+#include <map>
 
 #include "Network.hpp"
 
@@ -30,6 +31,8 @@ private:
     sf::TcpListener listener_;
     sf::SocketSelector selector_;
     std::list<Client> clients_;
+    std::map<sf::Int32,NetworkDynamicObject> networkObjects_;
     bool running_ = false;
     bool gameRunning_ = false;
+    int lastFinishRanking_ = 0;
 };

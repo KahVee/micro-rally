@@ -13,17 +13,34 @@ struct Client
     b2Vec2 velocity;
     float angularVelocity;
     float steeringAngle;
+    bool finished;
+    sf::Int32 ranking;
+    sf::Int32 car;
+};
+
+struct NetworkDynamicObject
+{
+    b2Transform transform;
+    b2Vec2 velocity;
+    float angularVelocity;
 };
 
 enum NetworkMessageType : sf::Uint8
 {
     PING,
     CHAT_MESSAGE,
+    CLIENT_START,
     CLIENT_CONNECT,
     CLIENT_DISCONNECT,
     CLIENT_DATA,
     CLIENT_ID,
-    GAME_START
+    CLIENT_WIN,
+    CLIENT_RANK,
+    CLIENT_CAR,
+    OBJECT_CREATE,
+    OBJECT_DATA,
+    GAME_START,
+    GAME_FINISH
 };
 
 inline sf::Packet& operator <<(sf::Packet& packet, const NetworkMessageType& networkMessageType)

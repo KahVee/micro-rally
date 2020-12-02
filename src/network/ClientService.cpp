@@ -1,8 +1,9 @@
 #include "ClientService.hpp"
 
-void ClientService::Init(SceneManager* sceneManager)
+void ClientService::Init(SceneManager* sceneManager, Settings* settings)
 {
     sceneManager_ = sceneManager;
+    settings_ = settings;
 }
 
 sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout, const std::string& playerName)
@@ -15,6 +16,10 @@ sf::Socket::Status ClientService::Connect(const sf::IpAddress &address, unsigned
         sf::Packet connectPacket;
         connectPacket << CLIENT_CONNECT << playerName;
         socket_.send(connectPacket);
+    }
+    else
+    {
+        socket_.disconnect();
     }
     return status;
 }
@@ -86,9 +91,22 @@ void ClientService::Receive()
                 }
                 else if (messageType == GAME_START)
                 {
+                    // Start playing gametheme
+                    settings_->PlayTheme("gamestarttheme");
                     sceneManager_->ChangeScene("game");
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == GAME_FINISH)
+                {
+                    // Start playing gametheme
+                    settings_->PlayTheme("scoreboardtheme");
+                    sceneManager_->ChangeScene("scorescreen");
                 }
                 else if (messageType == CHAT_MESSAGE)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == OBJECT_DATA)
                 {
                     sceneManager_->HandlePacket(packetCopy);
                 }
@@ -101,6 +119,18 @@ void ClientService::Receive()
                     sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == CLIENT_DATA)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_WIN)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_RANK)
+                {
+                    sceneManager_->HandlePacket(packetCopy);
+                }
+                else if (messageType == CLIENT_START)
                 {
                     sceneManager_->HandlePacket(packetCopy);
                 }
