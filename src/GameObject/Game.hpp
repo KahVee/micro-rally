@@ -43,8 +43,7 @@ public:
     sf::Int32 GenerateID();
 
     float GetFriction(b2Vec2 coords) const;
-    //Maps player ids to their "RaceState"
-    std::map<sf::Int32, RaceState*> raceStates_;
+
 private:
     sf::Int32 id_;
     Car *playerCar_;
@@ -55,7 +54,8 @@ private:
     Settings* settings_;
     ContactListener* contactListener_;
     ClientService *clientService_;
-;
+    //Maps player ids to their "RaceState"
+    std::map<sf::Int32, RaceState*> raceStates_;
     //All objects in the world except player-car and its tires
     std::vector<DynamicObject*> objects_;
     //All objects in the world indexed by their ids

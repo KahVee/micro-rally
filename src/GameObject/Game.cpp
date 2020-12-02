@@ -49,8 +49,8 @@ Game::~Game() {
     for(auto& rs: raceStates_) {
         delete rs.second;
     }
+    delete playerCar_;
     delete contactListener_;
-    //delete playerCar_;
     delete world_;
     delete map_;
 }
@@ -178,6 +178,7 @@ void Game::RemoveCar(sf::Int32 id)
 {
     //TODO add exception handling
     Car *carToRemove = (Car*)objectMap_.at(id);
+    std::cout << id << std::endl;
     objectMap_.erase(id);
     for(auto t: carToRemove->GetTires())
     {
