@@ -1,20 +1,29 @@
-#include <Box2D/Box2D.h>
-#include <iostream>
-#include "GameObject.hpp"
+#include "ContactListener.hpp"
 
-class ContactListener : public b2ContactListener
+void ContactListener::BeginContact(b2Contact *contact)
 {
-    void BeginContact(b2Contact *contact)
-    {
-        GameObject *fixtureAObj = static_cast<GameObject*>(contact->GetFixtureA()->GetUserData());
-        GameObject *fixtureBObj = static_cast<GameObject*>(contact->GetFixtureB()->GetUserData());
-        if (fixtureAObj != NULL && fixtureBObj != NULL) {
-            std::cout << "Collision detected: ID: " << fixtureBObj->GetID() << ", ID2: " <<  fixtureAObj->GetID() << std::endl;
+    GameObject *fixtureAObj = static_cast<GameObject*>(contact->GetFixtureA()->GetUserData());
+    GameObject *fixtureBObj = static_cast<GameObject*>(contact->GetFixtureB()->GetUserData());
+    sf::Int32 idA, idB;
+
+    if (fixtureAObj != NULL && fixtureBObj != NULL) {
+        idA = fixtureAObj->GetID();
+        idB = fixtureBObj->GetID();   
+        std::cout << "Collision detected: ID: " << idA << ", ID2: " <<  idB << std::endl;
+    }
+
+    //Fixture A is a car
+    if(0 <= idA && idA <= MAX_CLIENTS) {
+        //Fixture B is a RaceLine
+        if(idB <= -100) {
+            game_->UpdateRaceState(idA, idB);
         }
     }
-
-    void EndContact(b2Contact *contact)
-    {
-        
+    //Fixture B is a car
+    if(0 <= idB && idB <= MAX_CLIENTS) {
+        //Fixture A is a RaceLine
+        if(idA <= -100) {
+            game_->UpdateRaceState(idB, idA);
+        }
     }
-};
+}

@@ -26,6 +26,8 @@ public:
     int GetWidth() const;
     int GetHeight() const;
     float GetTileSize() const;
+    int GetNumberOfRaceLines() const;
+
 private:
     GameMapDrawable mapDrawable_;
     int width_;
