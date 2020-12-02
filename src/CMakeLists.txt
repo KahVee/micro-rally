@@ -34,6 +34,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "GameObject/RaceLine.hpp"
     "GameObject/RaceLine.cpp"
     "GameObject/GameMapDrawable.hpp"
+    "GameObject/ContactListener.cpp"
+    "GameObject/ContactListener.hpp"
     "lib/json.hpp"
     "GameObject/Tire.cpp"
     "GameObject/Tire.hpp"

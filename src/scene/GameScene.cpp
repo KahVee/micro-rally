@@ -40,7 +40,8 @@ GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, con
                 }
             }
             return "";
-        })
+        }),
+    lapCounter_({0.0f, 0.0f}, {0.2f, 0.1f}, "", window,"Lap:      ", sf::Color::White, font)
 {
 }
 
@@ -171,7 +172,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         packet >> map >> laps;
         settings_->SetLaps(laps);
         settings_->SetMapIndex(map);
-        game_ = new Game(clientService_->GetId(), settings_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
+        game_ = new Game(clientService_->GetId(), clientService_, settings_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
         // Send data to initialize networked dynamic objects on host if client is host
         if(clientService_->GetId() == 0)
         {
@@ -266,7 +267,7 @@ void GameScene::Update(const sf::Time& deltaTime)
         gameStarted_ = true;
         settings_->PlayTheme("gametheme");
     }
-    if(currentLap_ == settings_->GetLaps() && !lastLapThemePlaying_ && gameStarted_)
+    if(game_->GetCurrentPlayerLap() == settings_->GetLaps() && !lastLapThemePlaying_ && gameStarted_)
     {
         settings_->PlayTheme("lastlaptheme");
         lastLapThemePlaying_ = true;
@@ -357,6 +358,10 @@ void GameScene::Draw(sf::RenderWindow& window)
         // Set default view back
         window.setView(window.getDefaultView());
 
+        // Draw lap counter
+        lapCounter_.SetText("Lap: " + std::to_string(game_->GetCurrentPlayerLap()) + "/" + std::to_string(settings_->GetLaps()));
+        lapCounter_.Draw(window);
+
         // Draw chat
         if(drawChat_)
         {
@@ -380,7 +385,7 @@ void GameScene::Init()
     // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
     if(!clientService_->IsConnected())
     {
-        game_ = new Game(clientService_->GetId(), settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
+        game_ = new Game(clientService_->GetId(), clientService_, settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
     }
     theme2_.play();
 }

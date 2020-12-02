@@ -5,25 +5,21 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <Box2D/Box2D.h>
-
 #include "Game.hpp"
-#include "ContactListener.cpp"
-#include "RaceLine.hpp"
-
-ContactListener gameContactListener;
 
 
-Game::Game(sf::Int32 id, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
-    : id_(id), settings_(settings) {
+Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
+    : id_(id), clientService_(clientService), settings_(settings), laps_(laps) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
 
     // Set world contact event listener
-    gameContactListener.SetSettings(settings);
-    world_->SetContactListener(&gameContactListener);
+    contactListener_ = new ContactListener(this, settings);
+    world_->SetContactListener(contactListener_);
 
     map_ = new GameMap(1.6, -2, settings);
     map_->LoadMapFile(mapPath, world_);
+    noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
     playerCar_ = CreatePlayerCar(playerCarType);
     playerCar_->Accelerate(false);
@@ -31,6 +27,8 @@ Game::Game(sf::Int32 id, Settings* settings, int laps, const std::string &player
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
     playerCar_->SetTransform(b2Vec2(50, 50), 0);
+    RaceState *rs = new RaceState{0, -100};
+    raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
 
     Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, settings_);
     box->SetTransform(b2Vec2(20,30), 0.0);
@@ -48,7 +46,11 @@ Game::~Game() {
     for(Tire *t: playerCar_->GetTires()) {
         delete t;
     }
+    for(auto& rs: raceStates_) {
+        delete rs.second;
+    }
     delete playerCar_;
+    delete contactListener_;
     delete world_;
     delete map_;
 }
@@ -101,6 +103,29 @@ void Game::UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float
     car->SetState(transform, velocity, angularVelocity, steeringAngle);
 }
 
+void Game::UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId) {
+    //Check if the crossed checpoint is the next in line
+    RaceState *carState = raceStates_[carId];
+    if(carState->nextRaceLineId == raceLineId) {
+        std::cout << "Crossed raceline "<< std::endl;
+        carState->nextRaceLineId -= 1;
+
+        //Finish line
+        if(raceLineId == -100) {
+            carState->currentLap += 1;
+            if(carState->currentLap == laps_+1) {
+                sf::Packet packet;
+                packet << CLIENT_WIN;
+                clientService_->Send(packet);
+            }
+        }
+        //Last checkpoint
+        if(raceLineId == -99 - noOfCheckpoints_) {
+            carState->nextRaceLineId = -100;
+        }
+    }
+}
+
 Car* Game::CreatePlayerCar(const std::string &carType)
 {
     std::vector<sf::Int32> ids;
@@ -123,21 +148,29 @@ Car* Game::CreatePlayerCar(const std::string &carType)
 
 Car* Game::AddCar(sf::Int32 id, const std::string &carType)
 {
+    //Create local ids for the tires
     std::vector<sf::Int32> ids;
     ids.push_back(id);
     for (int i = 0; i < 4; i++)
     {
         ids.push_back(GenerateID());
     }
+
+    //Create the car and add it to the necessary containers
     Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
+
+    //Add the tires to the necessary containers
     std::vector<Tire*> tires = car->GetTires();
     for(int i = 0; i < 4; i++) {
         objects_.push_back(tires[i]);
         objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i+1], tires[i]));
     }
+
     car->isLocalPlayer_ = false;
+    RaceState *rs = new RaceState{0, 0};
+    raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
     return car;
 }
 
@@ -145,6 +178,7 @@ void Game::RemoveCar(sf::Int32 id)
 {
     //TODO add exception handling
     Car *carToRemove = (Car*)objectMap_.at(id);
+    std::cout << id << std::endl;
     objectMap_.erase(id);
     for(auto t: carToRemove->GetTires())
     {
@@ -171,6 +205,11 @@ bool Game::ContainsCar(sf::Int32 id)
 float Game::GetFriction(b2Vec2 coords) const
 {
     return map_->GetFriction(coords);
+}
+
+int Game::GetCurrentPlayerLap()
+{
+    return raceStates_[id_]->currentLap;
 }
 
 sf::Int32 Game::GenerateID() {

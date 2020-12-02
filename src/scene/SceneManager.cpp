@@ -66,7 +66,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             }
             else
             {
-                return "NOT FULLSCREEN";
+                return "   WINDOWED   ";
             }
         }));
     settingsmenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, backgroundColor, sf::Color::White, buttonSoundBuffer, settings.GetResolutionIndex(), sf::VideoMode::getFullscreenModes().size(), 12,

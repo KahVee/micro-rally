@@ -1,8 +1,7 @@
 #pragma once
 #include <SFML/Network.hpp>
 #include <Box2D/Box2D.h>
-
-#define MAX_CLIENTS 10
+#include "../constants.hpp"
 
 struct Client
 {

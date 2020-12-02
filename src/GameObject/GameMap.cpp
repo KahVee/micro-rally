@@ -131,3 +131,7 @@ float GameMap::GetTileSize() const
 {
     return tileSize_;
 }
+
+int GameMap::GetNumberOfRaceLines() const {
+    return raceLines_.size();
+}
