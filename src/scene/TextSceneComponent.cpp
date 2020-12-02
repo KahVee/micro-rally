@@ -29,6 +29,11 @@ void TextSceneComponent::Init(){}
 
 void TextSceneComponent::Reset(){}
 
+void TextSceneComponent::SetText(const std::string& text)
+{
+    text_.setString(text);
+}
+
 void TextSceneComponent::SetPosition(const sf::Vector2f& position, const sf::Vector2f& size)
 {
     sf::Vector2f textPosition(

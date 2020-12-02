@@ -40,7 +40,8 @@ GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, con
                 }
             }
             return "";
-        })
+        }),
+    lapCounter_({0.0f, 0.0f}, {0.2f, 0.1f}, "", window,"Lap:      ", sf::Color::White, font)
 {
 }
 
@@ -356,6 +357,10 @@ void GameScene::Draw(sf::RenderWindow& window)
 
         // Set default view back
         window.setView(window.getDefaultView());
+
+        // Draw lap counter
+        lapCounter_.SetText("Lap: " + std::to_string(game_->GetCurrentPlayerLap()) + "/" + std::to_string(settings_->GetLaps()));
+        lapCounter_.Draw(window);
 
         // Draw chat
         if(drawChat_)

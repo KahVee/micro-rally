@@ -10,6 +10,7 @@
 #include "Scene.hpp"
 #include "TableSceneComponent.hpp"
 #include "TextInputSceneComponent.hpp"
+#include "TextSceneComponent.hpp"
 #include "../GameObject/Game.hpp"
 #include "../GameObject/DynamicObject.hpp"
 #include "../constants.hpp"
@@ -39,6 +40,7 @@ private:
     TextInputSceneComponent textInput_;
     bool drawChat_ = false;
     TableSceneComponent playerList_;
+    TextSceneComponent lapCounter_;
     bool drawPlayerList_ = false;
     bool playerFinished_ = false;
     Settings* settings_;
