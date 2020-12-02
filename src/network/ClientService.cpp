@@ -31,6 +31,7 @@ void ClientService::Disconnect()
     socket_.disconnect();
     id_ = -1;
     sceneManager_->ChangeScene("mainMenu");
+    settings_->PlayTheme("menutheme");
 }
 
 bool ClientService::IsConnected()
