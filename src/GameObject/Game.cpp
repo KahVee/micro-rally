@@ -27,7 +27,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
     playerCar_->SetTransform(b2Vec2(50, 50), 0);
-    RaceState *rs = new RaceState{-1, -100};
+    RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
 
     Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, settings_);
@@ -112,8 +112,8 @@ void Game::UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId) {
 
         //Finish line
         if(raceLineId == -100) {
-            carState->completedLaps += 1;
-            if(carState->completedLaps == laps_) {
+            carState->currentLap += 1;
+            if(carState->currentLap == laps_+1) {
                 sf::Packet packet;
                 packet << CLIENT_WIN;
                 clientService_->Send(packet);
@@ -209,7 +209,7 @@ float Game::GetFriction(b2Vec2 coords) const
 
 int Game::GetCurrentPlayerLap()
 {
-    return raceStates_[id_]->completedLaps;
+    return raceStates_[id_]->currentLap;
 }
 
 sf::Int32 Game::GenerateID() {

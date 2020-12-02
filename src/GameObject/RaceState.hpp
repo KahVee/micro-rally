@@ -4,6 +4,6 @@
 #include <SFML/Network.hpp>
 
 struct RaceState {
-    int completedLaps;
+    int currentLap;
     sf::Int32 nextRaceLineId;
 };
