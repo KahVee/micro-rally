@@ -266,7 +266,7 @@ void GameScene::Update(const sf::Time& deltaTime)
         gameStarted_ = true;
         settings_->PlayTheme("gametheme");
     }
-    if(currentLap_ == settings_->GetLaps() && !lastLapThemePlaying_ && gameStarted_)
+    if(game_->GetCurrentPlayerLap() == settings_->GetLaps() && !lastLapThemePlaying_ && gameStarted_)
     {
         settings_->PlayTheme("lastlaptheme");
         lastLapThemePlaying_ = true;

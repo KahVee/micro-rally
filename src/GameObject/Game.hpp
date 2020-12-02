@@ -39,7 +39,7 @@ public:
     Car* AddCar(sf::Int32 id, const std::string &carType);
     void RemoveCar(sf::Int32 id);
     bool ContainsCar(sf::Int32 id);
-
+    int GetCurrentPlayerLap();
     sf::Int32 GenerateID();
 
     float GetFriction(b2Vec2 coords) const;

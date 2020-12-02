@@ -207,6 +207,11 @@ float Game::GetFriction(b2Vec2 coords) const
     return map_->GetFriction(coords);
 }
 
+int Game::GetCurrentPlayerLap()
+{
+    return raceStates_[id_]->completedLaps;
+}
+
 sf::Int32 Game::GenerateID() {
     sf::Int32 r = std::rand();
     for(auto o: objects_) {
