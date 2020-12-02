@@ -151,6 +151,14 @@ void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity
     
 }
 
+void Car::ApplyBoost(float boostScale) {
+    body_->ApplyLinearImpulse(body_->GetWorldVector(b2Vec2(0,boostScale)), body_->GetWorldCenter(), true);
+}
+void Car::ApplySpin(float spinScale) {
+    int dir = rand()%2 ? 1 : -1;
+    body_->ApplyLinearImpulse(dir * body_->GetWorldVector(b2Vec2(spinScale, 0)), body_->GetWorldPoint(b2Vec2(0,carData_.bodyHeight/2)), true);
+}
+
 void Car::Accelerate(bool in) {
     isAccelerating_ = in;
 }

@@ -137,6 +137,15 @@ void Game::UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId) {
     }
 }
 
+void Game::GiveBoost(sf::Int32 carId, float boostScale) {
+    Car *car = (Car*)objectMap_[carId];
+    car->ApplyBoost(boostScale);
+}
+void Game::GiveSpin(sf::Int32 carId, float spinScale) {
+    Car *car = (Car*)objectMap_[carId];
+    car->ApplySpin(spinScale);
+}
+
 Car* Game::CreatePlayerCar(const std::string &carType)
 {
     std::vector<sf::Int32> ids;
