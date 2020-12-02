@@ -40,7 +40,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     objects_.push_back(tirestack);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tirestack->GetID(), tirestack) );
     Oilspill *oilspill = new Oilspill(GenerateID(), "../res/oilspill.png", world_, settings_);
-    oilspill->SetTransform(b2Vec2(0,11), 0.0);
+    oilspill->SetTransform(b2Vec2(10,20), 0.0);
     objects_.push_back(oilspill);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(oilspill->GetID(), oilspill) );
     Boost *boost = new Boost(GenerateID(), "../res/boost.png", world_,settings_);
