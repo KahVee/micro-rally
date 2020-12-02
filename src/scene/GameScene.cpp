@@ -177,7 +177,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         packet >> map >> laps;
         settings_->SetLaps(laps);
         settings_->SetMapIndex(map);
-        game_ = new Game(clientService_->GetId(), settings_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
+        game_ = new Game(clientService_->GetId(), clientService_, settings_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
         // Send data to initialize networked dynamic objects on host if client is host
         if(clientService_->GetId() == 0)
         {
@@ -374,7 +374,7 @@ void GameScene::Init()
     // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
     if(!clientService_->IsConnected())
     {
-        game_ = new Game(clientService_->GetId(), settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
+        game_ = new Game(clientService_->GetId(), clientService_, settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
     }
     theme2_.play();
 }

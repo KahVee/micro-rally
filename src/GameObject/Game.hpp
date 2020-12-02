@@ -12,12 +12,14 @@
 #include "Box.hpp"
 #include "RaceState.hpp"
 #include "ContactListener.hpp"
+class ClientService;
+#include "../network/ClientService.hpp"
 class ContactListener;
 #include "RaceLine.hpp"
 
 class Game {
 public:
-    Game(sf::Int32 id, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath);
+    Game(sf::Int32 id, ClientService *clientService, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath);
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();
@@ -52,6 +54,7 @@ private:
     int laps_;
     Settings* settings_;
     ContactListener* contactListener_;
+    ClientService *clientService_;
 ;
     //All objects in the world except player-car and its tires
     std::vector<DynamicObject*> objects_;

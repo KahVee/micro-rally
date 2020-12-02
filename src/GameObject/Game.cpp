@@ -8,8 +8,8 @@
 #include "Game.hpp"
 
 
-Game::Game(sf::Int32 id, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
-    : id_(id), settings_(settings), laps_(laps) {
+Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
+    : id_(id), clientService_(clientService), settings_(settings), laps_(laps) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
 
@@ -50,7 +50,7 @@ Game::~Game() {
         delete rs.second;
     }
     delete contactListener_;
-    delete playerCar_;
+    //delete playerCar_;
     delete world_;
     delete map_;
 }
@@ -114,8 +114,9 @@ void Game::UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId) {
         if(raceLineId == -100) {
             carState->completedLaps += 1;
             if(carState->completedLaps == laps_) {
-                //TODO: call win in gamescene?
-                std::cout << "PLAYER " << id_ << " WINS" << std::endl;
+                sf::Packet packet;
+                packet << CLIENT_WIN;
+                clientService_->Send(packet);
             }
         }
         //Last checkpoint
