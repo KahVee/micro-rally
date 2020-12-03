@@ -4,25 +4,37 @@
             "name": "asphalt",
             "fileChar": "A",
             "friction": 1.0,
+            "texture": 0
+        },
+        {
+            "name": "grass",
+            "fileChar": "W",
+            "friction": 0.75,
             "texture": 1
         },
         {
-            "name": "dirt",
-            "fileChar": ".",
-            "friction": 0.5,
-            "texture": 2
-        },
-        {
-            "name": "sand",
+            "name": "gravel",
             "fileChar": ",",
-            "friction": 0.3,
-            "texture": 18
+            "friction": 0.85,
+            "texture": 2
         },
         {
             "name": "finish",
             "fileChar": "#",
             "friction": 1,
-            "texture": 53
+            "texture": 3
+        },
+        {
+            "name": "sand",
+            "fileChar": ".",
+            "friction": 0.5,
+            "texture": 4
+        },
+        {
+            "name": "water",
+            "fileChar": "~",
+            "friction": 0.25,
+            "texture": 5
         }
     ]
 }

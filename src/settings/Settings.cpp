@@ -177,6 +177,7 @@ bool Settings::LoadSettings()
         // Load maps
         maps_.push_back("test_map_file");
         maps_.push_back("test_map_file_2");
+        maps_.push_back("ponsa_gp");
         // Load themes
         themes_["menutheme"] = new sf::Music;
         themes_["lastlaptheme"] = new sf::Music;

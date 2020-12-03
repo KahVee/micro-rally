@@ -85,7 +85,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
         map_.push_back(tileTypes_[tileChar]);
     }
     // Load map textures
-    mapDrawable_.load("../res/mc_texture.png", tileSize_, map_, width_, height_);
+    mapDrawable_.load("../res/tiles.png", tileSize_, map_, width_, height_);
     // Set map position, so that left bottom coordinate is at (0,0) in box2d
     mapDrawable_.setPosition(sf::Vector2f(0, settings_->GetVideoMode().height - tileSize_*height_));
 
