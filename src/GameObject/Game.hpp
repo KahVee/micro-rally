@@ -10,6 +10,9 @@
 #include "GameMap.hpp"
 #include "RaceLine.hpp"
 #include "Box.hpp"
+#include "TireStack.hpp"
+#include "OilSpill.hpp"
+#include "Boost.hpp"
 #include "RaceState.hpp"
 #include "ContactListener.hpp"
 class ClientService;
@@ -34,6 +37,9 @@ public:
     void UpdateObject(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity);
     void UpdateCar(sf::Int32 id, b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle);
     void UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId);
+
+    void GiveBoost(sf::Int32 carId, float boostScale);
+    void GiveSpin(sf::Int32 carId, float spinScale);
 
     Car* CreatePlayerCar(const std::string &carType);
     Car* AddCar(sf::Int32 id, const std::string &carType);

@@ -35,7 +35,18 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     objects_.push_back(box);
     networkedObjects_.push_back(box);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
-
+    TireStack *tireStack = new TireStack(GenerateID(), "../res/tirestack.png", world_, settings_);
+    tireStack->SetTransform(b2Vec2(0,10), 0.0);
+    objects_.push_back(tireStack);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tireStack->GetID(), tireStack) );
+    Oilspill *oilSpill = new Oilspill(401, "../res/oilspill.png", world_, settings_);
+    oilSpill->SetTransform(b2Vec2(10,20), 0.0);
+    objects_.push_back(oilSpill);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(oilSpill->GetID(), oilSpill) );
+    Boost *boost = new Boost(301, "../res/boost.png", world_,settings_);
+    boost->SetTransform(b2Vec2(0,5), 0.0);
+    objects_.push_back(boost);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
 }
 
 
@@ -124,6 +135,15 @@ void Game::UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId) {
             carState->nextRaceLineId = -100;
         }
     }
+}
+
+void Game::GiveBoost(sf::Int32 carId, float boostScale) {
+    Car *car = (Car*)objectMap_[carId];
+    car->ApplyBoost(boostScale);
+}
+void Game::GiveSpin(sf::Int32 carId, float spinScale) {
+    Car *car = (Car*)objectMap_[carId];
+    car->ApplySpin(spinScale);
 }
 
 Car* Game::CreatePlayerCar(const std::string &carType)
