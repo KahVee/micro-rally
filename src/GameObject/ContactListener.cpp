@@ -33,7 +33,6 @@ void ContactListener::BeginContact(b2Contact *contact)
         //Fixture B is a Boost
         if(idB == 301)
         {
-            std::cout << "boostiin tormays" << std::endl;
             float boostscale = 100;
             game_->GiveBoost(idA, boostscale);
         }
@@ -44,7 +43,6 @@ void ContactListener::BeginContact(b2Contact *contact)
         //Fixture A is a boost
         if(idA == 301)
         {
-            std::cout << "boostiin tormays" << std::endl;
             float boostscale = 100;
             game_->GiveBoost(idA, boostscale);
         }
@@ -55,7 +53,6 @@ void ContactListener::BeginContact(b2Contact *contact)
         //Fixture B is an OilSpill
         if(idB == 401)
         {
-            std::cout << "oilspilliin tormays" << std::endl;
             float spinscale = 100;
             game_->GiveSpin(idA, spinscale);
         }
@@ -66,7 +63,6 @@ void ContactListener::BeginContact(b2Contact *contact)
         //Fixture A is an Oilspill
         if(idA == 401)
         {
-            std::cout << "oilspilliin tormays" << std::endl;
             float spinscale = 100;
             game_->GiveSpin(idA, spinscale);
         }
