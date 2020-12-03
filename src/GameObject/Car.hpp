@@ -25,6 +25,8 @@ public:
     void Brake(bool in);
     void TurnLeft(bool in);
     void TurnRight(bool in);
+    void ApplyBoost(float boostScale);
+    void ApplySpin(float spinScale);
 
     float GetEnginePower() const;
     void SetEnginePower(float newPower);
