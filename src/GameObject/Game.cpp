@@ -17,7 +17,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     contactListener_ = new ContactListener(this, settings);
     world_->SetContactListener(contactListener_);
 
-    map_ = new GameMap(1.6, -2, settings);
+    map_ = new GameMap(1.0, -2, settings);
     map_->LoadMapFile(mapPath, world_);
     noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
@@ -26,7 +26,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
-    playerCar_->SetTransform(b2Vec2(50, 50), 0);
+    playerCar_->SetTransform(b2Vec2(116, 107), -90*DEG_TO_RAD);
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
 

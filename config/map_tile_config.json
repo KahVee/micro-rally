@@ -4,25 +4,61 @@
             "name": "asphalt",
             "fileChar": "A",
             "friction": 1.0,
+            "texture": 0
+        },
+        {
+            "name": "grass",
+            "fileChar": "W",
+            "friction": 0.75,
             "texture": 1
         },
         {
-            "name": "dirt",
-            "fileChar": ".",
-            "friction": 0.5,
-            "texture": 2
-        },
-        {
-            "name": "sand",
+            "name": "gravel",
             "fileChar": ",",
-            "friction": 0.3,
-            "texture": 18
+            "friction": 0.85,
+            "texture": 2
         },
         {
             "name": "finish",
             "fileChar": "#",
             "friction": 1,
-            "texture": 53
+            "texture": 3
+        },
+        {
+            "name": "sand",
+            "fileChar": ".",
+            "friction": 0.5,
+            "texture": 4
+        },
+        {
+            "name": "water",
+            "fileChar": "~",
+            "friction": 0.25,
+            "texture": 5
+        },
+        {
+            "name": "dash_hor",
+            "fileChar": "-",
+            "friction": 0.95,
+            "texture": 6
+        },
+        {
+            "name": "dash_ver",
+            "fileChar": "|",
+            "friction": 0.95,
+            "texture": 7
+        },
+        {
+            "name": "dash_diag1",
+            "fileChar": "/",
+            "friction": 0.95,
+            "texture": 8
+        },
+        {
+            "name": "dash_diag2",
+            "fileChar": "(",
+            "friction": 0.95,
+            "texture": 9
         }
     ]
 }

@@ -34,7 +34,6 @@ public:
     void Reset();
 private:
     Game *game_ = nullptr;
-    sf::Music theme2_;
     ClientService* clientService_;
     TableSceneComponent chat_;
     TextInputSceneComponent textInput_;

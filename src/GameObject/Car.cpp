@@ -103,7 +103,7 @@ void Car::PrivateUpdate(float dt) {
     //tires_[1]->UpdateTurningTorque(isTurningLeft_, isTurningRight_); 
 
     //Force the front tires to a specific turn angle.
-    if(isLocalPlayer_) {
+    if(isLocalPlayer_ && (isTurningLeft_ || isTurningRight_) ) {
         float desiredAngle = 0;
         if(isTurningLeft_) {
             desiredAngle = carData_.tireLockAngle;
@@ -114,6 +114,8 @@ void Car::PrivateUpdate(float dt) {
         float turnSpeed = carData_.tireTurnSpeed * dt * DEG_TO_RAD;
         float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
         steeringAngle_ = currentAngle + deltaAngle;
+    } else {
+        steeringAngle_ = 0;
     }
 
     f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );

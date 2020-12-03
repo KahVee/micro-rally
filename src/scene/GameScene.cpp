@@ -387,7 +387,6 @@ void GameScene::Init()
     {
         game_ = new Game(clientService_->GetId(), clientService_, settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
     }
-    theme2_.play();
 }
 
 // This is called when the current scene is changed to another one from this
@@ -396,8 +395,11 @@ void GameScene::Reset()
     chat_.Reset();
     playerList_.Reset();
     textInput_.Reset();
-    theme2_.stop();
+    drawChat_ = false;
+    drawPlayerList_ = false;
     playerFinished_ = false;
+    lastLapThemePlaying_ = false;
+    gameStarted_ = false;
     if(game_ != nullptr)
     {
         delete game_;

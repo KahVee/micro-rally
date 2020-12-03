@@ -175,15 +175,16 @@ bool Settings::LoadSettings()
             };
         }
         // Load maps
+        maps_.push_back("ponsa_gp");
         maps_.push_back("test_map_file");
-        maps_.push_back("test_map_file_2");
+        maps_.push_back("test_map_file_2");        
         // Load themes
         themes_["menutheme"] = new sf::Music;
         themes_["lastlaptheme"] = new sf::Music;
         themes_["scoreboardtheme"] = new sf::Music;
         themes_["gametheme"] = new sf::Music;
         themes_["gamestarttheme"] = new sf::Music;
-        if(!themes_["menutheme"]->openFromFile("../res/audio/menutheme.wav")
+        if(!themes_["menutheme"]->openFromFile("../res/audio/8bit-boogiewoogie.wav")
         || !themes_["lastlaptheme"]->openFromFile("../res/audio/lastlaptheme.wav")
         || !themes_["scoreboardtheme"]->openFromFile("../res/audio/scoreboardtheme.wav")
         || !themes_["gametheme"]->openFromFile("../res/audio/gametheme.wav")
@@ -196,6 +197,8 @@ bool Settings::LoadSettings()
         themes_["scoreboardtheme"]->setLoop(true);
         themes_["gametheme"]->setLoop(true);
         themes_["gamestarttheme"]->setLoop(false);
+
+        themes_["lastlaptheme"]->setLoopPoints(sf::Music::Span<sf::Time>(sf::seconds(3), sf::seconds(54.250)));
 
         themes_["menutheme"]->setVolume(50.f);
         themes_["lastlaptheme"]->setVolume(50.f);

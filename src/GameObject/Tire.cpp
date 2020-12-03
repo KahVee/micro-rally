@@ -32,6 +32,8 @@ void Tire::UpdateDrive(bool isAccelerating, bool isBraking) {
     float targetSpeed = 0;
     float force = 0;
     if(isAccelerating) {
+
+        //if(lateralvelocity > X ) { asd } else applyimpulse
         targetSpeed = car_->GetMaxSpeed();
         if(targetSpeed > ForwardVelocity()) {
             force = car_->GetEnginePower();
@@ -50,7 +52,7 @@ void Tire::UpdateDrive(bool isAccelerating, bool isBraking) {
 
     //TODO: Test ApplyForce() too
     //Stops tire from sliding sideways, TODO: add a variable multiplier
-    body_->ApplyLinearImpulse(body_->GetMass() * -LateralVelocity() * body_->GetWorldVector(b2Vec2(1,0)), body_->GetWorldCenter(), true);
+    body_->ApplyLinearImpulse(frictionMultiplier_ * angularVelocityDampeningMultiplier * car_->body_->GetMass() * -LateralVelocity() * body_->GetWorldVector(b2Vec2(1,0)), body_->GetWorldCenter(), true);
     //"Rolling resistance" to stop car from sliding forever
     body_->ApplyForce(frictionMultiplier_ * car_->body_->GetMass() * dragForceMultiplier * -ForwardVelocity() * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
 }
