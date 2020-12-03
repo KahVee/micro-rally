@@ -198,6 +198,8 @@ bool Settings::LoadSettings()
         themes_["gametheme"]->setLoop(true);
         themes_["gamestarttheme"]->setLoop(false);
 
+        themes_["lastlaptheme"]->setLoopPoints(sf::Music::Span<sf::Time>(sf::seconds(3), sf::seconds(54.250)));
+
         themes_["menutheme"]->setVolume(50.f);
         themes_["lastlaptheme"]->setVolume(50.f);
         themes_["scoreboardtheme"]->setVolume(50.f);
