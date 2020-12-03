@@ -19,6 +19,18 @@ void ContactListener::BeginContact(b2Contact *contact)
         if(idB <= -100) {
             game_->UpdateRaceState(idA, idB);
         }
+        //Fixture B is a Boost
+        else if(300 <= idB && idB <= 399)
+        {
+            float boostscale = 100;
+            game_->GiveBoost(idA, boostscale);
+        }
+        //Fixture B is an OilSpill
+        else if(400 <= idB && idB <= 499)
+        {
+            float spinscale = 100;
+            game_->GiveSpin(idA, spinscale);
+        }
     }
     //Fixture B is a car
     if(0 <= idB && idB <= MAX_CLIENTS) {
@@ -26,42 +38,14 @@ void ContactListener::BeginContact(b2Contact *contact)
         if(idA <= -100) {
             game_->UpdateRaceState(idB, idA);
         }
-    }
-    //Fixture A is a car
-    if(0 <= idA && idA <=MAX_CLIENTS)
-    {
-        //Fixture B is a Boost
-        if(idB == 301)
+        //Fixture A is a Boost
+        else if(300 <= idA && idA <= 399)
         {
             float boostscale = 100;
             game_->GiveBoost(idA, boostscale);
         }
-    }
-    //Fixture B is a car
-    if(0 <= idB && idB <=MAX_CLIENTS)
-    {
-        //Fixture A is a boost
-        if(idA == 301)
-        {
-            float boostscale = 100;
-            game_->GiveBoost(idA, boostscale);
-        }
-    }
-        //Fixture A is a car
-    if(0 <= idA && idA <=MAX_CLIENTS)
-    {
-        //Fixture B is an OilSpill
-        if(idB == 401)
-        {
-            float spinscale = 100;
-            game_->GiveSpin(idA, spinscale);
-        }
-    }
-    //Fixture B is a car
-    if(0 <= idB && idB <=MAX_CLIENTS)
-    {
-        //Fixture A is an Oilspill
-        if(idA == 401)
+        //Fixture A is an OilSpill
+        else if(400 <= idA && idA <= 499)
         {
             float spinscale = 100;
             game_->GiveSpin(idA, spinscale);

@@ -1,4 +1,4 @@
-#include "oilspill.hpp"
+#include "OilSpill.hpp"
 #include <iostream>
 
 

@@ -1,7 +1,7 @@
-#include "tirestack.hpp"
+#include "TireStack.hpp"
 #include <iostream>
 
-Tirestack::Tirestack(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings) : DynamicObject(id, spritePath, world, settings)
+TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings) : DynamicObject(id, spritePath, world, settings)
 {
     body_->SetType(b2_staticBody);
     b2PolygonShape pShape;
@@ -18,12 +18,12 @@ Tirestack::Tirestack(sf::Int32 id, std::string spritePath, b2World *world, Setti
     sprite_.setScale(width / sprite_.getLocalBounds().width, height / sprite_.getLocalBounds().height);
 }
 
-Tirestack::~Tirestack()
+TireStack::~TireStack()
 {
     world_->DestroyBody(body_);
 }
 
-void Tirestack::PrivateUpdate(float dt)
+void TireStack::PrivateUpdate(float dt)
 {
     //std::cout << GetTransform().p.x << " " << GetTransform().p.y << " Olen taalla" << std::endl;
     body_->ApplyForceToCenter(10 * frictionMultiplier_ * -GetVelocity(), true);

@@ -10,9 +10,9 @@
 #include "GameMap.hpp"
 #include "RaceLine.hpp"
 #include "Box.hpp"
-#include "tirestack.hpp"
-#include "oilspill.hpp"
-#include "boost.hpp"
+#include "TireStack.hpp"
+#include "OilSpill.hpp"
+#include "Boost.hpp"
 #include "RaceState.hpp"
 #include "ContactListener.hpp"
 class ClientService;
