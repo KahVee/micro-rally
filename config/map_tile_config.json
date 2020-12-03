@@ -35,6 +35,30 @@
             "fileChar": "~",
             "friction": 0.25,
             "texture": 5
+        },
+        {
+            "name": "dash_hor",
+            "fileChar": "-",
+            "friction": 0.95,
+            "texture": 6
+        },
+        {
+            "name": "dash_ver",
+            "fileChar": "|",
+            "friction": 0.95,
+            "texture": 7
+        },
+        {
+            "name": "dash_diag1",
+            "fileChar": "/",
+            "friction": 0.95,
+            "texture": 8
+        },
+        {
+            "name": "dash_diag2",
+            "fileChar": "(",
+            "friction": 0.95,
+            "texture": 9
         }
     ]
 }
