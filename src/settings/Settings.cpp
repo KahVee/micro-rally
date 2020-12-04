@@ -240,6 +240,8 @@ bool Settings::LoadSettings()
         buttonsound.setBuffer(soundBuffers_[soundBuffers_.size() - 1]);
         sounds_["collisionsound"] = collisionsound;
         sounds_["buttonsound"] = buttonsound;
+        sounds_["collisionsound"].setAttenuation(0);
+        sounds_["buttonsound"].setAttenuation(0);
     }
     catch (const std::exception& e)
     {
