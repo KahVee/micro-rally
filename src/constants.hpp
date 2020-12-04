@@ -10,4 +10,4 @@ static const int RANDOM_SEED = 21;
 // MAX LAPS CANT BE smaller than 2
 static const int MAX_LAPS = 10;
 static const int PLAYER_NAME_MAX_CHARACTERS = 10;
-static const int MAX_CLIENTS = 10;
+static const int MAX_CLIENTS = 6;
