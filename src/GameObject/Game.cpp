@@ -49,7 +49,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
 
     // Sounds
-    sf::Listener::setDirection(0,0,1);
+    //sf::Listener::setDirection(0,0,1);
 }
 
 
