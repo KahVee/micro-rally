@@ -46,7 +46,7 @@ const float GameMap::GetFriction(b2Vec2 v) const {
         return map_[mapIndex]->GetFriction();
     } else {
         // If outside map
-        return 1.0;
+        return backgroundTileType_->GetFriction();
     }
 }
 
@@ -60,7 +60,7 @@ const float GameMap::GetRollingResistance(b2Vec2 v) const {
         return map_[mapIndex]->GetRollingResistance();
     } else {
         // If outside map
-        return 1.0;
+        return backgroundTileType_->GetRollingResistance();
     }
 }
 
@@ -99,6 +99,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
     width_ = mapJson["width"].get<int>();
     height_ = mapJson["height"].get<int>();
     tileSize_ = mapJson["tileSize"].get<int>();
+    backgroundTileType_ = tileTypes_[mapJson["bgTileType"].get<std::string>()[0]];
 
     std::string tileLayoutString;
     for (int i = 0; i < height_; i++) {
@@ -110,7 +111,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
         map_.push_back(tileTypes_[tileChar]);
     }
     // Load map textures
-    mapDrawable_.load("../res/tiles.png", tileSize_, map_, width_, height_);
+    mapDrawable_.load("../res/tiles.png", tileSize_, map_, width_, height_, backgroundTileType_);
     // Set map position, so that left bottom coordinate is at (0,0) in box2d
     mapDrawable_.setPosition(sf::Vector2f(0, settings_->GetVideoMode().height - tileSize_*height_));
 

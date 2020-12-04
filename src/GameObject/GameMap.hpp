@@ -40,6 +40,7 @@ private:
     float tileSize_ = 1.0; // In respect to simluation coordinates
     std::map<char, MapTile*> tileTypes_;
     std::vector<MapTile*> map_;
+    MapTile* backgroundTileType_;
     std::vector<RaceLine*> raceLines_;
     std::vector<b2Transform*> startPoints_;
     Settings* settings_;
