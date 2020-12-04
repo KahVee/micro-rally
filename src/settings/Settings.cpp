@@ -207,14 +207,20 @@ bool Settings::LoadSettings()
         themes_["gamestarttheme"]->setVolume(50.f);
         // Load sounds
         sf::SoundBuffer collisionsoundSoundBuffer;
-        if(!collisionsoundSoundBuffer.loadFromFile("../res/audio/collisionsound.wav"))
+        sf::SoundBuffer buttonsoundSoundBuffer;
+        if(!collisionsoundSoundBuffer.loadFromFile("../res/audio/collisionsound.wav")
+        || !buttonsoundSoundBuffer.loadFromFile("../res/audio/buttonsound.wav"))
         {
             return false;
         }
         soundBuffers_.push_back(collisionsoundSoundBuffer);
+        soundBuffers_.push_back(buttonsoundSoundBuffer);
         sf::Sound collisionsound;
+        sf::Sound buttonsound;
         collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-1]);
+        buttonsound.setBuffer(soundBuffers_[soundBuffers_.size() - 1]);
         sounds_["collisionsound"] = collisionsound;
+        sounds_["buttonsound"] = buttonsound;
     }
     catch (const std::exception& e)
     {

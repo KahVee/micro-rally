@@ -43,22 +43,6 @@ int main()
         std::cout << "texture load error" << std::endl;
         window.close();
     }
-    // Load ButtonSound
-    sf::SoundBuffer buttonSoundBuffer;
-    if (!buttonSoundBuffer.loadFromFile("../res/audio/buttonsound.wav"))
-    {
-        std::cout << "audio load error" << std::endl;
-        window.close();
-    }
-    // Load Theme1
-    // sf::Music theme1;
-    // if(!theme1.openFromFile("../res/Theme1.wav"))
-    // {
-    //     std::cout << "audio load error" << std::endl;
-    //     window.close();
-    // }
-    // theme1.setVolume(15.f);
-    // theme1.setLoop(true);
     // This object provides delta time
     sf::Clock clock;
     // The name of the local player
@@ -71,7 +55,7 @@ int main()
     // The object that manages scenes of the program
     SceneManager sceneManager;
     // Initialize SceneManager
-    sceneManager.Init(hostService, clientService, hostThread, settings, window, font, menuBackgroundTexture, buttonSoundBuffer);
+    sceneManager.Init(hostService, clientService, hostThread, settings, window, font, menuBackgroundTexture);
     // Initialize ClientService
     clientService.Init(&sceneManager, &settings);
     // Limit framerate to 60
