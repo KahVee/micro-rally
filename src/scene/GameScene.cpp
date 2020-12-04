@@ -1,6 +1,6 @@
 #include "GameScene.hpp"
 
-GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, const sf::Font& font, Settings& settings, const sf::Color& backgroundColor) : clientService_(clientService), settings_(&settings),
+GameScene::GameScene(ClientService* clientService, sf::RenderWindow& window, const sf::Font& font, Settings& settings, const sf::Color& backgroundColor) : clientService_(clientService), settings_(&settings), window_(&window),
     chat_({0.05f, 0.05f}, {0.4f, 0.75f}, "chat", window, sf::Color::Black, font, backgroundColor, 15, {10, 20}),
     playerList_({0.3f, 0.2f}, {0.4f, 0.6f}, "playerlist", window, sf::Color::Black, font, backgroundColor, MAX_CLIENTS, {3, 10}),
     textInput_({0.05f, 0.85f}, {0.4f, 0.1f}, "", window,"", sf::Color::Black, font, backgroundColor, sf::Color::White, 20,
@@ -172,7 +172,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         packet >> map >> laps;
         settings_->SetLaps(laps);
         settings_->SetMapIndex(map);
-        game_ = new Game(clientService_->GetId(), clientService_, settings_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
+        game_ = new Game(clientService_->GetId(), clientService_, settings_, window_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
         // Send data to initialize networked dynamic objects on host if client is host
         if(clientService_->GetId() == 0)
         {
@@ -198,7 +198,11 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
         }
         if(gameStarted_)
         {
-            if(drawChat_)
+            if(event.type == sf::Event::MouseButtonPressed)
+            {
+                // Ignore mousebuttonpress in GameScene
+            }
+            else if(drawChat_)
             {
                 textInput_.HandleEvent(event, window);
             }
@@ -262,7 +266,7 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
 void GameScene::Update(const sf::Time& deltaTime)
 {
     game_->Update(deltaTime.asSeconds());
-    if(gameStartClock_.getElapsedTime() > sf::seconds(10.0f) && !gameStarted_)
+    if(gameStartClock_.getElapsedTime() > sf::seconds(5.0f) && !gameStarted_)
     {
         gameStarted_ = true;
         settings_->PlayTheme("gametheme");
@@ -281,7 +285,7 @@ void GameScene::Draw(sf::RenderWindow& window)
     if(playerFinished_)
     {
         // Draw whole map if player finished
-        sf::View spectateView(sf::FloatRect(0.0f, settings_->GetVideoMode().height - game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize()));
+        sf::View spectateView(sf::FloatRect(0.0f, window.getSize().y - game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize()));
         window.setView(spectateView);
         // Draw map
         window.draw(game_->GetMap()->GetMapDrawable());
@@ -337,7 +341,7 @@ void GameScene::Draw(sf::RenderWindow& window)
         window.draw(rectangle);
 
         // Draw minimap
-        sf::View minimapView(sf::FloatRect(0.0f, settings_->GetVideoMode().height - game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize()));
+        sf::View minimapView(sf::FloatRect(0.0f, window.getSize().y - game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetWidth() * game_->GetMap()->GetTileSize(), game_->GetMap()->GetHeight() * game_->GetMap()->GetTileSize()));
         minimapView.setViewport(sf::FloatRect(0.75f, 0.f, 0.25f, 0.25f)); // TODO Stop using magic numbers
         window.setView(minimapView);
 
@@ -382,10 +386,11 @@ void GameScene::Init()
     chat_.Init();
     playerList_.Init();
     textInput_.Init();
+    window_->setMouseCursorVisible(false);
     // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
     if(!clientService_->IsConnected())
     {
-        game_ = new Game(0, clientService_, settings_, 3, "FORMULA", "../res/maps/test_map_file.json");
+        game_ = new Game(0, clientService_, settings_, window_, 3, "FORMULA", "../res/maps/test_map_file.json");
     }
 }
 
@@ -405,4 +410,6 @@ void GameScene::Reset()
         delete game_;
         game_ = nullptr;
     }
+    sf::Listener::setPosition(0,0,0);
+    window_->setMouseCursorVisible(true);
 }

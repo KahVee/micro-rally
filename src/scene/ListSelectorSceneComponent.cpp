@@ -1,6 +1,6 @@
 #include "ListSelectorSceneComponent.hpp"
 
-ListSelectorSceneComponent::ListSelectorSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, int currentIndex, int listSize, int maxTextSize, std::function<std::string(float)>  onChange) : SceneComponent(relativePosition, relativeSize, componentClass), onChange_(onChange), backgroundColor_(buttonColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff), currentIndex_(currentIndex), listSize_(listSize), maxTextSize_(maxTextSize)
+ListSelectorSceneComponent::ListSelectorSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, Settings* settings, int currentIndex, int listSize, int maxTextSize, std::function<std::string(float)>  onChange) : SceneComponent(relativePosition, relativeSize, componentClass), onChange_(onChange), backgroundColor_(buttonColor), highlightColor_(highlightColor), currentIndex_(currentIndex), listSize_(listSize), maxTextSize_(maxTextSize), settings_(settings)
 {
     // Set text
     text_.setString(onChange_(currentIndex_));
@@ -17,11 +17,7 @@ ListSelectorSceneComponent::ListSelectorSceneComponent(const sf::Vector2f& relat
     character_.setCharacterSize(text_.getCharacterSize());
     // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
-    SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
-    // Set button sound options
-    buttonSound_.setBuffer(buttonSoundBuff_);
-    buttonSound_.setVolume(30.f);
-    
+    SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});    
 }
 
 void ListSelectorSceneComponent::HandlePacket(sf::Packet packet){}
@@ -60,7 +56,7 @@ void ListSelectorSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow&
                     }
                     text_.setString(onChange_(currentIndex_));
                     // Sound on click
-                    buttonSound_.play();
+                    settings_->PlaySound("buttonsound");
                 }
                 if(IsMouseHoveringRight(window))
                 {
@@ -71,7 +67,7 @@ void ListSelectorSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow&
                     }
                     text_.setString(onChange_(currentIndex_));
                     // Sound on click
-                    buttonSound_.play();
+                    settings_->PlaySound("buttonsound");
                 }
             }
             break;

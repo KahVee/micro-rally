@@ -42,19 +42,34 @@ std::string Settings::GetName()
     return playerName_;
 }
 
-const sf::VideoMode& Settings::GetVideoMode()
+const sf::VideoMode& Settings::GetFullscreenVideoMode()
 {
-    return sf::VideoMode::getFullscreenModes().at(resolutionIndex_);
+    return sf::VideoMode::getFullscreenModes()[fullscreenResolutionIndex_];
 }
 
-void Settings::SetResolutionIndex(int resolutionIndex)
+const sf::VideoMode& Settings::GetWindowedVideoMode()
 {
-    resolutionIndex_ = resolutionIndex;
+    return windowedModes[windowedResolutionIndex_];
 }
 
-int Settings::GetResolutionIndex()
+void Settings::SetFullscreenResolutionIndex(int fullscreenResolutionIndex)
 {
-    return resolutionIndex_;
+    fullscreenResolutionIndex_ = fullscreenResolutionIndex;
+}
+
+int Settings::GetFullscreenResolutionIndex()
+{
+    return fullscreenResolutionIndex_;
+}
+
+void Settings::SetWindowedResolutionIndex(int windowedResolutionIndex)
+{
+    windowedResolutionIndex_ = windowedResolutionIndex;
+}
+
+int Settings::GetWindowedResolutionIndex()
+{
+    return windowedResolutionIndex_;
 }
 
 const CarData& Settings::GetCarData(const std::string& carType)
@@ -143,9 +158,13 @@ bool Settings::LoadSettings()
             {
                 volume_ =j["Volume"].get<float>();
             }
-            if(j.contains("ResolutionIndex"))
+            if(j.contains("FullscreenResolutionIndex"))
             {
-                resolutionIndex_ = j["ResolutionIndex"].get<int>();
+                fullscreenResolutionIndex_ = j["FullscreenResolutionIndex"].get<int>();
+            }
+            if(j.contains("WindowedResolutionIndex"))
+            {
+                windowedResolutionIndex_ = j["WindowedResolutionIndex"].get<int>();
             }
             if(j.contains("Fullscreen"))
             {
@@ -183,12 +202,12 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"] = new sf::Music;
         themes_["scoreboardtheme"] = new sf::Music;
         themes_["gametheme"] = new sf::Music;
-        themes_["gamestarttheme"] = new sf::Music;
+        themes_["countdowntheme"] = new sf::Music;
         if(!themes_["menutheme"]->openFromFile("../res/audio/8bit-boogiewoogie.wav")
         || !themes_["lastlaptheme"]->openFromFile("../res/audio/lastlaptheme.wav")
         || !themes_["scoreboardtheme"]->openFromFile("../res/audio/scoreboardtheme.wav")
         || !themes_["gametheme"]->openFromFile("../res/audio/gametheme.wav")
-        || !themes_["gamestarttheme"]->openFromFile("../res/audio/gamestarttheme.wav"))
+        || !themes_["countdowntheme"]->openFromFile("../res/audio/countdowntheme.wav"))
         {
             return false;
         }
@@ -196,7 +215,7 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"]->setLoop(true);
         themes_["scoreboardtheme"]->setLoop(true);
         themes_["gametheme"]->setLoop(true);
-        themes_["gamestarttheme"]->setLoop(false);
+        themes_["countdowntheme"]->setLoop(false);
 
         themes_["lastlaptheme"]->setLoopPoints(sf::Music::Span<sf::Time>(sf::seconds(3), sf::seconds(54.250)));
 
@@ -204,17 +223,25 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"]->setVolume(50.f);
         themes_["scoreboardtheme"]->setVolume(50.f);
         themes_["gametheme"]->setVolume(50.f);
-        themes_["gamestarttheme"]->setVolume(50.f);
+        themes_["countdowntheme"]->setVolume(50.f);
         // Load sounds
         sf::SoundBuffer collisionsoundSoundBuffer;
-        if(!collisionsoundSoundBuffer.loadFromFile("../res/audio/collisionsound.wav"))
+        sf::SoundBuffer buttonsoundSoundBuffer;
+        if(!collisionsoundSoundBuffer.loadFromFile("../res/audio/collisionsound.wav")
+        || !buttonsoundSoundBuffer.loadFromFile("../res/audio/buttonsound.wav"))
         {
             return false;
         }
         soundBuffers_.push_back(collisionsoundSoundBuffer);
+        soundBuffers_.push_back(buttonsoundSoundBuffer);
         sf::Sound collisionsound;
-        collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-1]);
+        sf::Sound buttonsound;
+        collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-2]);
+        buttonsound.setBuffer(soundBuffers_[soundBuffers_.size() - 1]);
         sounds_["collisionsound"] = collisionsound;
+        sounds_["buttonsound"] = buttonsound;
+        sounds_["collisionsound"].setAttenuation(0);
+        sounds_["buttonsound"].setAttenuation(0);
     }
     catch (const std::exception& e)
     {
@@ -233,7 +260,8 @@ bool Settings::SaveSettings()
         std::ofstream file("../config/settings.json");
         j["PlayerName"]  = playerName_;
         j["Volume"]  = volume_;
-        j["ResolutionIndex"] = resolutionIndex_;
+        j["FullscreenResolutionIndex"] = fullscreenResolutionIndex_;
+        j["WindowedResolutionIndex"] = windowedResolutionIndex_;
         j["Fullscreen"] = fullscreen_;
         file << j << std::endl;
         file.close();
@@ -246,3 +274,7 @@ bool Settings::SaveSettings()
     }
     return true;
 }
+
+const std::vector<sf::VideoMode> Settings::windowedModes = {sf::VideoMode(854,480, sf::VideoMode::getDesktopMode().bitsPerPixel), 
+                                                          sf::VideoMode(1280,720, sf::VideoMode::getDesktopMode().bitsPerPixel),
+                                                          sf::VideoMode(1920,1080, sf::VideoMode::getDesktopMode().bitsPerPixel)};

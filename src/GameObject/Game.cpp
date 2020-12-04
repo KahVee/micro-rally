@@ -8,8 +8,8 @@
 #include "Game.hpp"
 
 
-Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
-    : id_(id), clientService_(clientService), settings_(settings), laps_(laps) {
+Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::RenderWindow* window, int laps, const std::string &playerCarType, std::string mapPath)
+    : id_(id), clientService_(clientService), settings_(settings), window_(window), laps_(laps) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
 
@@ -17,7 +17,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     contactListener_ = new ContactListener(this, settings);
     world_->SetContactListener(contactListener_);
 
-    map_ = new GameMap(-2, settings);
+    map_ = new GameMap(-2, window);
     map_->LoadMapFile(mapPath, world_, &objectMap_, &objects_, &networkedObjects_);
     noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
@@ -29,6 +29,8 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     playerCar_->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
+    // Sounds
+    playerCar_->GetEngineSound().setRelativeToListener(true);
 }
 
 
@@ -83,6 +85,9 @@ void Game::Update(float dt) {
     }
     map_->Update();
     world_->Step(dt, 3, 8);
+    // Spatialized sound
+    sf::Listener::setPosition(playerCar_->GetTransform().p.x, 0.f, window_->getSize().y - playerCar_->GetTransform().p.y);
+    playerCar_->GetEngineSound().setPosition(0,0,0);
 }
 
 /*
@@ -139,7 +144,7 @@ Car* Game::CreatePlayerCar(const std::string &carType)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -161,7 +166,7 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
     }
 
     //Create the car and add it to the necessary containers
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);
     car->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));

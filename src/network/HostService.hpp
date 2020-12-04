@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <atomic>
 
 #include "Network.hpp"
 
@@ -11,7 +12,7 @@
 class HostService
 {
 public:
-    HostService() = default;
+    HostService();
     ~HostService();
     HostService(const HostService& hostService) = delete;
     HostService& operator=(const HostService& hostService) = delete;
@@ -32,7 +33,7 @@ private:
     sf::SocketSelector selector_;
     std::list<Client> clients_;
     std::map<sf::Int32,NetworkDynamicObject> networkObjects_;
-    bool running_ = false;
+    std::atomic_bool running_;
     bool gameRunning_ = false;
     int lastFinishRanking_ = 0;
 };

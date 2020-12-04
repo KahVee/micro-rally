@@ -1,6 +1,6 @@
 #include "ButtonSceneComponent.hpp"
 
-ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuffer, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize, componentClass), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor)
+ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& backgroundColor, const sf::Color& highlightColor, Settings* settings, std::function<void()> onClick) : SceneComponent(relativePosition, relativeSize, componentClass), onClick_(onClick), backgroundColor_(backgroundColor), highlightColor_(highlightColor), settings_(settings)
 {
     // Set text
     text_.setString(text);
@@ -12,10 +12,6 @@ ButtonSceneComponent::ButtonSceneComponent(const sf::Vector2f& relativePosition,
     // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
     SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y});
-    // Set button sound options
-    buttonSound_.setBuffer(buttonSoundBuffer);
-    buttonSound_.setVolume(30.f);
-    
 }
 
 void ButtonSceneComponent::HandlePacket(sf::Packet packet){}
@@ -39,7 +35,7 @@ void ButtonSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& windo
             {
                 onClick_();
                 // Sound on click
-                buttonSound_.play();
+                settings_->PlaySound("buttonsound");
             }
             break;
         default:

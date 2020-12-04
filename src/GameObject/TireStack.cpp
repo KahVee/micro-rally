@@ -1,7 +1,7 @@
 #include "TireStack.hpp"
 #include <iostream>
 
-TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings) : DynamicObject(id, spritePath, world, settings)
+TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window) : DynamicObject(id, spritePath, world, window)
 {
     body_->SetType(b2_staticBody);
     b2PolygonShape pShape;

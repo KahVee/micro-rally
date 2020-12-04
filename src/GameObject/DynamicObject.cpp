@@ -3,7 +3,7 @@
 #include "DynamicObject.hpp"
 #include "../constants.hpp"
 
-DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings): GameObject(id), world_(world), settings_(settings) {
+DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window): GameObject(id), world_(world), window_(window) {
     b2BodyDef bDef;
     bDef.type = b2_dynamicBody;
     body_ = world->CreateBody(&bDef);
@@ -13,7 +13,7 @@ DynamicObject::DynamicObject(sf::Int32 id, std::string spritePath, b2World *worl
 void DynamicObject::Update(float dt) {
     b2Vec2 worldPos = body_->GetTransform().p;
     float worldRot = body_->GetTransform().q.GetAngle();
-    sprite_.setPosition(sf::Vector2f(worldPos.x, settings_->GetVideoMode().height-worldPos.y));
+    sprite_.setPosition(sf::Vector2f(worldPos.x, window_->getSize().y-worldPos.y));
     sprite_.setRotation(-worldRot*RAD_TO_DEG);
     PrivateUpdate(dt);
 }

@@ -32,7 +32,7 @@ public:
     SceneManager(const SceneManager& sceneManager) = delete;
     SceneManager& operator=(const SceneManager& sceneManager) = delete;
     ~SceneManager();
-    void Init(HostService& hostService, ClientService& clientService, std::thread& hostThread, Settings& settings, sf::RenderWindow& window, sf::Font& font, sf::Texture& menuBackgroundTexture, sf::SoundBuffer& buttonSoundBuffer);
+    void Init(HostService& hostService, ClientService& clientService, std::thread& hostThread, Settings& settings, sf::RenderWindow& window, sf::Font& font, sf::Texture& menuBackgroundTexture);
     void AddScene(const std::string& sceneName, Scene* scenePointer);
     void SetInitialScene(const std::string& sceneName);
     void ChangeScene(const std::string& sceneName);

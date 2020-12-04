@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Set the name of the executable to be produced
-set(EXECUTABLE_NAME MyGame)
+set(EXECUTABLE_NAME MicroRally)
 
 # This is needed for threads (atleast on linux)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
@@ -78,7 +78,6 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
     "network/ClientService.cpp"
     "settings/Settings.cpp"
     "settings/Settings.hpp"
-
 )
 
 ## If you want to link SFML statically

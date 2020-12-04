@@ -6,8 +6,8 @@
 #include <cmath>
 #include "Car.hpp"
 
-Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* settings)
-    :DynamicObject(ids[0], carData.spritePath, world, settings), carData_(carData) {
+Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, sf::RenderWindow* window)
+    :DynamicObject(ids[0], carData.spritePath, world, window), carData_(carData), window_(window) {
 
     isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
 
@@ -31,25 +31,25 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* 
     jointDef.localAnchorB.SetZero();
 
     //front tires are created first
-    Tire *tire = new Tire(ids[1], "../res/tire.png", world, this, settings);
+    Tire *tire = new Tire(ids[1], "../res/tire.png", world, this, window);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[0].first, carData_.tirePositions[0].second );
     f1Joint_ =(b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[2], "../res/tire.png", world, this, settings);
+    tire = new Tire(ids[2], "../res/tire.png", world, this, window);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[1].first, carData_.tirePositions[1].second );
     f2Joint_ = (b2RevoluteJoint*)world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[3], "../res/tire.png", world, this, settings);
+    tire = new Tire(ids[3], "../res/tire.png", world, this, window);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[2].first, carData_.tirePositions[2].second );
     world->CreateJoint( &jointDef );
     tires_.push_back(tire);
 
-    tire = new Tire(ids[4], "../res/tire.png", world, this, settings);
+    tire = new Tire(ids[4], "../res/tire.png", world, this, window);
     jointDef.bodyB = tire->body_;
     jointDef.localAnchorA.Set( carData_.tirePositions[3].first, carData_.tirePositions[3].second );
     world->CreateJoint( &jointDef );
@@ -67,6 +67,8 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* 
     enginesound_.setBuffer(soundBuffer_);
     enginesound_.setLoop(true);
     enginesound_.setVolume(0.f);
+    enginesound_.setMinDistance(20.f);
+    enginesound_.setAttenuation(0.5f);
     enginesound_.play();
 }
 
@@ -124,14 +126,15 @@ void Car::PrivateUpdate(float dt) {
     float speed = sqrt(GetVelocity().x * GetVelocity().x + GetVelocity().y * GetVelocity().y);
     if(speed > 0.5f || speed < -0.5f)
     {
-        enginesound_.setVolume(25.f);
+        enginesound_.setVolume(20.f);
     }else
     {
         enginesound_.setVolume(0.f);
     }
     
     float pitch = speed / GetMaxSpeed();
-    enginesound_.setPitch(1.0f + pitch);
+    enginesound_.setPitch(0.5f + pitch);
+    enginesound_.setPosition(GetTransform().p.x, 0.f, window_->getSize().y - GetTransform().p.y);
 }
 
 void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {
@@ -203,6 +206,11 @@ float Car::GetSteeringAngle() const {
 
 void Car::SetSteeringAngle(float steeringAngle) {
     steeringAngle_ = steeringAngle;
+}
+
+sf::Sound& Car::GetEngineSound()
+{
+    return enginesound_;
 }
 
 std::vector<Tire*> Car::GetTires() {

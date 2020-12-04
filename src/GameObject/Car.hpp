@@ -13,7 +13,7 @@ class Tire;
 
 class Car : public DynamicObject {
 public:
-    Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* settings);
+    Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, sf::RenderWindow* window);
     ~Car();
 
     void UpdateFriction(float friction);
@@ -39,6 +39,7 @@ public:
 
     float GetSteeringAngle() const;
     void SetSteeringAngle(float steeringAngle);
+    sf::Sound& GetEngineSound();
     std::vector<Tire*> GetTires();
     bool isLocalPlayer_;
 private:
@@ -52,6 +53,7 @@ private:
 
     float steeringAngle_;
 
+    sf::RenderWindow* window_;
     // Sounds
     sf::SoundBuffer soundBuffer_;
     sf::Sound enginesound_;

@@ -7,12 +7,13 @@
 #include <SFML/Audio.hpp>
 
 #include "SceneComponent.hpp"
+#include "../settings/Settings.hpp"
 
 /*A SceneComponent that represents a slider on screen.*/
 class SliderSceneComponent : public SceneComponent
 {
 public:
-    SliderSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, const sf::Color& lineColor, float relativeButtonPosition, std::function<std::string(float)> onSlide);
+    SliderSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, Settings* settings, const sf::Color& lineColor, float relativeButtonPosition, std::function<std::string(float)> onSlide);
     ~SliderSceneComponent() = default;
     void HandlePacket(sf::Packet packet);
     void HandleEvent(sf::Event& event, sf::RenderWindow& window);
@@ -32,8 +33,7 @@ private:
     std::string textString_;
     sf::Text text_;
     std::function<std::string(float)> onSlide_;
-    sf::Sound buttonSound_;
-    sf::SoundBuffer buttonSoundBuff_;
     float relativeButtonPosition_;
     bool selected_ = false;
+    Settings* settings_;
 };

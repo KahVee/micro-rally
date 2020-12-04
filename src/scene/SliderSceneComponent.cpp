@@ -1,6 +1,6 @@
 #include "SliderSceneComponent.hpp"
 
-SliderSceneComponent::SliderSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, const sf::SoundBuffer& buttonSoundBuff, const sf::Color& lineColor, float relativeButtonPosition, std::function<std::string(float)>  onSlide) : SceneComponent(relativePosition, relativeSize, componentClass), onSlide_(onSlide), backgroundColor_(buttonColor), highlightColor_(highlightColor), buttonSoundBuff_(buttonSoundBuff), relativeButtonPosition_(relativeButtonPosition), textString_(text)
+SliderSceneComponent::SliderSceneComponent(const sf::Vector2f& relativePosition, const sf::Vector2f& relativeSize, const std::string& componentClass, sf::RenderWindow& window, const std::string& text, const sf::Color& textColor, const sf::Font& font, const sf::Color& buttonColor, const sf::Color& highlightColor, Settings* settings, const sf::Color& lineColor, float relativeButtonPosition, std::function<std::string(float)>  onSlide) : SceneComponent(relativePosition, relativeSize, componentClass), onSlide_(onSlide), backgroundColor_(buttonColor), highlightColor_(highlightColor), relativeButtonPosition_(relativeButtonPosition), textString_(text), settings_(settings)
 {
     // Set text
     text_.setString(textString_ + onSlide_(relativeButtonPosition_));
@@ -12,11 +12,7 @@ SliderSceneComponent::SliderSceneComponent(const sf::Vector2f& relativePosition,
     line_.setFillColor(lineColor);
     // Set size and position
     SetSize({relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
-    SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});
-    // Set button sound options
-    buttonSound_.setBuffer(buttonSoundBuff_);
-    buttonSound_.setVolume(30.f);
-    
+    SetPosition({relativePosition.x * window.getSize().x, relativePosition.y * window.getSize().y}, {relativeSize.x * window.getSize().x, relativeSize.y * window.getSize().y});    
 }
 
 void SliderSceneComponent::HandlePacket(sf::Packet packet){}
@@ -63,7 +59,7 @@ void SliderSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& windo
                 {
                     selected_ = true;
                     // Sound on click
-                    buttonSound_.play();
+                    settings_->PlaySound("buttonsound");
                 }
             }
             break;

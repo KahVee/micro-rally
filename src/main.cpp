@@ -23,12 +23,18 @@ int main()
     //sf::ContextSettings contextSettings;
     //contextSettings.antialiasingLevel = 8; TO ENABLE ANTI-ALIASING UNCOMMENT THE LINES WITH CONTEXTSETTINGS
     int style = sf::Style::Titlebar | sf::Style::Close;
+    sf::VideoMode videoMode;
     if(settings.GetFullscreen())
     {
         style = sf::Style::Fullscreen;
+        videoMode = settings.GetFullscreenVideoMode();
+    }
+    else
+    {
+        videoMode = settings.GetWindowedVideoMode();
     }
     // The window of the program
-    sf::RenderWindow window(settings.GetVideoMode(), "Micro Rally", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
+    sf::RenderWindow window(videoMode, "Micro Rally", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))
@@ -43,26 +49,8 @@ int main()
         std::cout << "texture load error" << std::endl;
         window.close();
     }
-    // Load ButtonSound
-    sf::SoundBuffer buttonSoundBuffer;
-    if (!buttonSoundBuffer.loadFromFile("../res/audio/buttonsound.wav"))
-    {
-        std::cout << "audio load error" << std::endl;
-        window.close();
-    }
-    // Load Theme1
-    // sf::Music theme1;
-    // if(!theme1.openFromFile("../res/Theme1.wav"))
-    // {
-    //     std::cout << "audio load error" << std::endl;
-    //     window.close();
-    // }
-    // theme1.setVolume(15.f);
-    // theme1.setLoop(true);
     // This object provides delta time
     sf::Clock clock;
-    // The name of the local player
-    std::string playerName = "player";
     // HostService provides host side networking run in a separate thread
     HostService hostService;
     std::thread hostThread;
@@ -71,11 +59,11 @@ int main()
     // The object that manages scenes of the program
     SceneManager sceneManager;
     // Initialize SceneManager
-    sceneManager.Init(hostService, clientService, hostThread, settings, window, font, menuBackgroundTexture, buttonSoundBuffer);
+    sceneManager.Init(hostService, clientService, hostThread, settings, window, font, menuBackgroundTexture);
     // Initialize ClientService
     clientService.Init(&sceneManager, &settings);
     // Limit framerate to 60
-    window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
     // Main loop
     while (window.isOpen())
     {

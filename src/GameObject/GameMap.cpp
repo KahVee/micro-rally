@@ -14,7 +14,7 @@
 
 using json = nlohmann::json;
 
-GameMap::GameMap(sf::Int32 id, Settings* settings) : GameObject(id), settings_(settings) {
+GameMap::GameMap(sf::Int32 id, sf::RenderWindow* window) : GameObject(id), window_(window) {
     
 }
 
@@ -113,7 +113,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
     // Load map textures
     mapDrawable_.load("../res/tiles.png", tileSize_, map_, width_, height_, backgroundTileType_);
     // Set map position, so that left bottom coordinate is at (0,0) in box2d
-    mapDrawable_.setPosition(sf::Vector2f(0, settings_->GetVideoMode().height - tileSize_*height_));
+    mapDrawable_.setPosition(sf::Vector2f(0, window_->getSize().y - tileSize_*height_));
 
     // Load finish line and checkpoints
     for (int i = 0; i < mapJson["raceLines"].size(); i++) {
@@ -142,7 +142,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
         float size = mapJson["oilSpills"][i][2].get<float>()*tileSize_;
         float rotation = mapJson["oilSpills"][i][3].get<float>()*DEG_TO_RAD;
 
-        Oilspill *oilSpill = new Oilspill(400 + i, "../res/oilspill.png", world, settings_);
+        Oilspill *oilSpill = new Oilspill(400 + i, "../res/oilspill.png", world, window_);
         oilSpill->SetTransform(b2Vec2(xPos,yPos), rotation);
         objects->push_back(oilSpill);
         objectMap->insert(std::pair<sf::Int32, DynamicObject*>(oilSpill->GetID(), oilSpill) );
@@ -154,7 +154,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
         float yPos = mapJson["boosts"][i][1].get<float>()*tileSize_;
         float power = mapJson["boosts"][i][2].get<float>()*tileSize_;
 
-        Boost *boost = new Boost(300 + i, "../res/boost.png", world,settings_);
+        Boost *boost = new Boost(300 + i, "../res/boost.png", world, window_);
         boost->SetTransform(b2Vec2(xPos,yPos), 0);
         objects->push_back(boost);
         objectMap->insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
@@ -167,7 +167,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
         float size = mapJson["boxes"][i][2].get<float>()*tileSize_;
         float rotation = mapJson["boxes"][i][3].get<float>()*DEG_TO_RAD;
 
-        Box *box = new Box(500+i, "../res/smallcrate.png", world, settings_);
+        Box *box = new Box(500+i, "../res/smallcrate.png", world, window_);
         box->SetTransform(b2Vec2(xPos,yPos), rotation);
         objects->push_back(box);
         networkedObjects->push_back(box);
@@ -179,7 +179,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
         float xPos = mapJson["tireStacks"][i][0].get<float>()*tileSize_;
         float yPos = mapJson["tireStacks"][i][1].get<float>()*tileSize_;
 
-        TireStack *tireStack = new TireStack(600+i, "../res/tirestack.png", world, settings_);
+        TireStack *tireStack = new TireStack(600+i, "../res/tirestack.png", world, window_);
         tireStack->SetTransform(b2Vec2(xPos,yPos), 0.0);
         objects->push_back(tireStack);
         objectMap->insert(std::pair<sf::Int32, DynamicObject*>(tireStack->GetID(), tireStack) );

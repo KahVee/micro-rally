@@ -9,11 +9,11 @@
 #include <map>
 #include <string>
 #include "RaceLine.hpp"
-#include "../settings/Settings.hpp"
+#include <SFML/Graphics.hpp>
 
 class GameMap : public GameObject {
 public:
-    GameMap(sf::Int32 id, Settings* settings);
+    GameMap(sf::Int32 id, sf::RenderWindow* window);
     virtual ~GameMap();
 
     b2Transform GetTransform() const;
@@ -43,5 +43,5 @@ private:
     MapTile* backgroundTileType_;
     std::vector<RaceLine*> raceLines_;
     std::vector<b2Transform*> startPoints_;
-    Settings* settings_;
+    sf::RenderWindow* window_;
 };
