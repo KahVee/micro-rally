@@ -262,7 +262,7 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
 void GameScene::Update(const sf::Time& deltaTime)
 {
     game_->Update(deltaTime.asSeconds());
-    if(gameStartClock_.getElapsedTime() > sf::seconds(10.0f) && !gameStarted_)
+    if(gameStartClock_.getElapsedTime() > sf::seconds(5.0f) && !gameStarted_)
     {
         gameStarted_ = true;
         settings_->PlayTheme("gametheme");

@@ -183,12 +183,12 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"] = new sf::Music;
         themes_["scoreboardtheme"] = new sf::Music;
         themes_["gametheme"] = new sf::Music;
-        themes_["gamestarttheme"] = new sf::Music;
+        themes_["countdowntheme"] = new sf::Music;
         if(!themes_["menutheme"]->openFromFile("../res/audio/8bit-boogiewoogie.wav")
         || !themes_["lastlaptheme"]->openFromFile("../res/audio/lastlaptheme.wav")
         || !themes_["scoreboardtheme"]->openFromFile("../res/audio/scoreboardtheme.wav")
         || !themes_["gametheme"]->openFromFile("../res/audio/gametheme.wav")
-        || !themes_["gamestarttheme"]->openFromFile("../res/audio/gamestarttheme.wav"))
+        || !themes_["countdowntheme"]->openFromFile("../res/audio/countdowntheme.wav"))
         {
             return false;
         }
@@ -196,7 +196,7 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"]->setLoop(true);
         themes_["scoreboardtheme"]->setLoop(true);
         themes_["gametheme"]->setLoop(true);
-        themes_["gamestarttheme"]->setLoop(false);
+        themes_["countdowntheme"]->setLoop(false);
 
         themes_["lastlaptheme"]->setLoopPoints(sf::Music::Span<sf::Time>(sf::seconds(3), sf::seconds(54.250)));
 
@@ -204,7 +204,7 @@ bool Settings::LoadSettings()
         themes_["lastlaptheme"]->setVolume(50.f);
         themes_["scoreboardtheme"]->setVolume(50.f);
         themes_["gametheme"]->setVolume(50.f);
-        themes_["gamestarttheme"]->setVolume(50.f);
+        themes_["countdowntheme"]->setVolume(50.f);
         // Load sounds
         sf::SoundBuffer collisionsoundSoundBuffer;
         sf::SoundBuffer buttonsoundSoundBuffer;
