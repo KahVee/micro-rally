@@ -13,7 +13,7 @@ class Tire;
 
 class Car : public DynamicObject {
 public:
-    Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, Settings* settings);
+    Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, sf::RenderWindow* window);
     ~Car();
 
     void UpdateFriction(float friction);

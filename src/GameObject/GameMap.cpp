@@ -10,7 +10,7 @@
 
 using json = nlohmann::json;
 
-GameMap::GameMap(float tileSize, sf::Int32 id, Settings* settings) : tileSize_(tileSize), GameObject(id), settings_(settings) {
+GameMap::GameMap(float tileSize, sf::Int32 id, sf::RenderWindow* window) : tileSize_(tileSize), GameObject(id), window_(window) {
     
 }
 
@@ -87,7 +87,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
     // Load map textures
     mapDrawable_.load("../res/tiles.png", tileSize_, map_, width_, height_);
     // Set map position, so that left bottom coordinate is at (0,0) in box2d
-    mapDrawable_.setPosition(sf::Vector2f(0, settings_->GetVideoMode().height - tileSize_*height_));
+    mapDrawable_.setPosition(sf::Vector2f(0, window_->getSize().y - tileSize_*height_));
 
     // Load finish line and checkpoints
     for (int i = 0; i < mapJson["raceLines"].size(); i++) {

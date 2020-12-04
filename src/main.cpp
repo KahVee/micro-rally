@@ -23,12 +23,18 @@ int main()
     //sf::ContextSettings contextSettings;
     //contextSettings.antialiasingLevel = 8; TO ENABLE ANTI-ALIASING UNCOMMENT THE LINES WITH CONTEXTSETTINGS
     int style = sf::Style::Titlebar | sf::Style::Close;
+    sf::VideoMode videoMode;
     if(settings.GetFullscreen())
     {
         style = sf::Style::Fullscreen;
+        videoMode = settings.GetFullscreenVideoMode();
+    }
+    else
+    {
+        videoMode = settings.GetWindowedVideoMode();
     }
     // The window of the program
-    sf::RenderWindow window(settings.GetVideoMode(), "Micro Rally", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
+    sf::RenderWindow window(videoMode, "Micro Rally", style);//sf::Style::Titlebar | sf::Style::Close);//, contextSettings);
     // The font of the program
     sf::Font font;
     if(!font.loadFromFile("../res/FreeMono.ttf"))

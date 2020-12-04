@@ -3,7 +3,7 @@
 
 #include "Tire.hpp"
 
-Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car, Settings* settings): DynamicObject(id, spritePath, world, settings) {
+Tire::Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car, sf::RenderWindow* window): DynamicObject(id, spritePath, world, window) {
     car_ = car;
 
     float width = 0.3f;

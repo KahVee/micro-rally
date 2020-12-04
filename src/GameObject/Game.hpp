@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+#include <SFML/Graphics.hpp>
 #include "GameObject.hpp"
 #include "DynamicObject.hpp"
 #include "Car.hpp"
@@ -22,7 +23,7 @@ class ContactListener;
 
 class Game {
 public:
-    Game(sf::Int32 id, ClientService *clientService, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath);
+    Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::RenderWindow* window, int laps, const std::string &playerCarType, std::string mapPath);
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();
@@ -58,6 +59,7 @@ private:
     int noOfCheckpoints_;
     int laps_;
     Settings* settings_;
+    sf::RenderWindow* window_;
     ContactListener* contactListener_;
     ClientService *clientService_;
     //Maps player ids to their "RaceState"

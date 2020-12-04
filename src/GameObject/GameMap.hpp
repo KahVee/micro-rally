@@ -8,11 +8,11 @@
 #include <map>
 #include <string>
 #include "RaceLine.hpp"
-#include "../settings/Settings.hpp"
+#include <SFML/Graphics.hpp>
 
 class GameMap : public GameObject {
 public:
-    GameMap(float tileSize, sf::Int32 id, Settings* settings);
+    GameMap(float tileSize, sf::Int32 id, sf::RenderWindow* window);
     virtual ~GameMap();
 
     b2Transform GetTransform() const;
@@ -36,5 +36,5 @@ private:
     std::map<char, MapTile*> tileTypes_;
     std::vector<MapTile*> map_;
     std::vector<RaceLine*> raceLines_;
-    Settings* settings_;
+    sf::RenderWindow* window_;
 };

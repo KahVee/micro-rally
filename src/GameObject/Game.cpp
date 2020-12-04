@@ -8,8 +8,8 @@
 #include "Game.hpp"
 
 
-Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int laps, const std::string &playerCarType, std::string mapPath)
-    : id_(id), clientService_(clientService), settings_(settings), laps_(laps) {
+Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::RenderWindow* window, int laps, const std::string &playerCarType, std::string mapPath)
+    : id_(id), clientService_(clientService), settings_(settings), window_(window), laps_(laps) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
 
@@ -17,7 +17,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     contactListener_ = new ContactListener(this, settings);
     world_->SetContactListener(contactListener_);
 
-    map_ = new GameMap(1.0, -2, settings);
+    map_ = new GameMap(1.0, -2, window);
     map_->LoadMapFile(mapPath, world_);
     noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
@@ -30,20 +30,20 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
 
-    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, settings_);
+    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, window);
     box->SetTransform(b2Vec2(20,30), 0.0);
     objects_.push_back(box);
     networkedObjects_.push_back(box);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
-    TireStack *tireStack = new TireStack(GenerateID(), "../res/tirestack.png", world_, settings_);
+    TireStack *tireStack = new TireStack(GenerateID(), "../res/tirestack.png", world_, window);
     tireStack->SetTransform(b2Vec2(0,10), 0.0);
     objects_.push_back(tireStack);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tireStack->GetID(), tireStack) );
-    Oilspill *oilSpill = new Oilspill(401, "../res/oilspill.png", world_, settings_);
+    Oilspill *oilSpill = new Oilspill(401, "../res/oilspill.png", world_, window);
     oilSpill->SetTransform(b2Vec2(10,20), 0.0);
     objects_.push_back(oilSpill);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(oilSpill->GetID(), oilSpill) );
-    Boost *boost = new Boost(301, "../res/boost.png", world_,settings_);
+    Boost *boost = new Boost(301, "../res/boost.png", world_,window);
     boost->SetTransform(b2Vec2(0,5), 0.0);
     objects_.push_back(boost);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
@@ -155,7 +155,7 @@ Car* Game::CreatePlayerCar(const std::string &carType)
     {
         ids.push_back(GenerateID());
     }
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
     
     std::vector<Tire*> tires = car->GetTires();
@@ -177,7 +177,7 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
     }
 
     //Create the car and add it to the necessary containers
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);  
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);  
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
 

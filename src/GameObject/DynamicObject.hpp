@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Box2D/Box2D.h>
+#include <SFML/Graphics.hpp>
 
 #include "../settings/Settings.hpp"
 #include "GameObject.hpp"
@@ -11,7 +12,7 @@
  */
 class DynamicObject : public GameObject {
 public:
-    DynamicObject(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings);
+    DynamicObject(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window);
     virtual ~DynamicObject() = default;
 
     //Common update for all DynamicObjects
@@ -36,5 +37,5 @@ protected:
     b2World *world_;
     virtual void PrivateUpdate(float dt);
     float frictionMultiplier_ = 1;
-    Settings* settings_;
+    sf::RenderWindow* window_;
 };

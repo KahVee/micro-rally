@@ -8,7 +8,7 @@ class Car;
 
 class Tire : public DynamicObject {
 public:
-    Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car, Settings* settings);
+    Tire(sf::Int32 id, std::string spritePath, b2World *world, Car *car, sf::RenderWindow* window);
     ~Tire();
 
     void UpdateFriction(float friction);

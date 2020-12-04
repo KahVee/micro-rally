@@ -42,19 +42,34 @@ std::string Settings::GetName()
     return playerName_;
 }
 
-const sf::VideoMode& Settings::GetVideoMode()
+const sf::VideoMode& Settings::GetFullscreenVideoMode()
 {
-    return sf::VideoMode::getFullscreenModes().at(resolutionIndex_);
+    return sf::VideoMode::getFullscreenModes()[fullscreenResolutionIndex_];
 }
 
-void Settings::SetResolutionIndex(int resolutionIndex)
+const sf::VideoMode& Settings::GetWindowedVideoMode()
 {
-    resolutionIndex_ = resolutionIndex;
+    return windowedModes[windowedResolutionIndex_];
 }
 
-int Settings::GetResolutionIndex()
+void Settings::SetFullscreenResolutionIndex(int fullscreenResolutionIndex)
 {
-    return resolutionIndex_;
+    fullscreenResolutionIndex_ = fullscreenResolutionIndex;
+}
+
+int Settings::GetFullscreenResolutionIndex()
+{
+    return fullscreenResolutionIndex_;
+}
+
+void Settings::SetWindowedResolutionIndex(int windowedResolutionIndex)
+{
+    windowedResolutionIndex_ = windowedResolutionIndex;
+}
+
+int Settings::GetWindowedResolutionIndex()
+{
+    return windowedResolutionIndex_;
 }
 
 const CarData& Settings::GetCarData(const std::string& carType)
@@ -143,9 +158,13 @@ bool Settings::LoadSettings()
             {
                 volume_ =j["Volume"].get<float>();
             }
-            if(j.contains("ResolutionIndex"))
+            if(j.contains("FullscreenResolutionIndex"))
             {
-                resolutionIndex_ = j["ResolutionIndex"].get<int>();
+                fullscreenResolutionIndex_ = j["FullscreenResolutionIndex"].get<int>();
+            }
+            if(j.contains("WindowedResolutionIndex"))
+            {
+                windowedResolutionIndex_ = j["WindowedResolutionIndex"].get<int>();
             }
             if(j.contains("Fullscreen"))
             {
@@ -217,7 +236,7 @@ bool Settings::LoadSettings()
         soundBuffers_.push_back(buttonsoundSoundBuffer);
         sf::Sound collisionsound;
         sf::Sound buttonsound;
-        collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-1]);
+        collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-2]);
         buttonsound.setBuffer(soundBuffers_[soundBuffers_.size() - 1]);
         sounds_["collisionsound"] = collisionsound;
         sounds_["buttonsound"] = buttonsound;
@@ -239,7 +258,8 @@ bool Settings::SaveSettings()
         std::ofstream file("../config/settings.json");
         j["PlayerName"]  = playerName_;
         j["Volume"]  = volume_;
-        j["ResolutionIndex"] = resolutionIndex_;
+        j["FullscreenResolutionIndex"] = fullscreenResolutionIndex_;
+        j["WindowedResolutionIndex"] = windowedResolutionIndex_;
         j["Fullscreen"] = fullscreen_;
         file << j << std::endl;
         file.close();
@@ -252,3 +272,7 @@ bool Settings::SaveSettings()
     }
     return true;
 }
+
+const std::vector<sf::VideoMode> Settings::windowedModes = {sf::VideoMode(854,480, sf::VideoMode::getDesktopMode().bitsPerPixel), 
+                                                          sf::VideoMode(1280,720, sf::VideoMode::getDesktopMode().bitsPerPixel),
+                                                          sf::VideoMode(1920,1080, sf::VideoMode::getDesktopMode().bitsPerPixel)};

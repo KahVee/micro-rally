@@ -3,7 +3,7 @@
 class Oilspill : public DynamicObject
 {
 public:
-    Oilspill(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings);
+    Oilspill(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window);
     ~Oilspill();
 
 private:

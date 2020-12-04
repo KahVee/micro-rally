@@ -3,7 +3,7 @@
 class Box : public DynamicObject
 {
 public:
-    Box(sf::Int32 id, std::string spritePath, b2World *world, Settings* settings);
+    Box(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window);
     ~Box();
     
 private:

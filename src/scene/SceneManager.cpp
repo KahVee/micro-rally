@@ -44,7 +44,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     MenuScene* settingsmenu = new MenuScene();
     settingsmenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     settingsmenu->AddSceneComponent(new TextSceneComponent({0.3f, 0.0f}, {0.4f, 0.2f}, "", window,"SETTINGS", titleColor, font));
-    settingsmenu->AddSceneComponent(new SliderSceneComponent({0.35f, 0.2f}, {0.3f, 0.1f}, "", window,"Volume: ", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, sf::Color::Black, settings.GetVolume()/100,
+    settingsmenu->AddSceneComponent(new SliderSceneComponent({0.05f, 0.2f}, {0.4f, 0.1f}, "", window,"Volume: ", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, sf::Color::Black, settings.GetVolume()/100,
         [&settings](float relativeButtonPosition){
             float volume = relativeButtonPosition * 100.0f;
             settings.SetVolume(volume);
@@ -52,12 +52,12 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             ss << std::setw(3) << std::setfill(' ') << static_cast<int>(volume);
             return ss.str();
         }));
-    settingsmenu->AddSceneComponent(new TextInputSceneComponent({0.35f, 0.4f}, {0.3f, 0.1f}, "deselectonsubmit", window, settings.GetName(), sf::Color::Black, font, backgroundColor, sf::Color::White, PLAYER_NAME_MAX_CHARACTERS,
+    settingsmenu->AddSceneComponent(new TextInputSceneComponent({0.55f, 0.2f}, {0.4f, 0.1f}, "deselectonsubmit", window, settings.GetName(), sf::Color::Black, font, backgroundColor, sf::Color::White, PLAYER_NAME_MAX_CHARACTERS,
         [&settings](const std::string& text){
             settings.SetName(text);
             return text;
         }));
-    settingsmenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.6f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, settings.GetFullscreen(), 2, 14,
+    settingsmenu->AddSceneComponent(new ListSelectorSceneComponent({0.05f, 0.4f}, {0.4f, 0.1f}, "", window, sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, settings.GetFullscreen(), 2, 14,
         [&settings](int currentIndex){
             settings.SetFullscreen(currentIndex);
             if(currentIndex)
@@ -69,17 +69,36 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
                 return "   WINDOWED   ";
             }
         }));
-    settingsmenu->AddSceneComponent(new ListSelectorSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window, sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, settings.GetResolutionIndex(), sf::VideoMode::getFullscreenModes().size(), 12,
+    settingsmenu->AddSceneComponent(new TextSceneComponent({0.5f, 0.3f}, {0.5f, 0.4f}, "", window,"RESOLUTION SETTINGS REQUIRE RESTART!\nSOME FULLSCREEN MODES DON'T WORK!", sf::Color::Red, font));
+    settingsmenu->AddSceneComponent(new TextSceneComponent({0.05f, 0.6f}, {0.4f, 0.2f}, "", window,"FULLSCREEN\nRESOLUTION", sf::Color::Red, font));
+    settingsmenu->AddSceneComponent(new ListSelectorSceneComponent({0.05f, 0.8f}, {0.4f, 0.1f}, "", window, sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, settings.GetFullscreenResolutionIndex(), sf::VideoMode::getFullscreenModes().size(), 12,
         [&settings](int currentIndex){
-            settings.SetResolutionIndex(currentIndex);
+            settings.SetFullscreenResolutionIndex(currentIndex);
             std::stringstream widthSs;
-            widthSs << std::setw(4) << std::setfill(' ') << settings.GetVideoMode().width;
+            widthSs << std::setw(4) << std::setfill(' ') << settings.GetFullscreenVideoMode().width;
 
             std::stringstream heightSs;
-            heightSs << std::setw(4) << std::setfill(' ') << settings.GetVideoMode().height;
+            heightSs << std::setw(4) << std::setfill(' ') << settings.GetFullscreenVideoMode().height;
 
             std::stringstream bpsSs;
-            bpsSs << std::setw(2) << std::setfill(' ') << settings.GetVideoMode().bitsPerPixel;
+            bpsSs << std::setw(2) << std::setfill(' ') << settings.GetFullscreenVideoMode().bitsPerPixel;
+
+            std::stringstream ss;
+            ss << widthSs.str() << "-" << heightSs.str() << "-" << bpsSs.str();
+            return ss.str();
+        }));
+    settingsmenu->AddSceneComponent(new TextSceneComponent({0.55f, 0.6f}, {0.4f, 0.2f}, "", window," WINDOWED\nRESOLUTION", sf::Color::Red, font));
+    settingsmenu->AddSceneComponent(new ListSelectorSceneComponent({0.55f, 0.8f}, {0.4f, 0.1f}, "", window, sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, settings.GetWindowedResolutionIndex(), settings.windowedModes.size(), 12,
+        [&settings](int currentIndex){
+            settings.SetWindowedResolutionIndex(currentIndex);
+            std::stringstream widthSs;
+            widthSs << std::setw(4) << std::setfill(' ') << settings.GetWindowedVideoMode().width;
+
+            std::stringstream heightSs;
+            heightSs << std::setw(4) << std::setfill(' ') << settings.GetWindowedVideoMode().height;
+
+            std::stringstream bpsSs;
+            bpsSs << std::setw(2) << std::setfill(' ') << settings.GetWindowedVideoMode().bitsPerPixel;
 
             std::stringstream ss;
             ss << widthSs.str() << "-" << heightSs.str() << "-" << bpsSs.str();

@@ -29,9 +29,12 @@ public:
     int GetLaps();
     void SetName(const std::string& name);
     std::string GetName();
-    const sf::VideoMode& GetVideoMode();
-    void SetResolutionIndex(int resolutionIndex);
-    int GetResolutionIndex();
+    const sf::VideoMode& GetFullscreenVideoMode();
+    const sf::VideoMode& GetWindowedVideoMode();
+    void SetFullscreenResolutionIndex(int fullscreenResolutionIndex);
+    int GetFullscreenResolutionIndex();
+    void SetWindowedResolutionIndex(int windowedResolutionIndex);
+    int GetWindowedResolutionIndex();
     const CarData& GetCarData(const std::string& carType);
     const std::vector<std::string> GetCarNames();
     const std::vector<std::string>& GetMapNames();
@@ -46,6 +49,7 @@ public:
     void PlaySound(const std::string& sound);
     bool LoadSettings();
     bool SaveSettings();
+    static const std::vector<sf::VideoMode> windowedModes;
 private:
     std::vector<sf::SoundBuffer> soundBuffers_;
     std::map<std::string,sf::Sound> sounds_;
@@ -54,7 +58,8 @@ private:
     std::vector<std::string> maps_;
     std::string playerName_ = "player";
     float volume_ = 50.0f;
-    int resolutionIndex_ = 0;
+    int fullscreenResolutionIndex_ = 0;
+    int windowedResolutionIndex_ = 0;
     int carIndex_ = 0;
     int mapIndex_ = 0;
     bool fullscreen_ = false;
