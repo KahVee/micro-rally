@@ -22,6 +22,10 @@ GameMap::~GameMap() {
     for (auto const& raceLine : this->raceLines_) {
         delete raceLine;
     }
+
+    for (auto const& startPoint : this->startPoints_) {
+        delete startPoint;
+    }
 }
 
 /* 
@@ -40,7 +44,20 @@ const float GameMap::GetFriction(b2Vec2 v) const {
         // If outside map
         return 1.0;
     }
+}
 
+const float GameMap::GetRollingResistance(b2Vec2 v) const {
+    int x = static_cast<int>(v.x/tileSize_);
+    int y = static_cast<int>(v.y/tileSize_);
+    if (x >= 0 && x < width_ && y >= 0 && y< height_) {
+        int row = height_ - y - 1;
+        int column = x;
+        int mapIndex = row*width_ + column;
+        return map_[mapIndex]->GetRollingResistance();
+    } else {
+        // If outside map
+        return 1.0;
+    }
 }
 
 /* 
@@ -60,6 +77,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
 
         int textureIndex = tile_stats["texture"].get<int>();
         auto tile = new MapTile(tile_stats["name"].get<std::string>(), tile_stats["friction"].get<float>(),
+            tile_stats["rollingResistance"].get<float>(),
             textureIndex%MAP_TEXTURE_TILES * (MAP_TEXTURE_MAP_SIZE/MAP_TEXTURE_TILES),  // Column in texture map
             textureIndex/MAP_TEXTURE_TILES * (MAP_TEXTURE_MAP_SIZE/MAP_TEXTURE_TILES)); // Row in texture map
         
@@ -97,6 +115,15 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
         float length = mapJson["raceLines"][i]["length"].get<float>()*tileSize_;
         b2Vec2 pos = b2Vec2(xPos, yPos);
         raceLines_.push_back(new RaceLine(length, tileSize_, pos, rotation, world, -100 -i)); //TODO: ID setting
+    }
+
+    // Load starting positions for players
+    for (int i = 0; i < mapJson["startPoints"].size(); i++) {
+        float xPos = mapJson["startPoints"][i][0].get<float>()*tileSize_;
+        float yPos = mapJson["startPoints"][i][1].get<float>()*tileSize_;
+        float rotation = mapJson["startPointRotations"][i].get<float>()*DEG_TO_RAD;
+        b2Transform *position = new b2Transform(b2Vec2(xPos,yPos), b2Rot(rotation));
+        startPoints_.push_back(position);
     }
 }
 
