@@ -198,7 +198,11 @@ void GameScene::HandleEvents(sf::RenderWindow& window)
         }
         if(gameStarted_)
         {
-            if(drawChat_)
+            if(event.type == sf::Event::MouseButtonPressed)
+            {
+                // Ignore mousebuttonpress in GameScene
+            }
+            else if(drawChat_)
             {
                 textInput_.HandleEvent(event, window);
             }
@@ -382,6 +386,7 @@ void GameScene::Init()
     chat_.Init();
     playerList_.Init();
     textInput_.Init();
+    window_->setMouseCursorVisible(false);
     // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
     if(!clientService_->IsConnected())
     {
@@ -406,4 +411,5 @@ void GameScene::Reset()
         game_ = nullptr;
     }
     sf::Listener::setPosition(0,0,0);
+    window_->setMouseCursorVisible(true);
 }
