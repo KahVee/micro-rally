@@ -7,7 +7,7 @@
 #include "Car.hpp"
 
 Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, sf::RenderWindow* window)
-    :DynamicObject(ids[0], carData.spritePath, world, window), carData_(carData) {
+    :DynamicObject(ids[0], carData.spritePath, world, window), carData_(carData), window_(window) {
 
     isAccelerating_, isBraking_, isTurningLeft_, isTurningRight_ = false;
 
@@ -67,6 +67,8 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, sf::Render
     enginesound_.setBuffer(soundBuffer_);
     enginesound_.setLoop(true);
     enginesound_.setVolume(0.f);
+    enginesound_.setMinDistance(20.f);
+    enginesound_.setAttenuation(1.f);
     enginesound_.play();
 }
 
@@ -125,14 +127,15 @@ void Car::PrivateUpdate(float dt) {
     float speed = sqrt(GetVelocity().x * GetVelocity().x + GetVelocity().y * GetVelocity().y);
     if(speed > 0.5f || speed < -0.5f)
     {
-        enginesound_.setVolume(25.f);
+        enginesound_.setVolume(20.f);
     }else
     {
         enginesound_.setVolume(0.f);
     }
     
     float pitch = speed / GetMaxSpeed();
-    enginesound_.setPitch(1.0f + pitch);
+    enginesound_.setPitch(0.5f + pitch);
+    enginesound_.setPosition(GetTransform().p.x, 0.f, window_->getSize().y - GetTransform().p.y);
 }
 
 void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity, float steeringAngle) {

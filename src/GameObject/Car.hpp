@@ -52,6 +52,7 @@ private:
 
     float steeringAngle_;
 
+    sf::RenderWindow* window_;
     // Sounds
     sf::SoundBuffer soundBuffer_;
     sf::Sound enginesound_;

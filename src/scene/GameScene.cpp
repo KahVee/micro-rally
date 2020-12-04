@@ -405,4 +405,5 @@ void GameScene::Reset()
         delete game_;
         game_ = nullptr;
     }
+    sf::Listener::setPosition(0,0,0);
 }
