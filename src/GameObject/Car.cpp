@@ -78,8 +78,7 @@ void Car::SetTransform(b2Vec2 pos, float angle) {
     body_->SetTransform(pos, angle);
     for(int i = 0; i < 4; i++) {
         b2Vec2 originalPos = b2Vec2(carData_.tirePositions[i].first, carData_.tirePositions[i].second);
-        float tireDistance = originalPos.Length();
-        b2Vec2 newPos = originalPos + body_->GetWorldVector(b2Vec2(sin(angle)*tireDistance, cos(angle)*tireDistance));
+        b2Vec2 newPos = body_->GetWorldPoint(b2Vec2(carData_.tirePositions[i].first, carData_.tirePositions[i].second));
         tires_[i]->SetTransform(newPos, angle);
     }
 }
@@ -106,9 +105,9 @@ void Car::PrivateUpdate(float dt) {
     if(isLocalPlayer_ && (isTurningLeft_ || isTurningRight_) ) {
         float desiredAngle = 0;
         if(isTurningLeft_) {
-            desiredAngle = carData_.tireLockAngle;
+            desiredAngle = carData_.tireLockAngle * DEG_TO_RAD;
         } else if(isTurningRight_) {
-            desiredAngle = -carData_.tireLockAngle;
+            desiredAngle = -carData_.tireLockAngle * DEG_TO_RAD;
         }
         float currentAngle = steeringAngle_;
         float turnSpeed = carData_.tireTurnSpeed * dt * DEG_TO_RAD;
@@ -139,18 +138,7 @@ void Car::SetState(b2Transform transform, b2Vec2 velocity, float angularVelocity
     SetTransform(transform.p, transform.q.GetAngle());
     SetVelocity(velocity);
     SetAngularVelocity(angularVelocity);
-    SetSteeringAngle(steeringAngle);
-
-    b2Transform t = GetTransform();    
-    b2Vec2 pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[0].first, carData_.tirePositions[0].second));
-    tires_[0]->body_->SetTransform(pos, t.q.GetAngle() + steeringAngle_);
-    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[1].first, carData_.tirePositions[1].second));
-    tires_[1]->body_->SetTransform(pos, t.q.GetAngle() + steeringAngle_);
-    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[2].first, carData_.tirePositions[2].second));
-    tires_[2]->body_->SetTransform(pos, t.q.GetAngle());
-    pos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[3].first, carData_.tirePositions[3].second));
-    tires_[3]->body_->SetTransform(pos, t.q.GetAngle());
-    
+    SetSteeringAngle(steeringAngle);    
 }
 
 void Car::ApplyBoost(float boostScale) {

@@ -26,7 +26,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
-    playerCar_->SetTransform(b2Vec2(116, 107), -90*DEG_TO_RAD);
+    playerCar_->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
 
@@ -92,10 +92,12 @@ void Game::Update(float dt) {
     for(auto object: objects_) {
         object->Update(dt);
         object->UpdateFriction(map_->GetFriction(object->GetTransform().p) );
+        object->UpdateRollingRresistance(map_->GetRollingResistance(object->GetTransform().p));
     }
     playerCar_->Update(dt);
     for(Tire *t : playerCar_->GetTires()) {
         t->UpdateFriction(map_->GetFriction(t->GetTransform().p));
+        t->UpdateRollingRresistance(map_->GetRollingResistance(t->GetTransform().p));
     }
     map_->Update();
     world_->Step(dt, 3, 8);
@@ -177,7 +179,8 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
     }
 
     //Create the car and add it to the necessary containers
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);  
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
+    car->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
 
@@ -225,6 +228,10 @@ bool Game::ContainsCar(sf::Int32 id)
 float Game::GetFriction(b2Vec2 coords) const
 {
     return map_->GetFriction(coords);
+}
+
+float Game::GetRollingResistance(b2Vec2 coords) const {
+    return map_->GetRollingResistance(coords);
 }
 
 int Game::GetCurrentPlayerLap()

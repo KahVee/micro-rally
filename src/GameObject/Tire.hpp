@@ -19,7 +19,7 @@ private:
     Car *car_;
     b2PolygonShape shape_;
     b2FixtureDef fDef_;
-    const float angularVelocityDampeningMultiplier = 0.01;
+    const float angularVelocityDampeningMultiplier = 0.015;
     const float dragForceMultiplier = 0.1;
     void PrivateUpdate(float dt);
 

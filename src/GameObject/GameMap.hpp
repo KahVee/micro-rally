@@ -21,12 +21,14 @@ public:
     void Update();
 
     const float GetFriction(b2Vec2) const;
+    const float GetRollingResistance(b2Vec2) const;
     void LoadMapFile(const std::string&, b2World* world);
     GameMapDrawable GetMapDrawable() const;
     int GetWidth() const;
     int GetHeight() const;
     float GetTileSize() const;
     int GetNumberOfRaceLines() const;
+    const b2Transform GetStartingPosition(int i) const;
 
 private:
     GameMapDrawable mapDrawable_;
@@ -36,5 +38,6 @@ private:
     std::map<char, MapTile*> tileTypes_;
     std::vector<MapTile*> map_;
     std::vector<RaceLine*> raceLines_;
+    std::vector<b2Transform*> startPoints_;
     Settings* settings_;
 };
