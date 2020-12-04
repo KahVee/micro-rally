@@ -42,13 +42,13 @@ void ContactListener::BeginContact(b2Contact *contact)
         else if(300 <= idA && idA <= 399)
         {
             float boostscale = 100;
-            game_->GiveBoost(idA, boostscale);
+            game_->GiveBoost(idB, boostscale);
         }
         //Fixture A is an OilSpill
         else if(400 <= idA && idA <= 499)
         {
             float spinscale = 100;
-            game_->GiveSpin(idA, spinscale);
+            game_->GiveSpin(idB, spinscale);
         }
     }
 }
