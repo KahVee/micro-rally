@@ -92,10 +92,12 @@ void Game::Update(float dt) {
     for(auto object: objects_) {
         object->Update(dt);
         object->UpdateFriction(map_->GetFriction(object->GetTransform().p) );
+        object->UpdateRollingRresistance(map_->GetRollingResistance(object->GetTransform().p));
     }
     playerCar_->Update(dt);
     for(Tire *t : playerCar_->GetTires()) {
         t->UpdateFriction(map_->GetFriction(t->GetTransform().p));
+        t->UpdateRollingRresistance(map_->GetRollingResistance(t->GetTransform().p));
     }
     map_->Update();
     world_->Step(dt, 3, 8);
@@ -225,6 +227,10 @@ bool Game::ContainsCar(sf::Int32 id)
 float Game::GetFriction(b2Vec2 coords) const
 {
     return map_->GetFriction(coords);
+}
+
+float Game::GetRollingResistance(b2Vec2 coords) const {
+    return map_->GetRollingResistance(coords);
 }
 
 int Game::GetCurrentPlayerLap()

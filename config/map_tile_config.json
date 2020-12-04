@@ -4,70 +4,70 @@
             "name": "asphalt",
             "fileChar": "A",
             "friction": 1.0,
-            "rollingResistance": 0.3,
+            "rollingResistance": 1,
             "texture": 0
         },
         {
             "name": "grass",
             "fileChar": "W",
-            "friction": 0.75,
-            "rollingResistance": 0.3,
+            "friction": 0.4,
+            "rollingResistance": 1.5,
             "texture": 1
         },
         {
             "name": "gravel",
             "fileChar": ",",
-            "friction": 0.85,
-            "rollingResistance": 0.3,
+            "friction": 0.8,
+            "rollingResistance": 1.5,
             "texture": 2
         },
         {
             "name": "finish",
             "fileChar": "#",
             "friction": 1,
-            "rollingResistance": 0.3,
+            "rollingResistance": 1,
             "texture": 3
         },
         {
             "name": "sand",
             "fileChar": ".",
             "friction": 0.5,
-            "rollingResistance": 0.3,
+            "rollingResistance": 1.8,
             "texture": 4
         },
         {
             "name": "water",
             "fileChar": "~",
-            "friction": 0.25,
-            "rollingResistance": 0.3,
+            "friction": 0.2,
+            "rollingResistance": 5,
             "texture": 5
         },
         {
             "name": "dash_hor",
             "fileChar": "-",
             "friction": 0.95,
-            "rollingResistance": 0.3,
+            "rollingResistance": 1,
             "texture": 6
         },
         {
             "name": "dash_ver",
             "fileChar": "|",
             "friction": 0.95,
-            "rollingResistance": 0.3,
+            "rollingResistance": 1,
             "texture": 7
         },
         {
             "name": "dash_diag1",
             "fileChar": "/",
             "friction": 0.95,
-            "rollingResistance": 0.3,
+            "rollingResistance": 1,
             "texture": 8
         },
         {
             "name": "dash_diag2",
             "fileChar": "(",
             "friction": 0.95,
-            "rollingResistance": 0.3,
+            "rollingResistance": 1,
             "texture": 9
         }
     ]

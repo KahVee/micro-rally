@@ -162,8 +162,8 @@ bool Settings::LoadSettings()
             cars_[element.key()] = {
                 element.value()["spritePath"].get<std::string>(),
                 element.value()["tireStringPath"].get<std::string>(),
-                element.value()["bodyWidth"].get<int>(),
-                element.value()["bodyHeight"].get<int>(),
+                element.value()["bodyWidth"].get<float>(),
+                element.value()["bodyHeight"].get<float>(),
                 element.value()["tirePositions"].get<std::vector<std::pair<float,float>>>(),
                 element.value()["enginePower"].get<float>(),
                 element.value()["brakingPower"].get<float>(),
