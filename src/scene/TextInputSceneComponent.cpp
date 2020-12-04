@@ -96,6 +96,17 @@ void TextInputSceneComponent::HandleEvent(sf::Event& event, sf::RenderWindow& wi
                         cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
                     }
                 }
+                else if(event.key.control && event.key.code == sf::Keyboard::C)
+                {
+                    sf::Clipboard::setString(unsubmittedTextString_);
+                }
+                else if(event.key.control && event.key.code == sf::Keyboard::V)
+                {
+                    unsubmittedTextString_ = sf::Clipboard::getString().substring(0, characterLimit_);
+                    text_.setString(unsubmittedTextString_);
+                    cursorPosition_ = unsubmittedTextString_.length();
+                    cursor_.setPosition(text_.findCharacterPos(cursorPosition_));
+                }
                 else if (event.key.code == sf::Keyboard::Enter)
                 {
                     // When input is submitted
