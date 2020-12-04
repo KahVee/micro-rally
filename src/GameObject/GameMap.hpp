@@ -28,6 +28,7 @@ public:
     int GetHeight() const;
     float GetTileSize() const;
     int GetNumberOfRaceLines() const;
+    const b2Transform GetStartingPosition(int i) const;
 
 private:
     GameMapDrawable mapDrawable_;

@@ -26,7 +26,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
-    playerCar_->SetTransform(b2Vec2(116, 107), -90*DEG_TO_RAD);
+    playerCar_->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
 
@@ -177,7 +177,8 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
     }
 
     //Create the car and add it to the necessary containers
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);  
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
+    car->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
 
