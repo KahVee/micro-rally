@@ -131,6 +131,10 @@ void GameMap::Update() {
 
 }
 
+const b2Transform GameMap::GetStartingPosition(int i) const {
+    return *(startPoints_[i]);
+}
+
 b2Transform GameMap::GetTransform() const {
     return transform_;
 }
