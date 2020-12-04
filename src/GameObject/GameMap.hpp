@@ -13,11 +13,7 @@
 
 class GameMap : public GameObject {
 public:
-<<<<<<< HEAD
-    GameMap(float tileSize, sf::Int32 id, sf::RenderWindow* window);
-=======
-    GameMap(sf::Int32 id, Settings* settings);
->>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
+    GameMap(sf::Int32 id, sf::RenderWindow* window);
     virtual ~GameMap();
 
     b2Transform GetTransform() const;
@@ -46,10 +42,6 @@ private:
     std::vector<MapTile*> map_;
     MapTile* backgroundTileType_;
     std::vector<RaceLine*> raceLines_;
-<<<<<<< HEAD
-    sf::RenderWindow* window_;
-=======
     std::vector<b2Transform*> startPoints_;
-    Settings* settings_;
->>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
+    sf::RenderWindow* window_;
 };

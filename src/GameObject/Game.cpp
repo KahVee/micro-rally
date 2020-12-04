@@ -17,13 +17,8 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     contactListener_ = new ContactListener(this, settings);
     world_->SetContactListener(contactListener_);
 
-<<<<<<< HEAD
-    map_ = new GameMap(1.0, -2, window);
-    map_->LoadMapFile(mapPath, world_);
-=======
-    map_ = new GameMap(-2, settings);
+    map_ = new GameMap(-2, window);
     map_->LoadMapFile(mapPath, world_, &objectMap_, &objects_, &networkedObjects_);
->>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
     noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
     playerCar_ = CreatePlayerCar(playerCarType);
@@ -34,29 +29,6 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     playerCar_->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
-<<<<<<< HEAD
-
-    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, window);
-    box->SetTransform(b2Vec2(20,30), 0.0);
-    objects_.push_back(box);
-    networkedObjects_.push_back(box);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
-    TireStack *tireStack = new TireStack(GenerateID(), "../res/tirestack.png", world_, window);
-    tireStack->SetTransform(b2Vec2(0,10), 0.0);
-    objects_.push_back(tireStack);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tireStack->GetID(), tireStack) );
-    Oilspill *oilSpill = new Oilspill(401, "../res/oilspill.png", world_, window);
-    oilSpill->SetTransform(b2Vec2(10,20), 0.0);
-    objects_.push_back(oilSpill);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(oilSpill->GetID(), oilSpill) );
-    Boost *boost = new Boost(301, "../res/boost.png", world_,window);
-    boost->SetTransform(b2Vec2(0,5), 0.0);
-    objects_.push_back(boost);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
-    // Sounds
-    playerCar_->GetEngineSound().setRelativeToListener(true);
-=======
->>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
 }
 
 
@@ -192,12 +164,8 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
     }
 
     //Create the car and add it to the necessary containers
-<<<<<<< HEAD
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);  
-=======
-    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);
     car->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
->>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
 

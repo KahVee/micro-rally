@@ -38,10 +38,6 @@ protected:
     b2World *world_;
     virtual void PrivateUpdate(float dt);
     float frictionMultiplier_ = 1;
-<<<<<<< HEAD
     sf::RenderWindow* window_;
-=======
     float rollingResistance_ = 1;
-    Settings* settings_;
->>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
 };
