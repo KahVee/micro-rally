@@ -6,11 +6,15 @@
 #include "../constants.hpp"
 #include <SFML/Graphics/Sprite.hpp>
 #include "RaceLine.hpp"
+#include "OilSpill.hpp"
+#include "TireStack.hpp"
+#include "Boost.hpp"
+#include "Box.hpp"
 #include <map>
 
 using json = nlohmann::json;
 
-GameMap::GameMap(float tileSize, sf::Int32 id, Settings* settings) : tileSize_(tileSize), GameObject(id), settings_(settings) {
+GameMap::GameMap(sf::Int32 id, Settings* settings) : GameObject(id), settings_(settings) {
     
 }
 
@@ -63,7 +67,9 @@ const float GameMap::GetRollingResistance(b2Vec2 v) const {
 /* 
  * Loads the config file for tiles and loads a saved map file.
  */
-void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
+void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<sf::Int32, GameObject*> *objectMap, 
+                        std::vector<DynamicObject*> *objects, 
+                        std::vector<DynamicObject*> *networkedObjects) {
     // Read json file (tile types)
     std::ifstream tilesFile("../config/map_tile_config.json");
     json tileTypeJson;
@@ -92,6 +98,7 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
 
     width_ = mapJson["width"].get<int>();
     height_ = mapJson["height"].get<int>();
+    tileSize_ = mapJson["tileSize"].get<int>();
 
     std::string tileLayoutString;
     for (int i = 0; i < height_; i++) {
@@ -121,9 +128,60 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world) {
     for (int i = 0; i < mapJson["startPoints"].size(); i++) {
         float xPos = mapJson["startPoints"][i][0].get<float>()*tileSize_;
         float yPos = mapJson["startPoints"][i][1].get<float>()*tileSize_;
-        float rotation = mapJson["startPointRotations"][i].get<float>()*DEG_TO_RAD;
+        float rotation = mapJson["startPoints"][i][2].get<float>()*DEG_TO_RAD;
         b2Transform *position = new b2Transform(b2Vec2(xPos,yPos), b2Rot(rotation));
         startPoints_.push_back(position);
+    }
+
+    // Load different objects
+    // Oilspills
+    for (int i = 0; i < mapJson["oilSpills"].size(); i++) {
+        float xPos = mapJson["oilSpills"][i][0].get<float>()*tileSize_;
+        float yPos = mapJson["oilSpills"][i][1].get<float>()*tileSize_;
+        float size = mapJson["oilSpills"][i][2].get<float>()*tileSize_;
+        float rotation = mapJson["oilSpills"][i][3].get<float>()*DEG_TO_RAD;
+
+        Oilspill *oilSpill = new Oilspill(400 + i, "../res/oilspill.png", world, settings_);
+        oilSpill->SetTransform(b2Vec2(xPos,yPos), rotation);
+        objects->push_back(oilSpill);
+        objectMap->insert(std::pair<sf::Int32, DynamicObject*>(oilSpill->GetID(), oilSpill) );
+    }
+
+    // Boosts
+    for (int i = 0; i < mapJson["boosts"].size(); i++) {
+        float xPos = mapJson["boosts"][i][0].get<float>()*tileSize_;
+        float yPos = mapJson["boosts"][i][1].get<float>()*tileSize_;
+        float power = mapJson["boosts"][i][2].get<float>()*tileSize_;
+
+        Boost *boost = new Boost(300 + i, "../res/boost.png", world,settings_);
+        boost->SetTransform(b2Vec2(xPos,yPos), 0);
+        objects->push_back(boost);
+        objectMap->insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
+    }
+
+    // Boxes
+    for (int i = 0; i < mapJson["boxes"].size(); i++) {
+        float xPos = mapJson["boxes"][i][0].get<float>()*tileSize_;
+        float yPos = mapJson["boxes"][i][1].get<float>()*tileSize_;
+        float size = mapJson["boxes"][i][2].get<float>()*tileSize_;
+        float rotation = mapJson["boxes"][i][3].get<float>()*DEG_TO_RAD;
+
+        Box *box = new Box(500+i, "../res/smallcrate.png", world, settings_);
+        box->SetTransform(b2Vec2(xPos,yPos), rotation);
+        objects->push_back(box);
+        networkedObjects->push_back(box);
+        objectMap->insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
+    }
+
+    // Tirestacks
+    for (int i = 0; i < mapJson["tireStacks"].size(); i++) {
+        float xPos = mapJson["tireStacks"][i][0].get<float>()*tileSize_;
+        float yPos = mapJson["tireStacks"][i][1].get<float>()*tileSize_;
+
+        TireStack *tireStack = new TireStack(600+i, "../res/tirestack.png", world, settings_);
+        tireStack->SetTransform(b2Vec2(xPos,yPos), 0.0);
+        objects->push_back(tireStack);
+        objectMap->insert(std::pair<sf::Int32, DynamicObject*>(tireStack->GetID(), tireStack) );
     }
 }
 

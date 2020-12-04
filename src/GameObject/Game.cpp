@@ -17,8 +17,8 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     contactListener_ = new ContactListener(this, settings);
     world_->SetContactListener(contactListener_);
 
-    map_ = new GameMap(1.0, -2, settings);
-    map_->LoadMapFile(mapPath, world_);
+    map_ = new GameMap(-2, settings);
+    map_->LoadMapFile(mapPath, world_, &objectMap_, &objects_, &networkedObjects_);
     noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
     playerCar_ = CreatePlayerCar(playerCarType);
@@ -29,24 +29,6 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, int l
     playerCar_->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
-
-    Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, settings_);
-    box->SetTransform(b2Vec2(20,30), 0.0);
-    objects_.push_back(box);
-    networkedObjects_.push_back(box);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(box->GetID(), box));
-    TireStack *tireStack = new TireStack(GenerateID(), "../res/tirestack.png", world_, settings_);
-    tireStack->SetTransform(b2Vec2(0,10), 0.0);
-    objects_.push_back(tireStack);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(tireStack->GetID(), tireStack) );
-    Oilspill *oilSpill = new Oilspill(401, "../res/oilspill.png", world_, settings_);
-    oilSpill->SetTransform(b2Vec2(10,20), 0.0);
-    objects_.push_back(oilSpill);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(oilSpill->GetID(), oilSpill) );
-    Boost *boost = new Boost(301, "../res/boost.png", world_,settings_);
-    boost->SetTransform(b2Vec2(0,5), 0.0);
-    objects_.push_back(boost);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
 }
 
 

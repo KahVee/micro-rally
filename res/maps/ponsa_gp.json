@@ -1,4 +1,5 @@
 {
+    "mapName": "Ponsa GP",
     "width": 200,
     "height": 112,
     "tileLayout": [
@@ -115,15 +116,15 @@
         "~~~~~~~~~~~~~~~~~~~~~~~.....................WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
         "~~~~~~~~~~~~~~~~~~~~~~~....................WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
     ],
+    "tileSize": 1.2,
     "startPoints": [
-        [116.5, 107.5],
-        [115.5, 104.5],
-        [110.5, 107.5],
-        [109.5, 104.5],
-        [104.5, 107.5],
-        [103.5, 104.5]
+        [116.5, 107.5, -90],
+        [115.5, 104.5, -90],
+        [110.5, 107.5, -90],
+        [109.5, 104.5, -90],
+        [104.5, 107.5, -90],
+        [103.5, 104.5, -90]
     ],
-    "startPointRotations": [-90, -90, -90, -90, -90, -90],
     "raceLines": [
         {
             "mapX": 120.5,
@@ -143,5 +144,20 @@
             "length": 22,
             "rotation": 90
         }
+    ],
+    "oilSpills": [
+        [126.5, 104.5, 1, 90]
+    ],
+    "boosts": [
+        [126.5, 107.5, 10],
+        [127.5, 107.5, 10],
+        [128.5, 107.5, 10],
+        [129.5, 107.5, 10]
+    ],
+    "boxes": [
+        [126.5, 100.5, 2, 90]
+    ],
+    "tireStacks": [
+        [126.5, 97.5]
     ]
 }
