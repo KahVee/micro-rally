@@ -8,8 +8,8 @@
 struct CarData {
     std::string spritePath;
     std::string tireStringPath;
-    int bodyWidth;
-    int bodyHeight;
+    float bodyWidth;
+    float bodyHeight;
     std::vector<std::pair<float, float>> tirePositions;
     float enginePower;
     float brakingPower;

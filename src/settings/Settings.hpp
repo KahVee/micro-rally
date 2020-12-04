@@ -63,5 +63,5 @@ private:
     int carIndex_ = 0;
     int mapIndex_ = 0;
     bool fullscreen_ = false;
-    int laps_ = 1;
+    int laps_ = 3;
 };

@@ -17,8 +17,13 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     contactListener_ = new ContactListener(this, settings);
     world_->SetContactListener(contactListener_);
 
+<<<<<<< HEAD
     map_ = new GameMap(1.0, -2, window);
     map_->LoadMapFile(mapPath, world_);
+=======
+    map_ = new GameMap(-2, settings);
+    map_->LoadMapFile(mapPath, world_, &objectMap_, &objects_, &networkedObjects_);
+>>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
     noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
     playerCar_ = CreatePlayerCar(playerCarType);
@@ -26,9 +31,10 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     playerCar_->Brake(false);
     playerCar_->TurnLeft(false);
     playerCar_->TurnRight(false);
-    playerCar_->SetTransform(b2Vec2(116, 107), -90*DEG_TO_RAD);
+    playerCar_->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
+<<<<<<< HEAD
 
     Box *box = new Box(GenerateID(), "../res/smallcrate.png", world_, window);
     box->SetTransform(b2Vec2(20,30), 0.0);
@@ -49,6 +55,8 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
     // Sounds
     playerCar_->GetEngineSound().setRelativeToListener(true);
+=======
+>>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
 }
 
 
@@ -94,10 +102,12 @@ void Game::Update(float dt) {
     for(auto object: objects_) {
         object->Update(dt);
         object->UpdateFriction(map_->GetFriction(object->GetTransform().p) );
+        object->UpdateRollingRresistance(map_->GetRollingResistance(object->GetTransform().p));
     }
     playerCar_->Update(dt);
     for(Tire *t : playerCar_->GetTires()) {
         t->UpdateFriction(map_->GetFriction(t->GetTransform().p));
+        t->UpdateRollingRresistance(map_->GetRollingResistance(t->GetTransform().p));
     }
     map_->Update();
     world_->Step(dt, 3, 8);
@@ -182,7 +192,12 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
     }
 
     //Create the car and add it to the necessary containers
+<<<<<<< HEAD
     Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);  
+=======
+    Car* car = new Car(ids, world_, settings_->GetCarData(carType), settings_);
+    car->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
+>>>>>>> f3dd8761cb37f2c5705c892f656ad217f75db0fb
     objects_.push_back(car);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
 
@@ -230,6 +245,10 @@ bool Game::ContainsCar(sf::Int32 id)
 float Game::GetFriction(b2Vec2 coords) const
 {
     return map_->GetFriction(coords);
+}
+
+float Game::GetRollingResistance(b2Vec2 coords) const {
+    return map_->GetRollingResistance(coords);
 }
 
 int Game::GetCurrentPlayerLap()

@@ -385,7 +385,7 @@ void GameScene::Init()
     // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
     if(!clientService_->IsConnected())
     {
-        game_ = new Game(clientService_->GetId(), clientService_, settings_, window_, 3, "FORMULA", "../res/maps/test_map_file.json");
+        game_ = new Game(0, clientService_, settings_, window_, 3, "FORMULA", "../res/maps/test_map_file.json");
     }
 }
 

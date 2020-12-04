@@ -54,7 +54,7 @@ void Tire::UpdateDrive(bool isAccelerating, bool isBraking) {
     //Stops tire from sliding sideways, TODO: add a variable multiplier
     body_->ApplyLinearImpulse(frictionMultiplier_ * angularVelocityDampeningMultiplier * car_->body_->GetMass() * -LateralVelocity() * body_->GetWorldVector(b2Vec2(1,0)), body_->GetWorldCenter(), true);
     //"Rolling resistance" to stop car from sliding forever
-    body_->ApplyForce(frictionMultiplier_ * car_->body_->GetMass() * dragForceMultiplier * -ForwardVelocity() * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
+    body_->ApplyForce(rollingResistance_ * car_->body_->GetMass() * dragForceMultiplier * -ForwardVelocity() * body_->GetWorldVector(b2Vec2(0,1)), body_->GetWorldCenter(), true);
 }
 
 //NOT USED ATM

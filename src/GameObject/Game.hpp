@@ -50,6 +50,7 @@ public:
     sf::Int32 GenerateID();
 
     float GetFriction(b2Vec2 coords) const;
+    float GetRollingResistance(b2Vec2 coords) const;
 
 private:
     sf::Int32 id_;

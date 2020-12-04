@@ -57,3 +57,7 @@ void DynamicObject::UpdateFriction(float friction)
 {
     frictionMultiplier_ = friction;
 }
+
+void DynamicObject::UpdateRollingRresistance(float rollingResistance) {
+    rollingResistance_ = rollingResistance;
+}
