@@ -29,6 +29,8 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     playerCar_->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
     RaceState *rs = new RaceState{0, -100};
     raceStates_.insert(std::pair<sf::Int32, RaceState*>(id, rs));
+    // Sounds
+    playerCar_->GetEngineSound().setRelativeToListener(true);
 }
 
 

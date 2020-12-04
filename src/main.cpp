@@ -51,8 +51,6 @@ int main()
     }
     // This object provides delta time
     sf::Clock clock;
-    // The name of the local player
-    std::string playerName = "player";
     // HostService provides host side networking run in a separate thread
     HostService hostService;
     std::thread hostThread;
@@ -65,7 +63,7 @@ int main()
     // Initialize ClientService
     clientService.Init(&sceneManager, &settings);
     // Limit framerate to 60
-    window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
     // Main loop
     while (window.isOpen())
     {
