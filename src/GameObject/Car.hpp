@@ -39,6 +39,7 @@ public:
 
     float GetSteeringAngle() const;
     void SetSteeringAngle(float steeringAngle);
+    sf::Sound& GetEngineSound();
     std::vector<Tire*> GetTires();
     bool isLocalPlayer_;
 private:

@@ -68,7 +68,7 @@ Car::Car(std::vector<sf::Int32> ids, b2World *world, CarData carData, sf::Render
     enginesound_.setLoop(true);
     enginesound_.setVolume(0.f);
     enginesound_.setMinDistance(20.f);
-    enginesound_.setAttenuation(1.f);
+    enginesound_.setAttenuation(0.5f);
     enginesound_.play();
 }
 
@@ -127,7 +127,7 @@ void Car::PrivateUpdate(float dt) {
     float speed = sqrt(GetVelocity().x * GetVelocity().x + GetVelocity().y * GetVelocity().y);
     if(speed > 0.5f || speed < -0.5f)
     {
-        enginesound_.setVolume(20.f);
+        enginesound_.setVolume(15.f);
     }else
     {
         enginesound_.setVolume(0.f);
@@ -218,6 +218,11 @@ float Car::GetSteeringAngle() const {
 
 void Car::SetSteeringAngle(float steeringAngle) {
     steeringAngle_ = steeringAngle;
+}
+
+sf::Sound& Car::GetEngineSound()
+{
+    return enginesound_;
 }
 
 std::vector<Tire*> Car::GetTires() {

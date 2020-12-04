@@ -47,9 +47,8 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     boost->SetTransform(b2Vec2(0,5), 0.0);
     objects_.push_back(boost);
     objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
-
     // Sounds
-    //sf::Listener::setDirection(0,0,1);
+    playerCar_->GetEngineSound().setRelativeToListener(true);
 }
 
 
@@ -104,6 +103,7 @@ void Game::Update(float dt) {
     world_->Step(dt, 3, 8);
     // Spatialized sound
     sf::Listener::setPosition(playerCar_->GetTransform().p.x, 0.f, window_->getSize().y - playerCar_->GetTransform().p.y);
+    playerCar_->GetEngineSound().setPosition(0,0,0);
 }
 
 /*
