@@ -285,14 +285,31 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
             return "";
         }));
     scorescreen->AddSceneComponent(new ButtonSceneComponent({0.05f, 0.05f}, {0.2f, 0.1f}, "", window,"BACK", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings,
-        [&clientService, &hostService, &hostThread, &settings](){
-            hostService.Stop();
-            // Terminate thread if needed
-            if(hostThread.joinable())
+        [&clientService, &settings, this](){
+            // hostService.Stop();
+            // // Terminate thread if needed
+            // if(hostThread.joinable())
+            // {
+            //     hostThread.join();
+            // }
+            // clientService.Disconnect();
+            if(clientService.GetId() == 0)
             {
-                hostThread.join();
+                this->ChangeScene("hostlobby");
             }
-            clientService.Disconnect();
+            else
+            {
+                this->ChangeScene("clientlobby");
+            }
+            // Fill player table
+            for(auto client : clientService.GetClients())
+            {
+                sf::Packet packet;
+                packet << CLIENT_CONNECT << client.second << client.first;
+                this->HandlePacket(packet);
+            }
+            // Change theme
+            settings.PlayTheme("menutheme");
         }));
     AddScene("scorescreen", scorescreen);
     // Create game scene ------------------------------------------------------------------------------------------
