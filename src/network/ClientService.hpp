@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <sstream>
 #include <iostream>
+#include <list>
+#include <utility>
 
 #include "../scene/SceneManager.hpp"
 #include "Network.hpp"
@@ -26,6 +28,7 @@ public:
     void Send(sf::Packet& packet);
     void Receive();
     sf::Int32 GetId() const;
+    std::list<std::pair<sf::Int32,std::string>> GetClients() const;
 private:
     sf::Socket::Status ReceiveIfReady(sf::Packet& packet);
     sf::TcpSocket socket_;
@@ -34,4 +37,5 @@ private:
     SceneManager* sceneManager_ = nullptr;
     Settings* settings_ = nullptr;
     sf::Int32 id_ = -1;
+    std::list<std::pair<sf::Int32,std::string>> clients_;
 };

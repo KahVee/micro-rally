@@ -113,10 +113,18 @@ void ClientService::Receive()
                 }
                 else if (messageType == CLIENT_CONNECT)
                 {
+                    sf::Int32 clientId = -1;
+                    std::string clientName;
+                    packet >> clientName >> clientId;
+                    clients_.push_back({clientId, clientName});
                     sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == CLIENT_DISCONNECT)
                 {
+                    sf::Int32 clientId = -1;
+                    std::string clientName;
+                    packet >> clientName >> clientId;
+                    clients_.remove_if([clientId](const std::pair<sf::Int32,std::string> client){return client.first == clientId;});
                     sceneManager_->HandlePacket(packetCopy);
                 }
                 else if (messageType == CLIENT_DATA)
@@ -147,6 +155,11 @@ void ClientService::Receive()
 sf::Int32 ClientService::GetId() const
 {
     return id_;
+}
+
+std::list<std::pair<sf::Int32,std::string>> ClientService::GetClients() const
+{
+    return clients_;
 }
 
 sf::Socket::Status ClientService::ReceiveIfReady(sf::Packet& packet)
