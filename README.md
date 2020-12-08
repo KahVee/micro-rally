@@ -28,20 +28,20 @@ sudo apt-get install cmake
 ## Credits
 
 **Programmers**
-Elias Nurmi
-Hilda Palva
-Markus Tuominen
-Ville Pihlava
+Elias Nurmi <br />
+Hilda Palva <br />
+Markus Tuominen <br />
+Ville Pihlava <br />
 Veeti Kahilainen
 
 **Resources**
-Menu background picture - https://arivers95.tumblr.com/image/163042694031
-Menu theme - Boogie Woogie Stomp, Albert Ammons (version used arranged by Ville Pihlava)
-Game theme - arranged by Veeti Kahilainen
-Score screen theme - https://www.youtube.com/watch?v=w_ECz5Tl2y4&ab_channel=DeoxysPrime
-Last lap theme - http://www.smashcustommusic.net/song/37395
-Countdown theme - https://www.youtube.com/watch?v=BjI7tuT_lhg&ab_channel=WarehouseSoundFX
-Car engine loop - https://opengameart.org/content/512-sound-effects-8-bit-style
-Crash sound - https://opengameart.org/content/512-sound-effects-8-bit-style
-Checkpoint sound - https://opengameart.org/content/512-sound-effects-8-bit-style
+Menu background picture - https://arivers95.tumblr.com/image/163042694031 <br />
+Menu theme - Boogie Woogie Stomp, Albert Ammons (version used arranged by Ville Pihlava) <br />
+Game theme - arranged by Veeti Kahilainen <br />
+Score screen theme - https://www.youtube.com/watch?v=w_ECz5Tl2y4&ab_channel=DeoxysPrime <br />
+Last lap theme - http://www.smashcustommusic.net/song/37395 <br />
+Countdown theme - https://www.youtube.com/watch?v=BjI7tuT_lhg&ab_channel=WarehouseSoundFX <br />
+Car engine loop - https://opengameart.org/content/512-sound-effects-8-bit-style <br />
+Crash sound - https://opengameart.org/content/512-sound-effects-8-bit-style <br />
+Checkpoint sound - https://opengameart.org/content/512-sound-effects-8-bit-style <br />
 Button sound - https://opengameart.org/content/512-sound-effects-8-bit-style
