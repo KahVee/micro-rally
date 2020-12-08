@@ -256,6 +256,10 @@ void HostService::RunGame()
             lastFinishRanking_ = 0;
             gameRunning_ = false;
             networkObjects_.clear();
+            for(auto& client2 : clients_)
+            {
+                client2.finished = false;
+            }
             sf::Packet sendPacket;
             sendPacket << GAME_FINISH;
             SendToAll(sendPacket);
