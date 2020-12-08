@@ -27,14 +27,14 @@ sudo apt-get install cmake
 
 ## Credits
 
-**Programmers**
+**Programmers** <br />
 Elias Nurmi <br />
 Hilda Palva <br />
 Markus Tuominen <br />
 Ville Pihlava <br />
 Veeti Kahilainen
 
-**Resources**
+**Resources** <br />
 Menu background picture - https://arivers95.tumblr.com/image/163042694031 <br />
 Menu theme - Boogie Woogie Stomp, Albert Ammons (version used arranged by Ville Pihlava) <br />
 Game theme - arranged by Veeti Kahilainen <br />
