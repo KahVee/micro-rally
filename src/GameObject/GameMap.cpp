@@ -67,7 +67,7 @@ const float GameMap::GetRollingResistance(b2Vec2 v) const {
 /* 
  * Loads the config file for tiles and loads a saved map file.
  */
-void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<sf::Int32, GameObject*> *objectMap, 
+void GameMap::LoadMapFile(const std::string& mapName, b2World* world, std::map<sf::Int32, GameObject*> *objectMap, 
                         std::vector<DynamicObject*> *objects, 
                         std::vector<DynamicObject*> *networkedObjects) {
     // Read json file (tile types)
@@ -91,11 +91,12 @@ void GameMap::LoadMapFile(const std::string& filepath, b2World* world, std::map<
     }
 
     // Read json file (map file)
-    std::ifstream mapFile(filepath);
+    std::ifstream mapFile("../res/maps.json");
     json mapJson;
     mapFile >> mapJson;
     mapFile.close();
-
+    mapJson = mapJson[mapName];
+    
     width_ = mapJson["width"].get<int>();
     height_ = mapJson["height"].get<int>();
     tileSize_ = mapJson["tileSize"].get<int>();

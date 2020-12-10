@@ -172,7 +172,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         packet >> map >> laps;
         settings_->SetLaps(laps);
         settings_->SetMapIndex(map);
-        game_ = new Game(clientService_->GetId(), clientService_, settings_, window_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
+        game_ = new Game(clientService_->GetId(), clientService_, settings_, window_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], settings_->GetMapNames()[map]);
         // Send data to initialize networked dynamic objects on host if client is host
         if(clientService_->GetId() == 0)
         {

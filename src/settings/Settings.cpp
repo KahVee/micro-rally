@@ -194,9 +194,13 @@ bool Settings::LoadSettings()
             };
         }
         // Load maps
-        maps_.push_back("ponsa_gp");
-        maps_.push_back("test_map_file");
-        maps_.push_back("test_map_file_2");        
+        std::ifstream mapFile("../res/maps.json");
+        json jsonMaps;
+        mapFile >> jsonMaps;
+        for(auto& element : jsonMaps.items())
+        {
+            maps_.push_back(element.key());
+        }
         // Load themes
         themes_["menutheme"] = new sf::Music;
         themes_["lastlaptheme"] = new sf::Music;
@@ -227,21 +231,28 @@ bool Settings::LoadSettings()
         // Load sounds
         sf::SoundBuffer collisionsoundSoundBuffer;
         sf::SoundBuffer buttonsoundSoundBuffer;
+        sf::SoundBuffer checkpointsoundSoundBuffer;
         if(!collisionsoundSoundBuffer.loadFromFile("../res/audio/collisionsound.wav")
-        || !buttonsoundSoundBuffer.loadFromFile("../res/audio/buttonsound.wav"))
+        || !buttonsoundSoundBuffer.loadFromFile("../res/audio/buttonsound.wav")
+        || !checkpointsoundSoundBuffer.loadFromFile("../res/audio/checkpointsound.wav"))
         {
             return false;
         }
         soundBuffers_.push_back(collisionsoundSoundBuffer);
         soundBuffers_.push_back(buttonsoundSoundBuffer);
+        soundBuffers_.push_back(checkpointsoundSoundBuffer);
         sf::Sound collisionsound;
         sf::Sound buttonsound;
-        collisionsound.setBuffer(soundBuffers_[soundBuffers_.size()-2]);
-        buttonsound.setBuffer(soundBuffers_[soundBuffers_.size() - 1]);
+        sf::Sound checkpointsound;
+        collisionsound.setBuffer(soundBuffers_[0]);
+        buttonsound.setBuffer(soundBuffers_[1]);
+        checkpointsound.setBuffer(soundBuffers_[2]);
         sounds_["collisionsound"] = collisionsound;
         sounds_["buttonsound"] = buttonsound;
+        sounds_["checkpointsound"] = checkpointsound;
         sounds_["collisionsound"].setAttenuation(0);
         sounds_["buttonsound"].setAttenuation(0);
+        sounds_["checkpointsound"].setAttenuation(0);
     }
     catch (const std::exception& e)
     {

@@ -14,8 +14,10 @@ TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, sf::R
     fDef.density = 1;
     fDef.friction = 1;
     fDef_ = fDef;
-    body_->CreateFixture(&fDef_);
+    b2Fixture* fixture = body_->CreateFixture(&fDef_);
+    
     sprite_.setScale(width / sprite_.getLocalBounds().width, height / sprite_.getLocalBounds().height);
+    fixture->SetUserData(this);
 }
 
 TireStack::~TireStack()
