@@ -149,13 +149,13 @@
                 "mapX": 92.5,
                 "mapY": 10.5,
                 "length": 22,
-                "rotation": 90
+                "rotation": 0
             },
             {
                 "mapX": 79.5,
                 "mapY": 53.5,
                 "length": 18,
-                "rotation": 0
+                "rotation": 90
             },
             {
                 "mapX": 126.5,
@@ -167,7 +167,7 @@
                 "mapX": 48.5,
                 "mapY": 97.5,
                 "length": 24,
-                "rotation": 0
+                "rotation": 90
             }
         ],
         "oilSpills": [
