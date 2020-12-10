@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject/CarData.hpp"
+#include "game/CarData.hpp"
 
 static const float DEG_TO_RAD = 0.0174532925;
 static const float RAD_TO_DEG = 57.295779513;

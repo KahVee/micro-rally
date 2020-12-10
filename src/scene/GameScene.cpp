@@ -387,11 +387,6 @@ void GameScene::Init()
     playerList_.Init();
     textInput_.Init();
     window_->setMouseCursorVisible(false);
-    // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
-    if(!clientService_->IsConnected())
-    {
-        game_ = new Game(0, clientService_, settings_, window_, 3, "FORMULA", "../res/maps/test_map_file.json");
-    }
 }
 
 // This is called when the current scene is changed to another one from this

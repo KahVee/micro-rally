@@ -115,8 +115,6 @@ void Car::PrivateUpdate(float dt) {
         float turnSpeed = carData_.tireTurnSpeed * dt * DEG_TO_RAD;
         float deltaAngle = b2Clamp( desiredAngle - currentAngle, -turnSpeed, turnSpeed );
         steeringAngle_ = currentAngle + deltaAngle;
-    } else {
-        steeringAngle_ = 0;
     }
 
     f1Joint_->SetLimits( steeringAngle_, steeringAngle_ );
