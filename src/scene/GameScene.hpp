@@ -11,8 +11,8 @@
 #include "TableSceneComponent.hpp"
 #include "TextInputSceneComponent.hpp"
 #include "TextSceneComponent.hpp"
-#include "../GameObject/Game.hpp"
-#include "../GameObject/DynamicObject.hpp"
+#include "../game/Game.hpp"
+#include "../game/DynamicObject.hpp"
 #include "../constants.hpp"
 #include "../network/ClientService.hpp"
 

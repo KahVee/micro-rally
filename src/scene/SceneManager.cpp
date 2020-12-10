@@ -19,8 +19,7 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
     MenuScene* mainMenu = new MenuScene();
     mainMenu->AddSceneComponent(new PictureSceneComponent({0.0f, 0.0f}, {1.0f, 1.0f}, "", window, menuBackgroundTexture));
     mainMenu->AddSceneComponent(new TextSceneComponent({0.2f, 0.0f}, {0.6f, 0.2f}, "", window,"MICRO RALLY", titleColor, font));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.32f}, {0.3f, 0.1f}, "", window,"PLAY NOW", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, [this](){this->ChangeScene("game");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.44f}, {0.3f, 0.1f}, "", window,"HOST", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings,
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.2f}, {0.3f, 0.15f}, "", window,"HOST", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings,
         [&hostService, &hostThread, &clientService, this, &settings](){
             if(!hostService.IsRunning())
             {
@@ -35,9 +34,9 @@ void SceneManager::Init(HostService& hostService, ClientService& clientService, 
                 }
             }
         }));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.56f}, {0.3f, 0.1f}, "", window,"JOIN", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, [this](){this->ChangeScene("join");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.68f}, {0.3f, 0.1f}, "", window,"SETTINGS", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, [this](){this->ChangeScene("settingsmenu");}));
-    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.1f}, "", window,"QUIT", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, [&window](){window.close();}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.4f}, {0.3f, 0.15f}, "", window,"JOIN", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, [this](){this->ChangeScene("join");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.6f}, {0.3f, 0.15f}, "", window,"SETTINGS", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, [this](){this->ChangeScene("settingsmenu");}));
+    mainMenu->AddSceneComponent(new ButtonSceneComponent({0.35f, 0.8f}, {0.3f, 0.15f}, "", window,"QUIT", sf::Color::Black, font, backgroundColor, sf::Color::White, &settings, [&window](){window.close();}));
     AddScene("mainMenu", mainMenu);
 
     // Create settingsmenu scene ------------------------------------------------------------------------------------------

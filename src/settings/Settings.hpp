@@ -10,7 +10,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
-#include "../GameObject/CarData.hpp"
+#include "../game/CarData.hpp"
 
 struct Resolution
 {
