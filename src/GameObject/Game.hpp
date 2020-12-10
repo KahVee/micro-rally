@@ -23,7 +23,7 @@ class ContactListener;
 
 class Game {
 public:
-    Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::RenderWindow* window, int laps, const std::string &playerCarType, std::string mapPath);
+    Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::RenderWindow* window, int laps, const std::string &playerCarType, std::string mapName);
     ~Game();
 
     std::vector<DynamicObject*> GetObjects();

@@ -194,9 +194,13 @@ bool Settings::LoadSettings()
             };
         }
         // Load maps
-        maps_.push_back("ponsa_gp");
-        maps_.push_back("test_map_file");
-        maps_.push_back("test_map_file_2");        
+        std::ifstream mapFile("../res/maps.json");
+        json jsonMaps;
+        mapFile >> jsonMaps;
+        for(auto& element : jsonMaps.items())
+        {
+            maps_.push_back(element.key());
+        }
         // Load themes
         themes_["menutheme"] = new sf::Music;
         themes_["lastlaptheme"] = new sf::Music;
