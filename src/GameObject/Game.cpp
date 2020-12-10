@@ -107,8 +107,11 @@ void Game::UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId) {
     //Check if the crossed checpoint is the next in line
     RaceState *carState = raceStates_[carId];
     if(carState->nextRaceLineId == raceLineId) {
-        std::cout << "Crossed raceline "<< std::endl;
         carState->nextRaceLineId -= 1;
+        if(carId == id_)
+        {
+            settings_->PlaySound("checkpointsound");
+        }
 
         //Finish line
         if(raceLineId == -100) {
@@ -188,7 +191,6 @@ void Game::RemoveCar(sf::Int32 id)
 {
     //TODO add exception handling
     Car *carToRemove = (Car*)objectMap_.at(id);
-    std::cout << id << std::endl;
     objectMap_.erase(id);
     for(auto t: carToRemove->GetTires())
     {
