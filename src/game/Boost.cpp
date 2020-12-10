@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-Boost::Boost(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window): DynamicObject(id, spritePath, world, window) 
+Boost::Boost(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window, float magnitude): DynamicObject(id, spritePath, world, window), magnitude_(magnitude)
 {
     b2PolygonShape pShape;
     float width = 1.0f;
@@ -22,6 +22,14 @@ Boost::Boost(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWin
 
 Boost::~Boost() {
     world_->DestroyBody(body_);
+}
+
+float Boost::GetMagnitude() {
+    return magnitude_;
+}
+
+void Boost::SetMagnitude(float magnitude) {
+    magnitude_ = magnitude;
 }
 
 void Boost::PrivateUpdate(float dt)

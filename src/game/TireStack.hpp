@@ -8,6 +8,6 @@ public:
 
 private:
     void PrivateUpdate(float dt);
-    b2PolygonShape shape_;
+    b2CircleShape shape_;
     b2FixtureDef fDef_;
 };
