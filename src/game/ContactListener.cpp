@@ -4,13 +4,12 @@ void ContactListener::BeginContact(b2Contact *contact)
 {
     GameObject *fixtureAObj = static_cast<GameObject*>(contact->GetFixtureA()->GetUserData());
     GameObject *fixtureBObj = static_cast<GameObject*>(contact->GetFixtureB()->GetUserData());
-    sf::Int32 idA, idB;
+    sf::Int32 idA = -1;
+    sf::Int32 idB = -1;
 
     if (fixtureAObj != NULL && fixtureBObj != NULL) {
         idA = fixtureAObj->GetID();
-        idB = fixtureBObj->GetID();   
-        std::cout << "Collision detected: ID: " << idA << ", ID2: " <<  idB << std::endl;
-        settings_->PlaySound("collisionsound");   
+        idB = fixtureBObj->GetID();
     }
 
     //Fixture A is a car
@@ -31,6 +30,10 @@ void ContactListener::BeginContact(b2Contact *contact)
             float spinscale = 100;
             game_->GiveSpin(idA, spinscale);
         }
+        else if(game_->GetPlayerCar()->GetID() == idA)
+        {
+            settings_->PlaySound("collisionsound");
+        }
     }
     //Fixture B is a car
     if(0 <= idB && idB <= MAX_CLIENTS) {
@@ -49,6 +52,10 @@ void ContactListener::BeginContact(b2Contact *contact)
         {
             float spinscale = 100;
             game_->GiveSpin(idB, spinscale);
+        }
+        else if(game_->GetPlayerCar()->GetID() == idB)
+        {
+            settings_->PlaySound("collisionsound");
         }
     }
 }

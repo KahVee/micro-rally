@@ -172,7 +172,7 @@ void GameScene::HandlePacket(sf::Packet& packet)
         packet >> map >> laps;
         settings_->SetLaps(laps);
         settings_->SetMapIndex(map);
-        game_ = new Game(clientService_->GetId(), clientService_, settings_, window_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], "../res/maps/" + settings_->GetMapNames()[map] + ".json");
+        game_ = new Game(clientService_->GetId(), clientService_, settings_, window_, laps, settings_->GetCarNames()[settings_->GetCarIndex()], settings_->GetMapNames()[map]);
         // Send data to initialize networked dynamic objects on host if client is host
         if(clientService_->GetId() == 0)
         {
@@ -387,11 +387,6 @@ void GameScene::Init()
     playerList_.Init();
     textInput_.Init();
     window_->setMouseCursorVisible(false);
-    // THIS IS HERE SO PLAY NOW WORKS OTHERWISE NOT NEEDED
-    if(!clientService_->IsConnected())
-    {
-        game_ = new Game(0, clientService_, settings_, window_, 3, "FORMULA", "../res/maps/test_map_file.json");
-    }
 }
 
 // This is called when the current scene is changed to another one from this

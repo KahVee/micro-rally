@@ -1,9 +1,8 @@
-#include "TireStack.hpp"
+#include "Box.hpp"
 #include <iostream>
 
-TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window) : DynamicObject(id, spritePath, world, window)
+Box::Box(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window): DynamicObject(id, spritePath, world, window)
 {
-    body_->SetType(b2_staticBody);
     b2PolygonShape pShape;
     float width = 1.0f;
     float height = 1.0f;
@@ -14,18 +13,18 @@ TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, sf::R
     fDef.density = 1;
     fDef.friction = 1;
     fDef_ = fDef;
-    body_->CreateFixture(&fDef_);
+    b2Fixture* fixture = body_->CreateFixture(&fDef_);
     sprite_.setScale(width / sprite_.getLocalBounds().width, height / sprite_.getLocalBounds().height);
+    fixture->SetUserData(this);
 }
-
-TireStack::~TireStack()
-{
+Box::~Box() {
     world_->DestroyBody(body_);
 }
 
-void TireStack::PrivateUpdate(float dt)
+void Box::PrivateUpdate(float dt)
 {
     //std::cout << GetTransform().p.x << " " << GetTransform().p.y << " Olen taalla" << std::endl;
-    body_->ApplyForceToCenter(10 * frictionMultiplier_ * -GetVelocity(), true);
-    body_->ApplyTorque(10 * frictionMultiplier_ * -GetAngularVelocity(), true);
+    body_->ApplyForceToCenter(8 * frictionMultiplier_ * -GetVelocity(), true);
+    body_->ApplyTorque(5 * frictionMultiplier_ * -GetAngularVelocity(), true);
 }
+

@@ -8,7 +8,7 @@
 #include "Game.hpp"
 
 
-Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::RenderWindow* window, int laps, const std::string &playerCarType, std::string mapPath)
+Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::RenderWindow* window, int laps, const std::string &playerCarType, std::string mapName)
     : id_(id), clientService_(clientService), settings_(settings), window_(window), laps_(laps) {
     b2Vec2 g = b2Vec2(0,0);
     world_ = new b2World(g);
@@ -18,7 +18,7 @@ Game::Game(sf::Int32 id, ClientService *clientService, Settings* settings, sf::R
     world_->SetContactListener(contactListener_);
 
     map_ = new GameMap(-2, window);
-    map_->LoadMapFile(mapPath, world_, &objectMap_, &objects_, &networkedObjects_);
+    map_->LoadMapFile(mapName, world_, &objectMap_, &objects_, &networkedObjects_);
     noOfCheckpoints_ = map_->GetNumberOfRaceLines();
 
     playerCar_ = CreatePlayerCar(playerCarType);
@@ -107,8 +107,11 @@ void Game::UpdateRaceState(sf::Int32 carId, sf::Int32 raceLineId) {
     //Check if the crossed checpoint is the next in line
     RaceState *carState = raceStates_[carId];
     if(carState->nextRaceLineId == raceLineId) {
-        std::cout << "Crossed raceline "<< std::endl;
         carState->nextRaceLineId -= 1;
+        if(carId == id_)
+        {
+            settings_->PlaySound("checkpointsound");
+        }
 
         //Finish line
         if(raceLineId == -100) {
@@ -188,7 +191,6 @@ void Game::RemoveCar(sf::Int32 id)
 {
     //TODO add exception handling
     Car *carToRemove = (Car*)objectMap_.at(id);
-    std::cout << id << std::endl;
     objectMap_.erase(id);
     for(auto t: carToRemove->GetTires())
     {
