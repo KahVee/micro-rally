@@ -5,8 +5,8 @@
 Oilspill::Oilspill(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window): DynamicObject(id, spritePath, world, window) 
 {
     b2PolygonShape pShape;
-    float width = 1.0f;
-    float height = 1.0f;
+    float width = 2.0f;
+    float height = 2.0f;
     pShape.SetAsBox(width/2,height/2);
     shape_ = pShape;
 

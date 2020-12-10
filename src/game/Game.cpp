@@ -168,11 +168,9 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
         ids.push_back(GenerateID());
     }
 
-    //Create the car and add it to the necessary containers
+    //Create the car
     Car* car = new Car(ids, world_, settings_->GetCarData(carType), window_);
     car->SetTransform(map_->GetStartingPosition(id).p, map_->GetStartingPosition(id).q.GetAngle());
-    objects_.push_back(car);
-    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
 
     //Add the tires to the necessary containers
     std::vector<Tire*> tires = car->GetTires();
@@ -180,6 +178,10 @@ Car* Game::AddCar(sf::Int32 id, const std::string &carType)
         objects_.push_back(tires[i]);
         objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[i+1], tires[i]));
     }
+
+    //Add the car to the necessary containers
+    objects_.push_back(car);
+    objectMap_.insert(std::pair<sf::Int32, DynamicObject*>(ids[0], car));
 
     car->isLocalPlayer_ = false;
     RaceState *rs = new RaceState{0, 0};
