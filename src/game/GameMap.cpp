@@ -144,7 +144,7 @@ void GameMap::LoadMapFile(const std::string& mapName, b2World* world, std::map<s
         float rotation = mapJson["oilSpills"][i][3].get<float>()*DEG_TO_RAD;
 
         Oilspill *oilSpill = new Oilspill(400 + i, "../res/oilspill.png", world, window_);
-        oilSpill->SetTransform(b2Vec2(xPos,yPos), rotation);
+        oilSpill->SetTransform(b2Vec2(xPos,yPos), rand());
         objects->push_back(oilSpill);
         objectMap->insert(std::pair<sf::Int32, DynamicObject*>(oilSpill->GetID(), oilSpill) );
     }
@@ -155,7 +155,8 @@ void GameMap::LoadMapFile(const std::string& mapName, b2World* world, std::map<s
         float yPos = mapJson["boosts"][i][1].get<float>()*tileSize_;
         float power = mapJson["boosts"][i][2].get<float>()*tileSize_;
 
-        Boost *boost = new Boost(300 + i, "../res/boost.png", world, window_);
+        std::string path = rand() % 50 ? (rand() % 2 ? "../res/boost1.png" : "../res/boost2.png") : "../res/boost.png";
+        Boost *boost = new Boost(300 + i, path, world, window_, power);
         boost->SetTransform(b2Vec2(xPos,yPos), 0);
         objects->push_back(boost);
         objectMap->insert(std::pair<sf::Int32, DynamicObject*>(boost->GetID(), boost) );
