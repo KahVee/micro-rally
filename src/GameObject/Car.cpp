@@ -78,11 +78,15 @@ Car::~Car() {
 
 void Car::SetTransform(b2Vec2 pos, float angle) {
     body_->SetTransform(pos, angle);
-    for(int i = 0; i < 4; i++) {
-        b2Vec2 originalPos = b2Vec2(carData_.tirePositions[i].first, carData_.tirePositions[i].second);
-        b2Vec2 newPos = body_->GetWorldPoint(b2Vec2(carData_.tirePositions[i].first, carData_.tirePositions[i].second));
-        tires_[i]->SetTransform(newPos, angle);
-    }
+    b2Transform t = GetTransform();    
+    b2Vec2 newPos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[0].first, carData_.tirePositions[0].second));
+    tires_[0]->body_->SetTransform(newPos, t.q.GetAngle() + steeringAngle_);
+    newPos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[1].first, carData_.tirePositions[1].second));
+    tires_[1]->body_->SetTransform(newPos, t.q.GetAngle() + steeringAngle_);
+    newPos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[2].first, carData_.tirePositions[2].second));
+    tires_[2]->body_->SetTransform(newPos, t.q.GetAngle());
+    newPos = body_->GetPosition() + body_->GetWorldVector(b2Vec2(carData_.tirePositions[3].first, carData_.tirePositions[3].second));
+    tires_[3]->body_->SetTransform(newPos, t.q.GetAngle());
 }
 
 void Car::PrivateUpdate(float dt) {
