@@ -4,6 +4,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/Audio.hpp>
 #include <thread>
+#include <time.h>
 
 
 #include "scene/SceneManager.hpp"
@@ -15,6 +16,8 @@
 
 int main()
 {
+    srand(time(NULL));
+
     Settings settings;
     if (!settings.LoadSettings())
     {

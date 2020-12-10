@@ -12,6 +12,8 @@ void ContactListener::BeginContact(b2Contact *contact)
         idB = fixtureBObj->GetID();
     }
 
+    float spinScale = 100;
+
     //Fixture A is a car
     if(0 <= idA && idA <= MAX_CLIENTS) {
         //Fixture B is a RaceLine
@@ -21,14 +23,13 @@ void ContactListener::BeginContact(b2Contact *contact)
         //Fixture B is a Boost
         else if(300 <= idB && idB <= 399)
         {
-            float boostscale = 100;
-            game_->GiveBoost(idA, boostscale);
+            float boostPower = static_cast<Boost*>(game_->GetObjectMap()[idB])->GetMagnitude();
+            game_->GiveBoost(idA, boostPower);
         }
         //Fixture B is an OilSpill
         else if(400 <= idB && idB <= 499)
         {
-            float spinscale = 100;
-            game_->GiveSpin(idA, spinscale);
+            game_->GiveSpin(idA, spinScale);
         }
         else if(game_->GetPlayerCar()->GetID() == idA)
         {
@@ -44,14 +45,13 @@ void ContactListener::BeginContact(b2Contact *contact)
         //Fixture A is a Boost
         else if(300 <= idA && idA <= 399)
         {
-            float boostscale = 100;
-            game_->GiveBoost(idB, boostscale);
+            float boostPower = static_cast<Boost*>(game_->GetObjectMap()[idA])->GetMagnitude();
+            game_->GiveBoost(idB, boostPower);
         }
         //Fixture A is an OilSpill
         else if(400 <= idA && idA <= 499)
         {
-            float spinscale = 100;
-            game_->GiveSpin(idB, spinscale);
+            game_->GiveSpin(idB, spinScale);
         }
         else if(game_->GetPlayerCar()->GetID() == idB)
         {
