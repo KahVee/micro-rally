@@ -168,7 +168,8 @@ void GameMap::LoadMapFile(const std::string& mapName, b2World* world, std::map<s
         float size = mapJson["boxes"][i][2].get<float>()*tileSize_;
         float rotation = mapJson["boxes"][i][3].get<float>()*DEG_TO_RAD;
 
-        Box *box = new Box(500+i, "../res/smallcrate.png", world, window_);
+        std::string path = size >= 2 ? "../res/bigcrate.png" : "../res/smallcrate.png";
+        Box *box = new Box(500+i, path, world, window_, size);
         box->SetTransform(b2Vec2(xPos,yPos), rotation);
         objects->push_back(box);
         networkedObjects->push_back(box);
