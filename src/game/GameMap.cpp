@@ -182,8 +182,11 @@ void GameMap::LoadMapFile(const std::string& mapName, b2World* world, std::map<s
         float xPos = mapJson["tireStacks"][i][0].get<float>()*tileSize_;
         float yPos = mapJson["tireStacks"][i][1].get<float>()*tileSize_;
 
+        float xRandomOffset = rand() % 100 * 0.00015;
+        float yRandomOffset = rand() % 100 * 0.00015;
+
         TireStack *tireStack = new TireStack(600+i, "../res/tirestack.png", world, window_);
-        tireStack->SetTransform(b2Vec2(xPos,yPos), 0.0);
+        tireStack->SetTransform(b2Vec2(xPos + xRandomOffset, yPos + yRandomOffset), 0.0);
         objects->push_back(tireStack);
         objectMap->insert(std::pair<sf::Int32, DynamicObject*>(tireStack->GetID(), tireStack) );
     }

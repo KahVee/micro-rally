@@ -4,11 +4,10 @@
 TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, sf::RenderWindow* window) : DynamicObject(id, spritePath, world, window)
 {
     body_->SetType(b2_staticBody);
-    b2PolygonShape pShape;
-    float width = 1.0f;
-    float height = 1.0f;
-    pShape.SetAsBox(width/2,height/2);
-    shape_ = pShape;
+    b2CircleShape shape;
+    float diameter = 1.0f;
+    shape.m_radius = diameter/2;
+    shape_ = shape;
     b2FixtureDef fDef;
     fDef.shape = &shape_;
     fDef.density = 1;
@@ -16,7 +15,7 @@ TireStack::TireStack(sf::Int32 id, std::string spritePath, b2World *world, sf::R
     fDef_ = fDef;
     b2Fixture* fixture = body_->CreateFixture(&fDef_);
     
-    sprite_.setScale(width / sprite_.getLocalBounds().width, height / sprite_.getLocalBounds().height);
+    sprite_.setScale(diameter / sprite_.getLocalBounds().width, diameter / sprite_.getLocalBounds().height);
     fixture->SetUserData(this);
 }
 
