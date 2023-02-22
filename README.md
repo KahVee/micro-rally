@@ -1,4 +1,5 @@
-# Micro machines
+# Micro rally
+<img src="microrally.png" width="875">
 
 ## Required libraries
 
